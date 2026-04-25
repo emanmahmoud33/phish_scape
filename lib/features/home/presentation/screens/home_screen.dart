@@ -1,8 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
+import 'package:phish_scape/features/lessons/presentation/widgets/header.dart';
 import 'package:phish_scape/features/onboarding/presentation/screens/simulate_screen.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../lessons/presentation/screens/lesson_screen.dart';
 import '../../../profile/screens/profile_screen.dart';
 import '../../../simulation/presentation/screens/simulation_screen.dart';
 
@@ -12,55 +14,11 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const Header(),
         backgroundColor: const Color(0xFF081826),
-    body: SafeArea(
-    child: SingleChildScrollView(
+    body: SingleChildScrollView(
     child: Column(
     children: [
-
-    /// 🔷 HEADER
-    Container(
-    padding: const EdgeInsets.all(16),
-    decoration: const BoxDecoration(
-    color:Color(0xFF1C2127)
-    ),
-    child: Row(
-    children: [
-    const CircleAvatar(
-    radius: 22,
-    // backgroundImage:
-    // AssetImage("assets/images/user.png"),
-    ),
-    const SizedBox(width: 10),
-
-    const Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text(
-    "PhishScape",
-    style: TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-      fontSize: 18
-    ),
-    ),
-    Text(
-    "Lvl 14 Security Analyst",
-    style: TextStyle(
-    color: AppColors.primary,
-    fontSize: 12,
-    ),
-    ),
-    ],
-    ),
-
-    const Spacer(),
-      _circleIcon(Icons.notifications),
-    const SizedBox(width: 10),
-    _circleIcon(Icons.settings),
-    ],
-    ),
-    ),
 
     /// BODY
     Padding(
@@ -114,7 +72,7 @@ class HomeScreen extends StatelessWidget {
               child: Container(
                 padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                 decoration: BoxDecoration(
-                  color: Color(0xFF102B47),
+                  color: const Color(0xFF102B47),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: const Row(
@@ -160,7 +118,7 @@ class HomeScreen extends StatelessWidget {
     const SizedBox(height: 30),
 
     /// 📊 STATS
-      Row(
+       Row(
         children: [
           Expanded(
             child: _statCard(
@@ -202,7 +160,7 @@ class HomeScreen extends StatelessWidget {
     Container(
     padding: const EdgeInsets.all(15),
     decoration: BoxDecoration(
-        color:Color(0xFF1C2127),
+        color:const Color(0xFF1C2127),
     borderRadius: BorderRadius.circular(16),
     ),
     child: Column(
@@ -231,8 +189,8 @@ class HomeScreen extends StatelessWidget {
           ),
           Container(
             height: 35,
-            padding: const EdgeInsets.all(6),
-            decoration: BoxDecoration(
+            padding:  const EdgeInsets.all(6),
+            decoration:  BoxDecoration(
               color: Colors.red.withOpacity(0.2),
               borderRadius: BorderRadius.circular(4),
             ),
@@ -256,10 +214,10 @@ class HomeScreen extends StatelessWidget {
 
       const SizedBox(height: 10),
 
-      CustomButton(text: 'Analyze Now', onPressed: () {  Navigator.push(
+       CustomButton(text: 'Analyze Now', onPressed: () {  Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (_) => const ProfileScreen(),
+          builder: (_) => const LessonsScreen(),
         ),
       );},)
     ],
@@ -320,7 +278,6 @@ class HomeScreen extends StatelessWidget {
     ),
     ),
     ],
-    ),
     ),
     ),
     );
