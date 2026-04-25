@@ -1,7 +1,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
+import 'package:phish_scape/features/onboarding/presentation/screens/simulate_screen.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../profile/screens/profile_screen.dart';
+import '../../../simulation/presentation/screens/simulation_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -52,8 +55,7 @@ class HomeScreen extends StatelessWidget {
     ),
 
     const Spacer(),
-
-    _circleIcon(Icons.notifications),
+      _circleIcon(Icons.notifications),
     const SizedBox(width: 10),
     _circleIcon(Icons.settings),
     ],
@@ -254,7 +256,12 @@ class HomeScreen extends StatelessWidget {
 
       const SizedBox(height: 10),
 
-      CustomButton(text: 'Analyze Now', onPressed: (){})
+      CustomButton(text: 'Analyze Now', onPressed: () {  Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const ProfileScreen(),
+        ),
+      );},)
     ],
     ),
     ),
