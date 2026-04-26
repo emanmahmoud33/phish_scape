@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../simulation/presentation/screens/simulation_screen.dart';
 import '../widgets/header.dart';
 
 class LessonsScreen extends StatelessWidget {
@@ -10,7 +11,6 @@ class LessonsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return  const Scaffold(
       appBar:  Header(),
-      backgroundColor: AppColors.backgroundStart ,
       body: SingleChildScrollView(
         padding: EdgeInsets.all(15),
         child: Column(
@@ -312,7 +312,14 @@ class _LessonCard extends StatelessWidget {
                 child: SizedBox(
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const SimulationScreen(),
+                        ),
+                      );
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: active
                           ? const Color(0xFF2F80ED)
@@ -320,7 +327,7 @@ class _LessonCard extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
-                      elevation: 0, // 👈 علشان يبقى flat زي الفيجما
+                      elevation: 0,
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -335,14 +342,17 @@ class _LessonCard extends StatelessWidget {
 
                         if (active) ...[
                           const SizedBox(width: 6),
-                          const Icon(Icons.play_arrow,
-                              size: 14, color: Colors.white),
-                        ]
+                          const Icon(
+                            Icons.play_arrow,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+                        ],
                       ],
                     ),
                   ),
                 ),
-              ),
+              ), // 👈 مهم جدًا
 
               /// 🔖 BOOKMARK
               if (active) ...[

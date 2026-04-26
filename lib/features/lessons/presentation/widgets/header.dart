@@ -16,15 +16,8 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
       flexibleSpace: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF1A1F26),
-              Color(0xFF1A1F26),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
+        decoration:  BoxDecoration(
+         color: AppColors.backgroundStart
         ),
 
         child: SafeArea(
