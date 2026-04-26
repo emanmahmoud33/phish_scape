@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
+import 'package:phish_scape/features/setting/presentation/Setting_Screen.dart';
 
 class AnalysisScreen extends StatelessWidget {
   const AnalysisScreen({super.key});
@@ -215,7 +216,12 @@ class AnalysisScreen extends StatelessWidget {
                 SizedBox(height: h * 0.04),
 
                 /// 🔵 BUTTON
-                CustomButton(text: 'CONTINUE TO NEXT PHASE', onPressed: (){}),
+                CustomButton(text: 'CONTINUE TO NEXT PHASE', onPressed: () {  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => const SettingsScreen(),
+                  ),
+                );}),
 
                 const SizedBox(height: 12),
 
