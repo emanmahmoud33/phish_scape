@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
-import 'package:phish_scape/features/home/analysis/presentation/screens/analysis_screen.dart';
+
+import '../../../analysis/presentation/screens/analysis_screen.dart';
 
 class SimulationScreen extends StatefulWidget {
   const SimulationScreen({super.key});
