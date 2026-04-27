@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class Header extends StatelessWidget implements PreferredSizeWidget {
@@ -69,9 +70,21 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
 
               const Spacer(),
 
-              _circleIcon(Icons.notifications),
+              _circleIcon(Icons.notifications, () {
+
+
+                Navigator.pushReplacementNamed(
+                  context,
+                  AppRoutes.notification ,
+
+                );
+              }),
               const SizedBox(width: 10),
-              _circleIcon(Icons.settings),
+              _circleIcon(Icons.settings,(){ Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.setting ,
+
+              );}),
             ],
           ),
         ),
@@ -79,15 +92,15 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
     );
   }
 
-  Widget _circleIcon(IconData icon) {
+  Widget _circleIcon( IconData icon, void Function() onTap) {
     return Container(
-      height: 38,
-      width: 38,
+      height: 46.67,
+      width: 40,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: Colors.white.withOpacity(0.08),
       ),
-      child: Icon(icon, color: Colors.white, size: 20),
+      child: IconButton(onPressed: onTap, icon: Icon(icon),color: AppColors.textPrimary,)
     );
   }
 }

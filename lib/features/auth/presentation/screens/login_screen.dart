@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phish_scape/features/auth/presentation/screens/signup_screen.dart';
+import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../onboarding/presentation/screens/identify_screen.dart';
 import '../../../onboarding/presentation/screens/level_selection_screen.dart';
@@ -12,6 +13,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundStart,
         body: Container(
             padding: const EdgeInsets.all(20),
             decoration: const BoxDecoration(
@@ -156,12 +158,9 @@ class LoginScreen extends StatelessWidget {
                         width: double.infinity,
                         height: 55,
                          child: CustomButton(
-                           onPressed: () {  Navigator.push(
-                             context,
-                             MaterialPageRoute(
-                               builder: (_) => const LevelSelectionScreen(),
-                             ),
-                           );},
+                           onPressed: () {
+                             Navigator.pushNamed(context, AppRoutes.onboarding);
+                           },
                         text: "ACCESS SHIELD",
 
                          )),

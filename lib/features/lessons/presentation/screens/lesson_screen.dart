@@ -9,7 +9,8 @@ class LessonsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  const Scaffold(
+    return   Scaffold(
+      backgroundColor: AppColors.backgroundStart,
       appBar:  Header(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(15),

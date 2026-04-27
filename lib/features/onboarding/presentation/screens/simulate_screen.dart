@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phish_scape/features/onboarding/presentation/screens/protected_screen.dart';
+import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/widgets/custom_button.dart';
 import '../../../auth/presentation/widgets/dots_indicator.dart';
@@ -28,7 +29,15 @@ class SimulateScreen extends StatelessWidget {
                     style: TextStyle(color: AppColors.textPrimary,fontSize: 16),
 
                   ),
-                  onPressed: (){},
+                    onPressed: () {
+
+
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.levelSelection ,
+                            (route) => false,
+                      );
+                    }
                 ),
               ),
 

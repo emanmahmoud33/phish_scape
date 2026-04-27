@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
+import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../home/presentation/screens/home_screen.dart';
 
@@ -16,134 +17,197 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final r = MediaQuery.of(context).size.width;
+    final scale = r / 375;
+    final h = size.height;
+    final w = size.width;
     return Scaffold(
-        body: Container(
-          padding: const EdgeInsets.all(20),
-          decoration: const BoxDecoration(
-            color: AppColors.backgroundStart,
-          ),
-          child: SafeArea(
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+      appBar: AppBar(
+        backgroundColor: AppColors.backgroundStart,
+        automaticallyImplyLeading: false,
+        elevation: 0,
 
-            // 🔙 Back + Title
-            const Row(
-            children: [
-            Icon(Icons.arrow_back_ios, color: AppColors.primary),
-            SizedBox(width: 10),
-            Text(
-              "Personalize Your Experience",
-              style: TextStyle(
-                color: AppColors.textPrimary,
-                fontSize: 16,
-              ),
-            ),
-            Spacer(),
-            Text(
-              "Step 3 of 3",
-              style: TextStyle(color: AppColors.primary),
-            ),
-            ],
-          ),
+        /// 👇 responsive height
+        toolbarHeight: h * 0.08,
 
-          const SizedBox(height: 20),
+        flexibleSpace: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: w * 0.05), // 👈 كان 0.04
 
-          // 📊 Progress
-          const Text(
-            "Setup Progress",
+            child: Row(
+              children: [
 
-            style: TextStyle(color: AppColors.textSecondary,fontSize: 16),
-          ),
-          const SizedBox(height: 8),
+                /// 🔙 BACK
+                GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.primary,
+                    size: w * 0.05, // 👈 responsive icon
+                  ),
+                ),
 
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: 1,
-              backgroundColor: Colors.grey.withOpacity(0.2),
-              color: AppColors.primary,
-              minHeight: 6,
-            ),
-          ),
+                SizedBox(width: w * 0.02), // 👈 بدل 0.01
 
-          const SizedBox(height: 30),
+                /// 🔤 TITLE
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      "Personalize Your Experience",
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
 
-          // ❓ Question
-          const Text(
-            "How much do you know about phishing?",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 30,
-              fontWeight: FontWeight.bold,
-              color: AppColors.textPrimary,
-            ),
-          ),
+                        /// 👇 responsive font
+                        fontSize: 18 * (w / 375),
+                      ),
+                    ),
+                  ),
+                ),
 
-          const SizedBox(height: 10),
-
-          // 📝 Description
-          const Text(
-            "We'll tailor your learning path based on your current expertise.",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: AppColors.textSecondary),
-          ),
-
-          const SizedBox(height: 30),
-
-          // 🧩 Options
-          _optionCard(
-            index: 0,
-            title: "Beginner",
-            subtitle: "I'm brand new to cybersecurity.",
-            icon: Icons.phishing,
-          ),
-
-          const SizedBox(height: 15),
-
-          _optionCard(
-            index: 1,
-            title: "Intermediate",
-            subtitle: "I know the basics of online safety.",
-            icon: Icons.shield,
-          ),
-
-          const SizedBox(height: 15),
-
-          _optionCard(
-            index: 2,
-            title: "Advanced",
-            subtitle: "I'm a security professional or pro user.",
-            icon: Icons.terminal,
-          ),
-
-          const Spacer(),
-
-          // ℹ️ Note
-          const Center(
-            child: Text(
-              "Don't worry, you can change this later in settings.",
-              style: TextStyle(
-                color: AppColors.textSecondary,
-                fontSize: 16,
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-                  // 🔘 Continue
-                 SizedBox(width: double.infinity,
-                     child: CustomButton(text: "Continue", onPressed: () {  Navigator.push(
-                       context,
-                       MaterialPageRoute(
-                         builder: (_) => const HomeScreen(),
-                       ),
-                     );},))
-                ],
+                /// 👇 علشان نحافظ على التوازن (زي الـ back button)
+                SizedBox(width: w * 0.05),
+              ],
             ),
           ),
         ),
-    );
+      ),
+      backgroundColor: AppColors.backgroundStart,
+        body:
+
+         SafeArea(
+
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+
+
+
+                        const SizedBox(height: 20),
+
+                        // 📊 Progress
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 👈 مهم
+                      children: [
+
+                        /// LEFT TEXT
+                        Text(
+                          "Setup Progress",
+                          style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 14 * scale,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1, // 👈 نفس شكل UI
+                          ),
+                        ),
+
+                        /// RIGHT TEXT (Step)
+                        Text(
+                          "Step 3 of 3",
+                          style: TextStyle(
+                            color: AppColors.primary, // 👈 أزرق زي الصورة
+                            fontSize: 14 * scale,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                        const SizedBox(height: 8),
+
+                        ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: LinearProgressIndicator(
+                value: 0.8,
+                backgroundColor: Colors.grey.withOpacity(0.2),
+                color: AppColors.primary,
+                minHeight: 8,
+              ),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // ❓ Question
+                        const Text(
+              "How much do you know about phishing?",
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                color: AppColors.textPrimary,
+              ),
+                        ),
+
+                        const SizedBox(height: 10),
+
+                        // 📝 Description
+                        const Text(
+              "We'll tailor your learning path based on your current expertise.",
+              textAlign: TextAlign.center,
+              style: TextStyle(color: AppColors.textSecondary),
+                        ),
+
+                        const SizedBox(height: 30),
+
+                        // 🧩 Options
+                        _optionCard(
+              index: 0,
+              title: "Beginner",
+              subtitle: "I'm brand new to cybersecurity.",
+              icon: Icons.phishing,
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        _optionCard(
+              index: 1,
+              title: "Intermediate",
+              subtitle: "I know the basics of online safety.",
+              icon: Icons.shield,
+                        ),
+
+                        const SizedBox(height: 15),
+
+                        _optionCard(
+              index: 2,
+              title: "Advanced",
+              subtitle: "I'm a security professional or pro user.",
+              icon: Icons.terminal,
+                        ),
+
+                        const Spacer(),
+
+                        // ℹ️ Note
+                        const Center(
+              child: Text(
+                "Don't worry, you can change this later in settings.",
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12,
+                ),
+              ),
+                        ),
+
+                        const SizedBox(height: 20),
+                    // 🔘 Continue
+                   SizedBox(width: double.infinity,
+                       child: CustomButton(text: "Continue", onPressed: () {
+                         print(AppRoutes.main); // 👈 هنا
+
+                         Navigator.pushNamedAndRemoveUntil(
+                           context,
+                           AppRoutes.main ,
+                               (route) => false,
+                         );
+                       }))
+                  ],
+              ),
+            ),
+          ),
+        );
+
   }
 
   // 🔹 Option Card
@@ -171,6 +235,7 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
               : Colors.transparent,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
+            width: 2,
             color: isSelected
                 ? AppColors.primary
                 : Colors.grey.withOpacity(0.2),

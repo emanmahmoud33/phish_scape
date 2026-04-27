@@ -1,7 +1,10 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:phish_scape/features/auth/presentation/screens/login_screen.dart';
+
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/routing/app_routes.dart';
 import '../../../auth/presentation/widgets/custom_button.dart';
 import '../../../auth/presentation/widgets/dots_indicator.dart';
 
@@ -28,7 +31,15 @@ class ProtectedScreen extends StatelessWidget {
                         style: TextStyle(color: AppColors.textPrimary,fontSize: 16),
 
                       ),
-                      onPressed: (){},
+                        onPressed: () {
+
+
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            AppRoutes.levelSelection ,
+                                (route) => false,
+                          );
+                        }
                     ),
                   ),
 
@@ -156,15 +167,18 @@ class ProtectedScreen extends StatelessWidget {
               const SizedBox(height: 20),
 
               // 🔘 Button
-              CustomButton(
-                text: "Start Learning",
-                  onPressed: () {  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const LoginScreen(),
-                    ),
-                  );}
-              ),const SizedBox(height: 20),
+                  CustomButton(
+                    text: "Start Learning",
+                      onPressed: () {
+
+
+                        Navigator.pushNamedAndRemoveUntil(
+                          context,
+                          AppRoutes.levelSelection ,
+                              (route) => false,
+                        );
+                      }
+                  ),const SizedBox(height: 20),
                 ],
               ),
             ),

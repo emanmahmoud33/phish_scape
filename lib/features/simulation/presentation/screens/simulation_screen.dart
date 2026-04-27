@@ -105,7 +105,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
                     color: AppColors.backgroundStart,
                     border: Border.all(
                       color: AppColors.textSecondary.withOpacity(0.03),
-                      width: 5,
+                      width: 2,
                     ),
                   ),
                   child: Column(
@@ -153,6 +153,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
                         decoration: BoxDecoration(
                           color: const Color(0xFF0D131B),
                           border: Border.all(
+                            width: 3,
                               color: AppColors.primary.withOpacity(0.3)),
                           borderRadius: BorderRadius.circular(8),
                         ),
@@ -256,6 +257,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
           color: const Color(0xFF0D131B),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
+            width: 2,
             color: selected
                 ? AppColors.primary.withOpacity(0.7)
                 : Colors.transparent,
@@ -269,6 +271,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
+                  width: 3,
                   color: selected ? AppColors.primary: Colors.grey,
                 ),
               ),

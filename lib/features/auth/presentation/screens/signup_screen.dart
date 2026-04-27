@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phish_scape/features/auth/presentation/screens/login_screen.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 import 'package:phish_scape/features/onboarding/presentation/screens/level_selection_screen.dart';
+import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/auth_buttons.dart';
 
@@ -102,12 +103,9 @@ class SignupScreen extends StatelessWidget {
               const SizedBox(height: 50),
 
               // 🔘 Button
-              CustomButton(text: 'ACCESS SHIELD', onPressed: (){Navigator.push(
-    context,
-    MaterialPageRoute(
-    builder: (_) => const LevelSelectionScreen(),
-    ),
-    );})
+              CustomButton(text: 'ACCESS SHIELD', onPressed: () {
+                Navigator.pushNamed(context, AppRoutes.onboarding);
+              },)
 
             ,  const SizedBox(height: 25),// 🔒 Encryption
                       const Row(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phish_scape/features/auth/presentation/screens/login_screen.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
+import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'identify_screen.dart';
 
@@ -10,6 +11,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
         body: Container(
             width: double.infinity,
@@ -101,12 +103,9 @@ class SplashScreen extends StatelessWidget {
               const SizedBox(height: 60),
 
               // 🔘 Button
-             CustomButton(text: 'Get Started',  onPressed: () {  Navigator.push(
-               context,
-               MaterialPageRoute(
-                 builder: (_) => const LoginScreen(),
-               ),
-             );},)
+             CustomButton(text: 'Get Started',  onPressed: () {
+               Navigator.pushReplacementNamed(context, AppRoutes.login);
+             })
                    , const SizedBox(height: 60),
                   ],
               ),

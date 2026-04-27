@@ -3,6 +3,8 @@ import 'package:phish_scape/core/theme/app_colors.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 import 'package:phish_scape/features/setting/presentation/Setting_Screen.dart';
 
+import '../../../chatbot/presentation/screens/chat_bot_screen.dart';
+
 class AnalysisScreen extends StatelessWidget {
   const AnalysisScreen({super.key});
 
@@ -231,7 +233,12 @@ class AnalysisScreen extends StatelessWidget {
                   width: double.infinity,
                   height: h * 0.06,
                   child: OutlinedButton(
-                    onPressed: () {},
+                      onPressed: (){Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const ChatScreen(),
+                        ),
+                      );},
                     style: OutlinedButton.styleFrom(
                       side:  BorderSide(color: AppColors.textSecondary.withOpacity(0.2)),
                       shape: RoundedRectangleBorder(

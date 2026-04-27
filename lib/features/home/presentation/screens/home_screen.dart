@@ -15,7 +15,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const Header(),
-        backgroundColor: const Color(0xFF081826),
+        backgroundColor: AppColors.backgroundStart,
     body: SingleChildScrollView(
     child: Column(
     children: [

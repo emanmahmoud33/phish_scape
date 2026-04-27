@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
 
+import '../../notifications/presentation/screens/notifications_screen.dart';
+
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
 
@@ -22,49 +24,52 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final w = size.width;
 
     return Scaffold(
+
       appBar: AppBar(
         backgroundColor: AppColors.backgroundStart,
-        elevation: 0,
         automaticallyImplyLeading: false,
+        elevation: 0,
 
-        /// 👇 يخليه responsive زي باقي الشاشات
-        toolbarHeight: MediaQuery.of(context).size.height * 0.08,
+        /// 👇 responsive height
+        toolbarHeight: h * 0.08,
 
         flexibleSpace: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: MediaQuery.of(context).size.width * 0.05,
-            ),
+            padding: EdgeInsets.symmetric(horizontal: w * 0.05), // 👈 كان 0.04
+
             child: Row(
               children: [
 
-                /// 🔙 Back
+                /// 🔙 BACK
                 GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(
                     Icons.arrow_back_ios,
-                    color: Colors.blue,
+                    color: AppColors.primary,
+                    size: w * 0.05, // 👈 responsive icon
                   ),
                 ),
 
-                const Spacer(),
+                SizedBox(width: w * 0.02), // 👈 بدل 0.01
 
-                /// 🔤 Title
-                Text(
-                  "Settings",
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 16 * scale,
-                    fontWeight: FontWeight.w700,
+                /// 🔤 TITLE
+                Expanded(
+                  child: Center(
+                    child: Text(
+                      "Settings",
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+
+                        /// 👇 responsive font
+                        fontSize: 18 * (w / 375),
+                      ),
+                    ),
                   ),
                 ),
 
-                const Spacer(),
-
-                /// 👇 علشان يوازن المساحة زي back button
-                const SizedBox(width: 20),
+                /// 👇 علشان نحافظ على التوازن (زي الـ back button)
+                SizedBox(width: w * 0.05),
               ],
             ),
           ),
@@ -287,20 +292,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 SizedBox(height: h * 0.03),
 
                 /// 🔴 SIGN OUT
-                Container(
+                SizedBox(
                   width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: h * 0.02),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF16202D),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child:  Center(
-                    child: Text(
-                      "Sign Out",
-                      style: TextStyle(color:Color(0XFFF43F5E),fontSize: 16*scale,fontWeight:  FontWeight.w700),
+                  height: h * 0.065,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //     builder: (_) => const NotificationsScreen(),
+                      //   ),
+                      // );
+                    },
+
+                    /// 👇 هنا مكان الـ style الصح
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF16202D),
+                      elevation: 0,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      padding: EdgeInsets.zero,
+                    ),
+
+                    /// 👇 وهنا child
+                    child: Center(
+                      child: Text(
+                        "Sign Out",
+                        style: TextStyle(
+                          color: const Color(0XFFF43F5E),
+                          fontSize: 16 * scale,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ),
