@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../home/presentation/screens/home_screen.dart';
 
 class LevelSelectionScreen extends StatefulWidget {
   const LevelSelectionScreen({super.key});
@@ -13,42 +12,50 @@ class LevelSelectionScreen extends StatefulWidget {
 }
 
 class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
-  int selectedIndex = 1; // default (Intermediate)
+  int selectedIndex = 1;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final r = MediaQuery.of(context).size.width;
-    final scale = r / 375;
-    final h = size.height;
     final w = size.width;
+    final h = size.height;
+    final scale = w / 375;
+
     return Scaffold(
+      backgroundColor: AppColors.backgroundStart,
+
+      /// 🔹 APP BAR
       appBar: AppBar(
         backgroundColor: AppColors.backgroundStart,
         automaticallyImplyLeading: false,
         elevation: 0,
-
-        /// 👇 responsive height
         toolbarHeight: h * 0.08,
-
         flexibleSpace: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: w * 0.05), // 👈 كان 0.04
-
+            padding: EdgeInsets.symmetric(horizontal: w * 0.05),
             child: Row(
               children: [
 
                 /// 🔙 BACK
                 GestureDetector(
-                  onTap: () => Navigator.pop(context),
+                  onTap: () {
+                    if (Navigator.canPop(context)) {
+                      Navigator.pop(context);
+                    } else {
+                      Navigator.pushReplacementNamed(
+                        context,
+                        AppRoutes.main,
+                      );
+                    }
+                  },
                   child: Icon(
                     Icons.arrow_back_ios,
                     color: AppColors.primary,
-                    size: w * 0.05, // 👈 responsive icon
+                    size: w * 0.05,
                   ),
                 ),
 
-                SizedBox(width: w * 0.02), // 👈 بدل 0.01
+                SizedBox(width: w * 0.02),
 
                 /// 🔤 TITLE
                 Expanded(
@@ -58,159 +65,154 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                       style: TextStyle(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w700,
-
-                        /// 👇 responsive font
-                        fontSize: 18 * (w / 375),
+                        fontSize: 18 * scale,
                       ),
                     ),
                   ),
                 ),
 
-                /// 👇 علشان نحافظ على التوازن (زي الـ back button)
                 SizedBox(width: w * 0.05),
               ],
             ),
           ),
         ),
       ),
-      backgroundColor: AppColors.backgroundStart,
-        body:
 
-         SafeArea(
+      /// 🔹 BODY
+      body: SafeArea(
+        child: SingleChildScrollView( // ✅ حل المشكلة
+          child: Padding(
+            padding: EdgeInsets.all(w * 0.04),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                SizedBox(height: h * 0.025),
+
+                /// 📊 Progress
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-
-
-
-                        const SizedBox(height: 20),
-
-                        // 📊 Progress
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween, // 👈 مهم
-                      children: [
-
-                        /// LEFT TEXT
-                        Text(
-                          "Setup Progress",
-                          style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 14 * scale,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: 1, // 👈 نفس شكل UI
-                          ),
-                        ),
-
-                        /// RIGHT TEXT (Step)
-                        Text(
-                          "Step 3 of 3",
-                          style: TextStyle(
-                            color: AppColors.primary, // 👈 أزرق زي الصورة
-                            fontSize: 14 * scale,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
+                    Text(
+                      "Setup Progress",
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14 * scale,
+                      ),
                     ),
-                        const SizedBox(height: 8),
-
-                        ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: LinearProgressIndicator(
-                value: 0.8,
-                backgroundColor: Colors.grey.withOpacity(0.2),
-                color: AppColors.primary,
-                minHeight: 8,
-              ),
-                        ),
-
-                        const SizedBox(height: 30),
-
-                        // ❓ Question
-                        const Text(
-              "How much do you know about phishing?",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 30,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
-                        ),
-
-                        const SizedBox(height: 10),
-
-                        // 📝 Description
-                        const Text(
-              "We'll tailor your learning path based on your current expertise.",
-              textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary),
-                        ),
-
-                        const SizedBox(height: 30),
-
-                        // 🧩 Options
-                        _optionCard(
-              index: 0,
-              title: "Beginner",
-              subtitle: "I'm brand new to cybersecurity.",
-              icon: Icons.phishing,
-                        ),
-
-                        const SizedBox(height: 15),
-
-                        _optionCard(
-              index: 1,
-              title: "Intermediate",
-              subtitle: "I know the basics of online safety.",
-              icon: Icons.shield,
-                        ),
-
-                        const SizedBox(height: 15),
-
-                        _optionCard(
-              index: 2,
-              title: "Advanced",
-              subtitle: "I'm a security professional or pro user.",
-              icon: Icons.terminal,
-                        ),
-
-                        const Spacer(),
-
-                        // ℹ️ Note
-                        const Center(
-              child: Text(
-                "Don't worry, you can change this later in settings.",
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 12,
-                ),
-              ),
-                        ),
-
-                        const SizedBox(height: 20),
-                    // 🔘 Continue
-                   SizedBox(width: double.infinity,
-                       child: CustomButton(text: "Continue", onPressed: () {
-                         print(AppRoutes.main); // 👈 هنا
-
-                         Navigator.pushNamedAndRemoveUntil(
-                           context,
-                           AppRoutes.main ,
-                               (route) => false,
-                         );
-                       }))
+                    Text(
+                      "Step 3 of 3",
+                      style: TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 14 * scale,
+                      ),
+                    ),
                   ],
-              ),
+                ),
+
+                SizedBox(height: h * 0.01),
+
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: LinearProgressIndicator(
+                    value: 0.8,
+                    minHeight: 8,
+                    backgroundColor: Colors.grey.withOpacity(0.2),
+                    color: AppColors.primary,
+                  ),
+                ),
+
+                SizedBox(height: h * 0.035),
+
+                /// ❓ Question
+                Text(
+                  "How much do you know about phishing?",
+                  style: TextStyle(
+                    fontSize: 30 * scale,
+                    fontWeight: FontWeight.bold,
+                    color: AppColors.textPrimary,
+                  ),
+                ),
+
+                SizedBox(height: h * 0.015),
+
+                /// 📝 Description
+                Text(
+                  "We'll tailor your learning path based on your current expertise.",
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14 * scale,
+                  ),
+                ),
+
+                SizedBox(height: h * 0.035),
+
+                /// 🧩 OPTIONS
+                _optionCard(
+                  index: 0,
+                  title: "Beginner",
+                  subtitle: "I'm brand new to cybersecurity.",
+                  icon: Icons.phishing,
+                ),
+
+                SizedBox(height: h * 0.02),
+
+                _optionCard(
+                  index: 1,
+                  title: "Intermediate",
+                  subtitle: "I know the basics of online safety.",
+                  icon: Icons.shield,
+                ),
+
+                SizedBox(height: h * 0.02),
+
+                _optionCard(
+                  index: 2,
+                  title: "Advanced",
+                  subtitle: "I'm a security professional or pro user.",
+                  icon: Icons.terminal,
+                ),
+
+                SizedBox(height: h * 0.06), // 👈 بدل Spacer
+
+                /// ℹ️ NOTE
+                Center(
+                  child: Text(
+                    "Don't worry, you can change this later in settings.",
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12 * scale,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: h * 0.02),
+
+                /// 🔘 BUTTON
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: "Continue",
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.main,
+                            (route) => false,
+                      );
+                    },
+                  ),
+                ),
+
+                SizedBox(height: h * 0.03),
+              ],
             ),
           ),
-        );
-
+        ),
+      ),
+    );
   }
 
-  // 🔹 Option Card
+  /// 🔹 OPTION CARD
   Widget _optionCard({
     required int index,
     required String title,
@@ -219,6 +221,9 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
   }) {
     final isSelected = selectedIndex == index;
 
+    final w = MediaQuery.of(context).size.width;
+    final scale = w / 375;
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -226,9 +231,8 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
         });
       },
       child: Container(
-       margin: const EdgeInsets.all(5),
-        padding: const EdgeInsets.all(20),
-
+        margin: EdgeInsets.all(w * 0.01),
+        padding: EdgeInsets.all(w * 0.05),
         decoration: BoxDecoration(
           color: isSelected
               ? AppColors.primary.withOpacity(0.1)
@@ -243,10 +247,10 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
         ),
         child: Row(
           children: [
-            // Icon
+
             Container(
-              height: 50,
-              width: 50,
+              height: w * 0.13,
+              width: w * 0.13,
               decoration: BoxDecoration(
                 color: isSelected
                     ? AppColors.primary
@@ -261,39 +265,35 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
               ),
             ),
 
-            const SizedBox(width: 15),
+            SizedBox(width: w * 0.04),
 
-            // Text
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textPrimary,
                       fontWeight: FontWeight.bold,
-                      fontSize: 18,
+                      fontSize: 18 * scale,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: const TextStyle(
+                    style: TextStyle(
                       color: AppColors.textSecondary,
-                      fontSize: 14,
-
+                      fontSize: 14 * scale,
                     ),
                   ),
                 ],
               ),
             ),
 
-            // Radio Circle
             Container(
-              height: 22,
-              width: 22,
+              height: w * 0.06,
+              width: w * 0.06,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/routing/app_routes.dart';
 
 import '../../../../core/theme/app_colors.dart';
 
@@ -22,29 +23,38 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     final scale = w / 375;
 
     return Scaffold(
-      appBar:AppBar(
+      appBar: AppBar(
         backgroundColor: AppColors.backgroundStart,
         automaticallyImplyLeading: false,
         elevation: 0,
-         leading: Icon(Icons.done_all),
-        /// 👇 responsive height
         toolbarHeight: h * 0.08,
 
         flexibleSpace: SafeArea(
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: w * 0.05), // 👈 كان 0.04
+            padding: EdgeInsets.symmetric(horizontal: w * 0.05),
 
             child: Row(
               children: [
 
-                /// 🔙 BACK
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: AppColors.primary,
-                    size: w * 0.05,
-
+                /// 🔙 BACK BUTTON
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.main,
+                        );
+                      }
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: AppColors.primary,
+                      size: w * 0.05,
+                    ),
                   ),
                 ),
 
@@ -64,14 +74,14 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ),
                 ),
 
-                /// ✅ الأيقونة هنا بدل leading
+                /// ✅ DONE ICON
                 Icon(
                   Icons.done_all,
                   color: AppColors.primary,
                   size: w * 0.06,
                 ),
               ],
-            )
+            ),
           ),
         ),
       ),

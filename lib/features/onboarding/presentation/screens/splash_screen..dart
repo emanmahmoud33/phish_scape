@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:phish_scape/features/auth/presentation/screens/login_screen.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
-import 'identify_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -12,25 +10,31 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-        body: Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            decoration: const BoxDecoration(
-              color: AppColors.backgroundStart,
-            ),
-            child: SafeArea(
-              child: Column(
-                  children: [
-                  const Spacer(),
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+    final h = size.height;
+    final scale = w / 375;
 
-              // 🔷 Logo Card
+    return Scaffold(
+      body: Container(
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: w * 0.05),
+        decoration: const BoxDecoration(
+          color: AppColors.backgroundStart,
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+
+              const Spacer(),
+
+              /// 🔷 Logo Card
               Container(
-                height: 181.02,
-                width: 181.02,
+                height: w * 0.48, // 👈 بدل 181
+                width: w * 0.48,
                 decoration: BoxDecoration(
                   color: AppColors.backgroundStart,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(12 * scale),
                   border: Border.all(
                     color: AppColors.primary,
                     width: 2,
@@ -38,79 +42,85 @@ class SplashScreen extends StatelessWidget {
                   boxShadow: [
                     BoxShadow(
                       color: AppColors.primary.withOpacity(0.2),
-                      blurRadius: 25,
+                      blurRadius: 25 * scale,
                     ),
                   ],
                 ),
                 child: Center(
                   child: SvgPicture.asset(
                     "assets/images/logo.svg",
-                    height: 70,
+                    height: w * 0.18, // 👈 بدل 70
                   ),
                 ),
               ),
 
-              const SizedBox(height: 30),
+              SizedBox(height: h * 0.04),
 
-              // 📝 Title
-              const Text(
+              /// 📝 Title
+              Text(
                 "PhishScape",
                 style: TextStyle(
-                  fontSize: 36,
+                  fontSize: 36 * scale,
                   fontWeight: FontWeight.w700,
-                  // fontFamily:AppTheme.
                   color: AppColors.textPrimary,
                 ),
               ),
 
-              const SizedBox(height: 8),
+              SizedBox(height: h * 0.01),
 
-              // 🟦 Subtitle
-              const Text(
+              /// 🟦 Subtitle
+              Text(
                 "Master the defense",
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 14 * scale,
                   color: AppColors.primary,
-                 fontWeight: FontWeight.w500,
+                  fontWeight: FontWeight.w500,
                   letterSpacing: 4,
                 ),
               ),
 
               const Spacer(),
 
-              // 🔹 Bottom Text
-              const Text(
+              /// 🔹 Bottom Text
+              Text(
                 "Protecting your digital assets",
                 style: TextStyle(
                   color: AppColors.textSecondary,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500
+                  fontSize: 12 * scale,
+                  fontWeight: FontWeight.w500,
                 ),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: h * 0.01),
 
-              // 🔹 Indicator line
+              /// 🔹 Indicator line
               Container(
                 height: 4,
-                width: 50,
+                width: w * 0.13, // 👈 بدل 50
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
 
-              const SizedBox(height: 60),
+              SizedBox(height: h * 0.07),
 
-              // 🔘 Button
-             CustomButton(text: 'Get Started',  onPressed: () {
-               Navigator.pushReplacementNamed(context, AppRoutes.login);
-             })
-                   , const SizedBox(height: 60),
-                  ],
+              /// 🔘 Button
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  text: 'Get Started',
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.login);
+                  },
+                ),
               ),
-            ),
+
+              SizedBox(height: h * 0.07),
+            ],
+          ),
         ),
+      ),
     );
   }
 }

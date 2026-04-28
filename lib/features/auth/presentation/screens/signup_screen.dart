@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phish_scape/features/auth/presentation/screens/login_screen.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
-import 'package:phish_scape/features/onboarding/presentation/screens/level_selection_screen.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../widgets/auth_buttons.dart';
@@ -11,178 +10,216 @@ class SignupScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+    final h = size.height;
+    final scale = w / 375;
+
     return Scaffold(
-        body: Container(
-            padding: const EdgeInsets.all(20),
-            decoration: const BoxDecoration(
-              color: AppColors.backgroundStart,
-            ),
-            child: SafeArea(
-              child: SingleChildScrollView(
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
+      body: Container(
+        padding: EdgeInsets.all(w * 0.05),
+        decoration: const BoxDecoration(
+          color: AppColors.backgroundStart,
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
 
-                // 🔷 Header
-                const Row(
-                children: [
-                Icon(Icons.shield, color: AppColors.primary),
-                SizedBox(width: 40),
-                Text(
-                  "Authentication Required",
-                  style: TextStyle(
-                    color: AppColors.textPrimary,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                ],
-              ),
-
-              const SizedBox(height: 30),
-
-              // 🔐 Secure Signup
-              Row(
-                children: [
-                  const Icon(Icons.lock, color: AppColors.primary),
-                  const SizedBox(width: 40),
-                  RichText(
-                    text: const TextSpan(
-                      children: [
-                        TextSpan(
-                          text: "Secure ",
-                          style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                              letterSpacing: 5
-                          ),
-                        ),
-                        TextSpan(
-                          text: "Signup",
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontSize: 32,
-                            fontWeight: FontWeight.w700,
-                              letterSpacing: 3
-                          ),
-                        ),
-                      ],
+                /// 🔷 Header
+                Row(
+                  children: [
+                    const Icon(Icons.shield, color: AppColors.primary),
+                    SizedBox(width: w * 0.1),
+                    Text(
+                      "Authentication Required",
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 18 * scale,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
-              const SizedBox(height: 10),
+                SizedBox(height: h * 0.04),
 
-              // 📝 Description
-              const Text(
-                textAlign: TextAlign.center
-             ,   "Access your cybersecurity training module and phishing simulation portal.",
-                style: TextStyle(color: AppColors.textSecondary,fontSize: 16,fontWeight: FontWeight.w400,),
-              ),
-
-              const SizedBox(height: 30),
-
-              // 📧 Email
-              _label("Email/Username"),
-              _input("Enter identity"),
-
-              const SizedBox(height: 20),
-
-              // 🎓 University ID
-              _label("University ID"),
-              _input("Enter Id", isPassword: true),
-
-              const SizedBox(height: 20),
-
-              // 🔑 Password
-              _label("Password"),
-              _input("Enter credentials", isPassword: true),
-
-              const SizedBox(height: 50),
-
-              // 🔘 Button
-              CustomButton(text: 'ACCESS SHIELD', onPressed: () {
-                Navigator.pushNamed(context, AppRoutes.onboarding);
-              },)
-
-            ,  const SizedBox(height: 25),// 🔒 Encryption
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                /// 🔐 Secure Signup
+                Row(
+                  children: [
+                    const Icon(Icons.lock, color: AppColors.primary),
+                    SizedBox(width: w * 0.1),
+                    RichText(
+                      text: TextSpan(
                         children: [
-                          Icon(Icons.lock, size: 16, color: AppColors.primary),
-                          SizedBox(width: 6),
-                          Text(
-                            "256-bit Encrypted Connection",
+                          TextSpan(
+                            text: "Secure ",
+                            style: TextStyle(
+                              color: AppColors.textPrimary,
+                              fontSize: 32 * scale,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 5,
+                            ),
+                          ),
+                          TextSpan(
+                            text: "Signup",
                             style: TextStyle(
                               color: AppColors.primary,
-                              fontSize: 12,
+                              fontSize: 32 * scale,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 3,
                             ),
                           ),
                         ],
                       ),
+                    ),
+                  ],
+                ),
 
-                      const SizedBox(height: 45),
+                SizedBox(height: h * 0.015),
 
-                      // OR
-                      const Center(
-                        child: Text(
-                          "Or Signup with",
-                          style: TextStyle(color: AppColors.textSecondary),
+                /// 📝 Description
+                Text(
+                  "Access your cybersecurity training module and phishing simulation portal.",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 16 * scale,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+
+                SizedBox(height: h * 0.04),
+
+                /// 📧 Email
+                _label("Email/Username", scale),
+                _input("Enter identity", w),
+
+                SizedBox(height: h * 0.025),
+
+                /// 🎓 University ID
+                _label("University ID", scale),
+                _input("Enter Id", w, isPassword: true),
+
+                SizedBox(height: h * 0.025),
+
+                /// 🔑 Password
+                _label("Password", scale),
+                _input("Enter credentials", w, isPassword: true),
+
+                SizedBox(height: h * 0.06),
+
+                /// 🔘 Button
+                SizedBox(
+                  width: double.infinity,
+                  height: h * 0.07,
+                  child: CustomButton(
+                    text: 'ACCESS SHIELD',
+                    onPressed: () {
+                      Navigator.pushNamedAndRemoveUntil(
+                        context,
+                        AppRoutes.identify,
+                            (route) => false,
+                      );
+                    },
+                  ),
+                ),
+
+                SizedBox(height: h * 0.03),
+
+                /// 🔒 Encryption
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.lock,
+                        size: w * 0.04, color: AppColors.primary),
+                    SizedBox(width: w * 0.015),
+                    Text(
+                      "256-bit Encrypted Connection",
+                      style: TextStyle(
+                        color: AppColors.primary,
+                        fontSize: 12 * scale,
+                      ),
+                    ),
+                  ],
+                ),
+
+                SizedBox(height: h * 0.05),
+
+                /// OR
+                Center(
+                  child: Text(
+                    "Or Signup with",
+                    style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 14 * scale,
+                    ),
+                  ),
+                ),
+
+                SizedBox(height: h * 0.025),
+
+                /// 🔗 Social Buttons
+                const SocialButtonRow(),
+
+                SizedBox(height: h * 0.04),
+
+                /// Login link
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "You have an account? ",
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 14 * scale,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Login To Shield",
+                        style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 14 * scale,
                         ),
                       ),
-
-                      const SizedBox(height: 20),
-
-                      // 🔗 Social Buttons
-                      const SocialButtonRow(),
-
-                      const SizedBox(height: 30),
-
-                      // Login link
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            "You have an account? ",
-                            style: TextStyle(color: AppColors.textSecondary),
-                          ),
-                          TextButton(
-                            onPressed: () {  Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const LoginScreen(),
-                              ),
-                            );},
-                            child: const Text(
-                              "Login To Shield",
-                              style: TextStyle(color: AppColors.primary),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                    ),
+                  ],
                 ),
-              ),
+              ],
             ),
+          ),
         ),
-    );
-  }
-
-  // 🔹 Label
-  Widget _label(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        text,
-        style: const TextStyle(color: AppColors.textSecondary),
       ),
     );
   }
 
-  // 🔹 Input
-  Widget _input(String hint, {bool isPassword = false}) {
+  /// 🔹 Label
+  Widget _label(String text, double scale) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Text(
+        text,
+        style: TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 14 * scale,
+        ),
+      ),
+    );
+  }
+
+  /// 🔹 Input
+  Widget _input(String hint, double w, {bool isPassword = false}) {
     return TextField(
       obscureText: isPassword,
       decoration: InputDecoration(
@@ -194,8 +231,13 @@ class SignupScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
         ),
+        contentPadding: EdgeInsets.symmetric(
+          horizontal: w * 0.04,
+          vertical: w * 0.04,
+        ),
         suffixIcon: isPassword
-            ? const Icon(Icons.visibility,color: AppColors.textPrimary,)
+            ? const Icon(Icons.visibility,
+            color: AppColors.textPrimary)
             : null,
       ),
     );

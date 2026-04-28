@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../simulation/presentation/screens/simulation_screen.dart';
 import '../widgets/header.dart';
+import '../../../../core/routing/app_routes.dart';
 
 class LessonsScreen extends StatelessWidget {
   const LessonsScreen({super.key});
@@ -313,14 +314,9 @@ class _LessonCard extends StatelessWidget {
                 child: SizedBox(
                   height: 45,
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const SimulationScreen(),
-                        ),
-                      );
-                    },
+    onPressed: () {
+    Navigator.pushNamed(context, AppRoutes.simulation);
+    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: active
                           ? const Color(0xFF2F80ED)

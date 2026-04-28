@@ -71,20 +71,12 @@ class Header extends StatelessWidget implements PreferredSizeWidget {
               const Spacer(),
 
               _circleIcon(Icons.notifications, () {
-
-
-                Navigator.pushReplacementNamed(
-                  context,
-                  AppRoutes.notification ,
-
-                );
+                Navigator.pushNamed(context, AppRoutes.notification);
               }),
               const SizedBox(width: 10),
-              _circleIcon(Icons.settings,(){ Navigator.pushReplacementNamed(
-                context,
-                AppRoutes.setting ,
-
-              );}),
+              _circleIcon(Icons.settings,() {
+                Navigator.pushNamed(context, AppRoutes.setting);
+              }),
             ],
           ),
         ),

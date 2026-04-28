@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/routing/app_routes.dart';
 
 class Message {
   final String text;
@@ -64,76 +65,95 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
         backgroundColor: const Color(0xFF081826),
 
-        /// 🔹 APPBAR
-        appBar: AppBar(
+      appBar: AppBar(
         backgroundColor: const Color(0xFF081826),
-    elevation: 0,
-    toolbarHeight: h * 0.09,
-    automaticallyImplyLeading: false,
-    flexibleSpace: SafeArea(
-    child: Padding(
-    padding: EdgeInsets.symmetric(horizontal: w * 0.05),
-    child: Row(
-    children: [
-    const Icon(Icons.arrow_back_ios, color: Colors.blue),
-    SizedBox(width: w * 0.03),
+        elevation: 0,
+        toolbarHeight: h * 0.09,
+        automaticallyImplyLeading: false,
 
-    Expanded(
-    child: Row(
-    children: [
-    Stack(
-    children: [
-    Container(
-    height: 42,
-    width: 42,
-    decoration: const BoxDecoration(
-    color: Color(0xFF2F80ED),
-    shape: BoxShape.circle,
-    ),
-    child:
-    const Icon(Icons.shield, color: Colors.white),
-    ),
-    Positioned(
-    bottom: 0,
-    right: 0,
-    child: Container(
-    height: 10,
-    width: 10,
-    decoration: const BoxDecoration(
-    color: Colors.green,
-    shape: BoxShape.circle,
-    ),
-    ),
-    )
-    ],
-    ),
-    SizedBox(width: w * 0.03),
-    Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-    Text("Cyber Guard AI",
-    style: TextStyle(
-    color: Colors.white,
-    fontSize: 14 * scale,
-    fontWeight: FontWeight.w700)),
-    Text("Online & Ready",
-    style: TextStyle(
-    color: Colors.green,
-    fontSize: 11 * scale)),
-    ],
-    ),
-    ],
-    ),
-    ),
-      const Icon(Icons.verified_user, color: Colors.grey),
-      const SizedBox(width: 12),
-      const Icon(Icons.info, color: Colors.grey),
-    ],
-    ),
-    ),
-    ),
+        flexibleSpace: SafeArea(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: w * 0.05),
+            child: Row(
+              children: [
+
+                /// 🔙 BACK BUTTON (نفس الشكل بالظبط)
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pushReplacementNamed(context, AppRoutes.main);
+                      }
+                    },
+                    child: const Icon(
+                      Icons.arrow_back_ios,
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+
+                SizedBox(width: w * 0.03),
+
+                Expanded(
+                  child: Row(
+                    children: [
+                      Stack(
+                        children: [
+                          Container(
+                            height: 42,
+                            width: 42,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFF2F80ED),
+                              shape: BoxShape.circle,
+                            ),
+                            child:
+                            const Icon(Icons.shield, color: Colors.white),
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              height: 10,
+                              width: 10,
+                              decoration: const BoxDecoration(
+                                color: Colors.green,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      SizedBox(width: w * 0.03),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text("Cyber Guard AI",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 14 * scale,
+                                  fontWeight: FontWeight.w700)),
+                          Text("Online & Ready",
+                              style: TextStyle(
+                                  color: Colors.green,
+                                  fontSize: 11 * scale)),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                const Icon(Icons.verified_user, color: Colors.grey),
+                const SizedBox(width: 12),
+                const Icon(Icons.info, color: Colors.grey),
+              ],
+            ),
+          ),
         ),
+      ),
 
       /// 🔹 BODY
       body: Column(

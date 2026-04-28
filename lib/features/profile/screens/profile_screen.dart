@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../auth/presentation/widgets/custom_app_bar.dart';
+import '../../../../core/routing/app_routes.dart';
+
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -8,6 +11,7 @@ class ProfileScreen extends StatelessWidget {
     final width = MediaQuery.of(context).size.width;
 
     return Scaffold(
+
         backgroundColor: const Color(0xFF081826),
     body: SafeArea(
     child: SingleChildScrollView(
@@ -16,22 +20,62 @@ class ProfileScreen extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
 
-    /// 🔙 HEADER
-   const Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children:  [
-    Icon(Icons.arrow_back_ios, color: AppColors.primary),
-    Text(
-    "Security Score & Stats",
-    style: TextStyle(
-    color: AppColors.textPrimary,
-    fontWeight: FontWeight.w700,
-    fontSize: 18,
-    ),
-    ),
-    Icon(Icons.share, color: AppColors.primary),
-    ],
-    ),
+      /// 🔙 HEADER
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+
+          /// 🔙 BACK BUTTON (InkWell)
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                if (Navigator.canPop(context)) {
+                  Navigator.pop(context);
+                } else {
+                  Navigator.pushReplacementNamed(context, AppRoutes.main);
+                }
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.arrow_back_ios,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ),
+
+          /// 🔤 TITLE
+          const Text(
+            "Security Score & Stats",
+            style: TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+            ),
+          ),
+
+          /// 🔗 SHARE ICON (خليها clickable لو عايزة)
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                print("share");
+              },
+              child: const Padding(
+                padding: EdgeInsets.all(8),
+                child: Icon(
+                  Icons.share,
+                  color: AppColors.primary,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
 
     const SizedBox(height: 20),
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
 
+import '../../auth/presentation/widgets/custom_app_bar.dart';
 import '../../notifications/presentation/screens/notifications_screen.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -25,55 +26,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
     return Scaffold(
 
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundStart,
-        automaticallyImplyLeading: false,
-        elevation: 0,
-
-        /// 👇 responsive height
-        toolbarHeight: h * 0.08,
-
-        flexibleSpace: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: w * 0.05), // 👈 كان 0.04
-
-            child: Row(
-              children: [
-
-                /// 🔙 BACK
-                GestureDetector(
-                  onTap: () => Navigator.pop(context),
-                  child: Icon(
-                    Icons.arrow_back_ios,
-                    color: AppColors.primary,
-                    size: w * 0.05, // 👈 responsive icon
-                  ),
-                ),
-
-                SizedBox(width: w * 0.02), // 👈 بدل 0.01
-
-                /// 🔤 TITLE
-                Expanded(
-                  child: Center(
-                    child: Text(
-                      "Settings",
-                      style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w700,
-
-                        /// 👇 responsive font
-                        fontSize: 18 * (w / 375),
-                      ),
-                    ),
-                  ),
-                ),
-
-                /// 👇 علشان نحافظ على التوازن (زي الـ back button)
-                SizedBox(width: w * 0.05),
-              ],
-            ),
-          ),
-        ),
+      appBar: const CustomAppBar(
+        title: "Settings",
       ),
       backgroundColor: AppColors.backgroundStart,
       body: SafeArea(

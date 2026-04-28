@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 
+import '../../../../core/routing/app_routes.dart';
 import '../../../analysis/presentation/screens/analysis_screen.dart';
 
 class SimulationScreen extends StatefulWidget {
@@ -32,22 +33,51 @@ class _SimulationScreenState extends State<SimulationScreen> {
             padding: EdgeInsets.symmetric(horizontal: width * 0.04),
             child: Row(
               children: [
-                const Icon(Icons.arrow_back_ios, color: AppColors.primary),
-                const SizedBox(width: 10),
-                const Expanded(
+
+                /// 🔙 BACK BUTTON (نفس الشكل - بس رجوع آمن)
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.main,
+                        );
+                      }
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: AppColors.primary,
+                      size: width * 0.05,
+                    ),
+                  ),
+                ),
+
+                SizedBox(width: 10),
+
+                /// 🔤 TITLE
+                Expanded(
                   child: Center(
                     child: Text(
                       "Simulation: Email 3 of 10",
                       style: TextStyle(
                         color: AppColors.textPrimary,
                         fontWeight: FontWeight.w700,
-                        fontSize: 16,
+                        fontSize: 18,
                       ),
                     ),
                   ),
                 ),
-                const Icon(Icons.info_rounded,
-                    color: AppColors.primary, size: 22),
+
+                /// ℹ️ INFO
+                Icon(
+                  Icons.info_rounded,
+                  color: AppColors.primary,
+                  size: 22,
+                ),
               ],
             ),
           ),
@@ -223,14 +253,14 @@ class _SimulationScreenState extends State<SimulationScreen> {
                 SizedBox(height: height * 0.04),
 
                 /// 🔵 BUTTON
-                CustomButton(
-                  text: 'SUBMIT ANSWER',
-                    onPressed: (){Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AnalysisScreen(),
-                      ),
-                    );}
+                SizedBox(
+                  width: double.infinity,
+                  child: CustomButton(
+                    text: 'SUBMIT ANSWER',
+                      onPressed: () {
+                        Navigator.pushNamed(context, AppRoutes.analysis);
+                      }
+                  ),
                 ),
               ],
             ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:phish_scape/features/onboarding/presentation/screens/protected_screen.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/presentation/widgets/custom_button.dart';
@@ -11,82 +10,94 @@ class SimulateScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+    final h = size.height;
+    final scale = w / 375;
+
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.all(20),
+        padding: EdgeInsets.all(w * 0.05), // بدل 20
         decoration: const BoxDecoration(
           color: AppColors.backgroundStart,
         ),
         child: SafeArea(
           child: Column(
             children: [
-              // 🔹 Skip
+
+              /// 🔹 Skip
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
-                  child: const Text(
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      AppRoutes.levelSelection,
+                          (route) => false,
+                    );
+                  },
+                  child: Text(
                     "Skip",
-                    style: TextStyle(color: AppColors.textPrimary,fontSize: 16),
-
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 16 * scale,
+                    ),
                   ),
-                    onPressed: () {
-
-
-                      Navigator.pushNamedAndRemoveUntil(
-                        context,
-                        AppRoutes.levelSelection ,
-                            (route) => false,
-                      );
-                    }
                 ),
               ),
 
               const Spacer(),
-          SvgPicture.asset(
-            "assets/images/div.relative.svg",
-          ),
-              const SizedBox(height: 30),
 
-              // 📝 Title
-              const Text(
+              /// 🎯 IMAGE
+              SvgPicture.asset(
+                "assets/images/div.relative.svg",
+                width: w * 0.7,
+              ),
+
+              SizedBox(height: h * 0.04),
+
+              /// 📝 Title
+              Text(
                 "Simulate & Practice",
                 style: TextStyle(
-                  fontSize: 26,
+                  fontSize: 26 * scale,
                   fontWeight: FontWeight.bold,
                   color: AppColors.textPrimary,
                 ),
               ),
 
-              const SizedBox(height: 12),
+              SizedBox(height: h * 0.015),
 
-              // 📄 Description
-              const Text(
+              /// 📄 Description
+              Text(
                 "Experience real-world threats in a safe sandbox environment. Sharpen your instincts by interacting with simulated phishing attacks without risking your actual data.",
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: AppColors.textSecondary,
+                  fontSize: 14 * scale,
                 ),
               ),
 
               const Spacer(),
 
-              // 🔵 Dots
+              /// 🔵 Dots
               Dots(index: 1),
 
-              const SizedBox(height: 20),
+              SizedBox(height: h * 0.025),
 
-              // 🔘 Button
-              CustomButton(
-                text: "Next",
-                  onPressed: () {  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => const ProtectedScreen(),
-                    ),
-                  );}
+              /// 🔘 Button
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  text: "Next",
+                  onPressed: () {
+                    Navigator.pushNamed(context, AppRoutes.protect);
+                  },
+                ),
               ),
 
-              const SizedBox(height: 20),
+              SizedBox(height: h * 0.03),
             ],
           ),
         ),

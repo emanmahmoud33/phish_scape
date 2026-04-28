@@ -3,6 +3,7 @@ import 'package:phish_scape/core/theme/app_colors.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 import 'package:phish_scape/features/setting/presentation/Setting_Screen.dart';
 
+import '../../../auth/presentation/widgets/custom_app_bar.dart';
 import '../../../chatbot/presentation/screens/chat_bot_screen.dart';
 
 class AnalysisScreen extends StatelessWidget {
@@ -15,43 +16,9 @@ class AnalysisScreen extends StatelessWidget {
     final w = size.width;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.backgroundStart,
-        automaticallyImplyLeading: false,
-        elevation: 0,
-        toolbarHeight: h * 0.08, // 👈 هنا الحل
-
-        flexibleSpace: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: w * 0.04),
-            child: Row(
-              children: [
-                const Icon(Icons.arrow_back_ios, color: AppColors.primary),
-
-                SizedBox(width: w * 0.001),
-
-                const Expanded(
-                  child: Center(
-
-                    child: Text(
-
-                      "Analysis & Breakdown",
-                      style: TextStyle(
-                          color: AppColors.textPrimary,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 18
-
-                      ),
-                    ),
-                  ),
-                ),
-
-
-              ],
-            ),
-          ),
-        ),
-      ),
+      appBar: const CustomAppBar(
+      title: "Analysis",
+    ),
       backgroundColor: AppColors.backgroundStart,
 
       body: SafeArea(
@@ -218,12 +185,13 @@ class AnalysisScreen extends StatelessWidget {
                 SizedBox(height: h * 0.04),
 
                 /// 🔵 BUTTON
-                CustomButton(text: 'CONTINUE TO NEXT PHASE', onPressed: () {  Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => const SettingsScreen(),
-                  ),
-                );}),
+                SizedBox(
+                  width: double.infinity,
+                  height: h * 0.06,
+                  child: CustomButton(text: 'CONTINUE TO NEXT PHASE', onPressed: () {
+                    Navigator.pop(context);
+                  }),
+                ),
 
                 const SizedBox(height: 12),
 
@@ -233,12 +201,9 @@ class AnalysisScreen extends StatelessWidget {
                   width: double.infinity,
                   height: h * 0.06,
                   child: OutlinedButton(
-                      onPressed: (){Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const ChatScreen(),
-                        ),
-                      );},
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
                     style: OutlinedButton.styleFrom(
                       side:  BorderSide(color: AppColors.textSecondary.withOpacity(0.2)),
                       shape: RoundedRectangleBorder(
