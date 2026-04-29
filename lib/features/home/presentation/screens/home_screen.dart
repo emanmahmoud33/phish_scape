@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 import 'package:phish_scape/features/lessons/presentation/widgets/header.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../auth/data/services/auth_service.dart';
+import '../../../auth/logic/cubit/user_cubit.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,281 +18,301 @@ class HomeScreen extends StatelessWidget {
     final h = size.height;
     final scale = w / 375;
 
-    return Scaffold(
+    return
+      BlocProvider(
+        create: (context) => UserCubit(AuthService())..getUser(),
+
+    child:
+
+    Scaffold(
       appBar: const Header(),
       backgroundColor: AppColors.backgroundStart,
 
       body: SingleChildScrollView(
-        child: Column(
-          children: [
+        child: BlocBuilder<UserCubit, UserState>(
+          builder: (context, state) {
+
+            if (state is UserLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is UserError) {
+              return Center(child: Text(state.error));
+            }
+
+            return Column(
+
+              children: [
 
             Padding(
-              padding: EdgeInsets.all(w * 0.05),
-              child: Column(
-                children: [
+            padding: EdgeInsets.all(w * 0.05),
+            child: Column(
+            children: [
 
-                  /// 🔵 CIRCLE
-                  SizedBox(
-                    height: w * 0.55,
-                    width: w * 0.55,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      clipBehavior: Clip.none,
-                      children: [
+            /// 🔵 CIRCLE
+            SizedBox(
+            height: w * 0.55,
+            width: w * 0.55,
+            child: Stack(
+            alignment: Alignment.center,
+            clipBehavior: Clip.none,
+            children: [
 
-                        Container(
-                          height: w * 0.4,
-                          width: w * 0.4,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: AppColors.primary,
-                              width: w * 0.025,
-                            ),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "99%",
-                                style: TextStyle(
-                                  fontSize: 32 * scale,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              const Text(
-                                "Secure",
-                                style: TextStyle(
-                                  color: Colors.greenAccent,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /// 🔥 7 DAYS
-                        Positioned(
-                          top: h * 0.015,
-                          right: -w * 0.12,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: w * 0.04,
-                              vertical: h * 0.008,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF102B47),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Row(
-                              children: [
-                                Icon(
-                                  Icons.local_fire_department,
-                                  size: w * 0.035,
-                                  color: AppColors.primary,
-                                ),
-                                SizedBox(width: w * 0.01),
-                                Text(
-                                  "7 Days",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12 * scale,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: h * 0.025),
-
-                  Text(
-                    "Your Phish Shield is Strong",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16 * scale,
-                    ),
-                  ),
-
-                  SizedBox(height: h * 0.008),
-
-                  Text(
-                    "Improve your score by completing lessons",
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14 * scale,
-                    ),
-                  ),
-
-                  SizedBox(height: h * 0.035),
-
-                  /// 📊 STATS
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _statCard(
-                          "Simulations",
-                          "24 / 25",
-                          Icons.verified_user,
-                          w,
-                          scale,
-                          iconColor: const Color(0xFF13AE9D),
-                        ),
-                      ),
-                      SizedBox(width: w * 0.03),
-                      Expanded(
-                        child: _statCard(
-                          "Rank",
-                          "Top 5%",
-                          Icons.military_tech,
-                          w,
-                          scale,
-                          iconColor: AppColors.primary,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  SizedBox(height: h * 0.035),
-
-                  /// 🔥 PHISH CARD
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Phish of the Day",
-                      style: TextStyle(
-                        fontSize: 20 * scale,
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: h * 0.015),
-
-                  Container(
-                    padding: EdgeInsets.all(w * 0.04),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1C2127),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Column(
-                      children: [
-
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(12),
-                          child: Image.asset(
-                            "assets/images/home.png",
-                            height: h * 0.18,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-
-                        SizedBox(height: h * 0.015),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "Urgent: Microsoft Account Reset",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 18 * scale,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            Container(
-                              height: h * 0.045,
-                              padding: EdgeInsets.all(w * 0.015),
-                              decoration: BoxDecoration(
-                                color: Colors.red.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(4),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  "HIGH RISK",
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 10 * scale,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-
-                        SizedBox(height: h * 0.01),
-
-                        Text(
-                          "Analyze this suspicious email attempt. Can you spot the hidden red flags?",
-                          style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14 * scale,
-                          ),
-                        ),
-
-                        SizedBox(height: h * 0.015),
-
-                        CustomButton(
-                          text: 'Analyze Now',
-                          onPressed: () {
-                            Navigator.pushNamed(context, AppRoutes.simulation);
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(height: h * 0.04),
-
-                  /// 📚 LESSONS
-                  _lessonCard(
-                    title: "URL Masking Techniques",
-                    time: "10 min",
-                    level: "Intermediate",
-                    color: AppColors.primary,
-                    icon: Icons.link,
-                    w: w,
-                    h: h,
-                    scale: scale,
-                  ),
-
-                  _lessonCard(
-                    title: "Social Engineering 101",
-                    time: "15 min",
-                    level: "Beginner",
-                    color: Colors.purple,
-                    icon: Icons.psychology,
-                    w: w,
-                    h: h,
-                    scale: scale,
-                  ),
-
-                  _lessonCard(
-                    title: "Attachment Safety",
-                    time: "8 min",
-                    level: "Advanced",
-                    color: Colors.orange,
-                    icon: Icons.mail_lock,
-                    w: w,
-                    h: h,
-                    scale: scale,
-                  ),
-                ],
-              ),
+            Container(
+            height: w * 0.4,
+            width: w * 0.4,
+            decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+            color: AppColors.primary,
+            width: w * 0.025,
             ),
-          ],
+            ),
+            child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Text(
+            "99%",
+            style: TextStyle(
+            fontSize: 32 * scale,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+            ),
+            ),
+            const Text(
+            "Secure",
+            style: TextStyle(
+            color: Colors.greenAccent,
+            ),
+            ),
+            ],
+            ),
+            ),
+
+            /// 🔥 7 DAYS
+            Positioned(
+            top: h * 0.015,
+            right: -w * 0.12,
+            child: Container(
+            padding: EdgeInsets.symmetric(
+            horizontal: w * 0.04,
+            vertical: h * 0.008,
+            ),
+            decoration: BoxDecoration(
+            color: const Color(0xFF102B47),
+            borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+            children: [
+            Icon(
+            Icons.local_fire_department,
+            size: w * 0.035,
+            color: AppColors.primary,
+            ),
+            SizedBox(width: w * 0.01),
+            Text(
+            "7 Days",
+            style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 12 * scale,
+            ),
+            ),
+            ],
+            ),
+            ),
+            ),
+            ],
+            ),
+            ),
+
+            SizedBox(height: h * 0.025),
+
+            Text(
+            "Your Phish Shield is Strong",
+            style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16 * scale,
+            ),
+            ),
+
+            SizedBox(height: h * 0.008),
+
+            Text(
+            "Improve your score by completing lessons",
+            style: TextStyle(
+            color: Colors.grey,
+            fontSize: 14 * scale,
+            ),
+            ),
+
+            SizedBox(height: h * 0.035),
+            /// 📊 STATS
+            Row(
+            children: [
+            Expanded(
+            child: _statCard(
+            "Simulations",
+            "24 / 25",
+            Icons.verified_user,
+            w,
+            scale,
+            iconColor: const Color(0xFF13AE9D),
+            ),
+            ),
+            SizedBox(width: w * 0.03),
+            Expanded(
+            child: _statCard(
+            "Rank",
+            "Top 5%",
+            Icons.military_tech,
+            w,
+            scale,
+            iconColor: AppColors.primary,
+            ),
+            ),
+            ],
+            ),
+
+            SizedBox(height: h * 0.035),
+
+            /// 🔥 PHISH CARD
+            Align(
+            alignment: Alignment.centerLeft,
+            child: Text(
+            "Phish of the Day",
+            style: TextStyle(
+            fontSize: 20 * scale,
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            ),
+            ),
+            ),
+
+            SizedBox(height: h * 0.015),
+
+            Container(
+            padding: EdgeInsets.all(w * 0.04),
+            decoration: BoxDecoration(
+            color: const Color(0xFF1C2127),
+            borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+            children: [
+
+            ClipRRect(
+            borderRadius: BorderRadius.circular(12),
+            child: Image.asset(
+            "assets/images/home.png",
+            height: h * 0.18,
+            width: double.infinity,
+            fit: BoxFit.cover,
+            ),
+            ),
+
+            SizedBox(height: h * 0.015),
+
+            Row(
+            children: [
+            Expanded(
+            child: Text(
+            "Urgent: Microsoft Account Reset",
+            style: TextStyle(
+            color: Colors.white,
+            fontSize: 18 * scale,
+            fontWeight: FontWeight.bold,
+            ),
+            ),
+            ),
+            Container(
+            height: h * 0.045,
+            padding: EdgeInsets.all(w * 0.015),
+            decoration: BoxDecoration(
+            color: Colors.red.withOpacity(0.2),
+            borderRadius: BorderRadius.circular(4),
+            ),
+            child: Center(
+            child: Text(
+            "HIGH RISK",
+            style: TextStyle(
+            color: Colors.red,
+            fontSize: 10 * scale,
+            fontWeight: FontWeight.bold,
+            ),
+            ),
+            ),
+            ),
+            ],
+            ),
+
+            SizedBox(height: h * 0.01),
+
+              Text(
+                "Analyze this suspicious email attempt. Can you spot the hidden red flags?",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 14 * scale,
+                ),
+              ),
+
+              SizedBox(height: h * 0.015),
+
+              CustomButton(
+                text: 'Analyze Now',
+                onPressed: () {
+                  Navigator.pushNamed(context, AppRoutes.simulation);
+                },
+              )
+            ],
+            ),
+            ),
+
+              SizedBox(height: h * 0.04),
+
+              /// 📚 LESSONS
+              _lessonCard(
+                title: "URL Masking Techniques",
+                time: "10 min",
+                level: "Intermediate",
+                color: AppColors.primary,
+                icon: Icons.link,
+                w: w,
+                h: h,
+                scale: scale,
+              ),
+
+              _lessonCard(
+                title: "Social Engineering 101",
+                time: "15 min",
+                level: "Beginner",
+                color: Colors.purple,
+                icon: Icons.psychology,
+                w: w,
+                h: h,
+                scale: scale,
+              ),
+
+              _lessonCard(
+                title: "Attachment Safety",
+                time: "8 min",
+                level: "Advanced",
+                color: Colors.orange,
+                icon: Icons.mail_lock,
+                w: w,
+                h: h,
+                scale: scale,
+              ),
+            ],
+            ),
+            ),
+              ],
+            );
+          },
         ),
       ),
-    );
+    ));
+
   }
 
   /// 📊 STAT CARD

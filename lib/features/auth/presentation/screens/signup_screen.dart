@@ -100,13 +100,13 @@ class SignupScreen extends StatelessWidget {
                 SizedBox(height: h * 0.025),
 
                 /// 🎓 University ID
-                _label("University ID", scale),
-                _input("Enter Id", w, isPassword: true),
+                _label("Password", scale),
+                _input("Enter credentials", w, isPassword: true),
 
                 SizedBox(height: h * 0.025),
 
                 /// 🔑 Password
-                _label("Password", scale),
+                _label("Confirm Password", scale),
                 _input("Enter credentials", w, isPassword: true),
 
                 SizedBox(height: h * 0.06),

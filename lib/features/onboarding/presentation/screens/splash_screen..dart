@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../auth/data/services/auth_service.dart';
+import '../../../auth/logic/cubit/auth_cubit.dart';
+import '../../../auth/presentation/screens/login_screen.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
@@ -111,7 +115,15 @@ class SplashScreen extends StatelessWidget {
                 child: CustomButton(
                   text: 'Get Started',
                   onPressed: () {
-                    Navigator.pushNamed(context, AppRoutes.login);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => BlocProvider(
+                          create: (context) => AuthCubit(AuthService()),
+                          child: LoginScreen(),
+                        ),
+                      ),
+                    );
                   },
                 ),
               ),

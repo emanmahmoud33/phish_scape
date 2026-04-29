@@ -9,13 +9,17 @@ import 'package:phish_scape/features/onboarding/presentation/screens/simulate_sc
 import 'package:phish_scape/features/setting/presentation/Setting_Screen.dart';
 import 'package:phish_scape/layout/main_layout.dart';
 
+import 'core/network/dio_helper.dart';
 import 'core/routing/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/onboarding/presentation/screens/protected_screen.dart';
 import 'features/onboarding/presentation/screens/splash_screen..dart';
 import 'features/simulation/presentation/screens/simulation_screen.dart';
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await DioHelper.init();
+
   runApp(const MyApp());
 }
 
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
       routes: {
         AppRoutes.splash: (_) => const SplashScreen(),
         AppRoutes.login: (_) => const LoginScreen(),
-        // 🔥 onboarding
+        //  onboarding
         AppRoutes.identify: (_) => const IdentifyScreen(),
         AppRoutes.simulate: (_) => const SimulateScreen (),
         AppRoutes.protect: (_) => const ProtectedScreen(),

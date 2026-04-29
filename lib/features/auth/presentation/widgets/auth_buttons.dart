@@ -26,7 +26,7 @@ class SocialButtonRow extends StatelessWidget {
               alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: const Color(0xFF1F2937),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 "Google",
@@ -47,12 +47,12 @@ class SocialButtonRow extends StatelessWidget {
               height: h * 0.065,
               decoration: BoxDecoration(
                 color: const Color(0xFF1F2937),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
                 child: SvgPicture.asset(
                   "assets/images/ios.svg",
-                  width: w * 0.05,
+                  width: w * 0.1,
                 ),
               ),
             ),
@@ -66,13 +66,13 @@ class SocialButtonRow extends StatelessWidget {
               height: h * 0.065,
               decoration: BoxDecoration(
                 color: const Color(0xFF1F2937),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Center(
                 child: Icon(
                   Icons.code,
                   color: Colors.white,
-                  size: w * 0.05,
+                  size: w * 0.07,
                 ),
               ),
             ),
