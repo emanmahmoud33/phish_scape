@@ -165,15 +165,16 @@ class AnalysisScreen extends StatelessWidget {
                           color: Colors.white,size: 25,),
                       ),
                       const SizedBox(width: 12),
-                      const Expanded(
+                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('Performance Insight'),
+                            Text('Performance Insight',style:
+                        TextStyle(color: AppColors.textPrimary,fontSize: 14,fontWeight: FontWeight.w400)),
                             Text(
                               "Exceptional threat detection capability demonstrated.\nReady for higher-tier operations.",
                               style:
-                              TextStyle(color: Colors.grey, fontSize: 12),
+                              TextStyle(color: AppColors.textSecondary, fontSize: 12,fontWeight: FontWeight.w400),
                             ),
                           ],
                         ),

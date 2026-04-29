@@ -3,70 +3,82 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_colors.dart';
 
 class SocialButtonRow extends StatelessWidget {
-
-  const SocialButtonRow ({super.key,});
+  const SocialButtonRow({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+    final h = size.height;
+    final scale = w / 375;
+
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30),
+      padding: EdgeInsets.symmetric(horizontal: w * 0.08),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // 🔵 Google Button
-          Container(
-            width: 169,
-            height: 49,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1F2937),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Text(
-              "Google",
-              style: TextStyle(
-                color:  Color(0xFF00B8DF),
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
+
+          /// 🔵 Google
+          Expanded(
+            flex: 3,
+            child: Container(
+              height: h * 0.065,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1F2937),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                "Google",
+                style: TextStyle(
+                  color: const Color(0xFF00B8DF),
+                  fontSize: 18 * scale,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
 
-          const SizedBox(width: 12),
+          SizedBox(width: w * 0.03),
 
-          // 🍎 iOS
-          Container(
-            height: 55,
-            width: 55,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1F2937),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Center(
-              child: SvgPicture.asset(
-                "assets/images/ios.svg",
+          /// 🍎 iOS
+          Expanded(
+            child: Container(
+              height: h * 0.065,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1F2937),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: SvgPicture.asset(
+                  "assets/images/ios.svg",
+                  width: w * 0.05,
+                ),
               ),
             ),
           ),
 
-          const SizedBox(width: 12),
+          SizedBox(width: w * 0.03),
 
-          // 💻 Code
-          Container(
-            height: 55,
-            width: 55,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1F2937),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.code,
-
-                color: Colors.white,
+          /// 💻 Code
+          Expanded(
+            child: Container(
+              height: h * 0.065,
+              decoration: BoxDecoration(
+                color: const Color(0xFF1F2937),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Center(
+                child: Icon(
+                  Icons.code,
+                  color: Colors.white,
+                  size: w * 0.05,
+                ),
               ),
             ),
           ),
         ],
       ),
-    );}}
+    );
+  }
+}

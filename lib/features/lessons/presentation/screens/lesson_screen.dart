@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-
 import '../../../../core/theme/app_colors.dart';
-import '../../../simulation/presentation/screens/simulation_screen.dart';
 import '../widgets/header.dart';
 import '../../../../core/routing/app_routes.dart';
 
@@ -10,72 +8,79 @@ class LessonsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return   Scaffold(
+
+    final size = MediaQuery.of(context).size;
+    final w = size.width;
+    final h = size.height;
+    final scale = w / 375;
+
+    return Scaffold(
       backgroundColor: AppColors.backgroundStart,
-      appBar:  Header(),
+      appBar: Header(),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(15),
+        padding: EdgeInsets.all(w * 0.04),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            SizedBox(height: 20),
+            SizedBox(height: h * 0.025),
 
-            /// 🔍 Search
-            _SearchBar(),
+            const _SearchBar(),
 
-            SizedBox(height: 25),
+            SizedBox(height: h * 0.03),
 
-            /// 🎯 Weekly Goal
-            _WeeklyGoal(),
+            const _WeeklyGoal(),
 
-            SizedBox(height: 20),
+            SizedBox(height: h * 0.025),
 
-            /// 📚 Title
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Active Curriculum",
                   style: TextStyle(
-                      color: AppColors.textPrimary,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w700),
+                    color: AppColors.textPrimary,
+                    fontSize: 18 * scale,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 Text(
                   "View All",
-                  style: TextStyle(color: AppColors.primary,fontSize: 14,fontWeight: FontWeight.w700),
+                  style: TextStyle(
+                    color: AppColors.primary,
+                    fontSize: 14 * scale,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ],
             ),
 
-            SizedBox(height: 24),
+            SizedBox(height: h * 0.03),
 
-            /// 📦 Cards
-            _LessonCard(
+            const _LessonCard(
               active: true,
               icon: Icons.alternate_email,
               title: "Email Basics",
               subtitle: "Header Analysis • 12 mins",
             ),
 
-            const SizedBox(height: 15),
+            SizedBox(height: h * 0.02),
 
-            _LessonCard(
+            const _LessonCard(
               icon: Icons.link,
               title: "Advanced URL Spoofing",
               subtitle: "Homograph Attacks • 18 mins",
             ),
 
-            const SizedBox(height: 15),
+            SizedBox(height: h * 0.02),
 
-            _LessonCard(
+            const _LessonCard(
               icon: Icons.psychology,
               title: "Psychological Triggers",
               subtitle: "Authority & Urgency • 15 mins",
             ),
 
-            const SizedBox(height: 15),
+            SizedBox(height: h * 0.02),
 
             const _LockedCard(),
           ],
@@ -84,19 +89,23 @@ class LessonsScreen extends StatelessWidget {
     );
   }
 }
+
 class _SearchBar extends StatelessWidget {
   const _SearchBar();
 
   @override
   Widget build(BuildContext context) {
+
+    final w = MediaQuery.of(context).size.width;
+
     return Container(
-      padding: const EdgeInsets.all(10),
-      height: 50,
+      padding: EdgeInsets.all(w * 0.025),
+      height: w * 0.13,
       decoration: BoxDecoration(
         color: const Color(0xFF1F2937),
         borderRadius: BorderRadius.circular(14),
       ),
-      child:  const Row(
+      child: const Row(
         children: [
           Icon(Icons.search, color: Colors.grey),
           SizedBox(width: 10),
@@ -107,57 +116,67 @@ class _SearchBar extends StatelessWidget {
     );
   }
 }
+
 class _WeeklyGoal extends StatelessWidget {
   const _WeeklyGoal();
 
   @override
   Widget build(BuildContext context) {
+
+    final w = MediaQuery.of(context).size.width;
+    final scale = w / 375;
+
     return Padding(
-      padding: const EdgeInsets.all(12),
+      padding: EdgeInsets.all(w * 0.03),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-         const Text("Weekly Goal",
-              style: TextStyle(color: AppColors.textSecondary,fontSize: 14,fontWeight: FontWeight.w500)),
+          Text("Weekly Goal",
+              style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 14 * scale,
+                  fontWeight: FontWeight.w500)),
 
-          const SizedBox(height: 8),
+          SizedBox(height: w * 0.02),
 
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("1,200 XP to Gold",
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w700,
-                    fontSize: 20,
-                  )),
-              Text("72%", style: TextStyle(color: Colors.white, fontSize: 24,fontWeight: FontWeight.w700)),
+                      fontSize: 20 * scale)),
+              Text("72%",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24 * scale,
+                      fontWeight: FontWeight.w700)),
             ],
           ),
 
-          const SizedBox(height: 10),
+          SizedBox(height: w * 0.025),
 
-          /// progress bar
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: 0.72,
-              minHeight: 10,
+              minHeight: w * 0.02,
               backgroundColor: Colors.grey.withOpacity(0.2),
               color: Colors.white,
             ),
           ),
 
-          const SizedBox(height: 8),
+          SizedBox(height: w * 0.02),
 
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text("4 of 6 Lessons Today",
-                  style: TextStyle(color: Colors.grey, fontSize: 12,fontWeight: FontWeight.w500)),
+                  style: TextStyle(color: Colors.grey, fontSize: 12 * scale)),
               Text("+150 XP",
-                  style: TextStyle(color: Colors.grey, fontSize: 12,fontWeight: FontWeight.w500)),
+                  style: TextStyle(color: Colors.grey, fontSize: 12 * scale)),
             ],
           ),
         ],
@@ -165,6 +184,7 @@ class _WeeklyGoal extends StatelessWidget {
     );
   }
 }
+
 class _LessonCard extends StatelessWidget {
   final bool active;
   final IconData icon;
@@ -181,142 +201,125 @@ class _LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+    final scale = w / 375;
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(w * 0.04),
       decoration: BoxDecoration(
-        color: const Color(0xFF1C2127), // 👈 لون الكارد ثابت
+        color: const Color(0xFF1C2127),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          /// 🔹 TOP ROW
           Row(
             children: [
 
-              /// 🔵 ICON BOX
               Container(
-                height: 48,
-                width: 48,
+                height: w * 0.12,
+                width: w * 0.12,
                 decoration: BoxDecoration(
                   color: active
-                      ? const Color(0xFF2F80ED) // 🔵 Active
-                      : const Color(0xFF2A3138), // ⚫ عادي
+                      ? const Color(0xFF2F80ED)
+                      : const Color(0xFF2A3138),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(
                   icon,
-                  color: active ? AppColors.textPrimary : AppColors.textSecondary, // 👈 هنا
+                  color: active
+                      ? AppColors.textPrimary
+                      : AppColors.textSecondary,
                 ),
               ),
 
-              const SizedBox(width: 12),
+              SizedBox(width: w * 0.03),
 
-              /// 🔹 TEXT
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                       color:  AppColors.textPrimary,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16,
-
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: const TextStyle(
-                      color:   AppColors.textSecondary,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                    Text(title,
+                        style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16 * scale)),
+                    SizedBox(height: h * 0.005),
+                    Text(subtitle,
+                        style: TextStyle(
+                            color: AppColors.textSecondary,
+                            fontSize: 12 * scale)),
                   ],
                 ),
               ),
 
-              /// 🟢 STATUS
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 4),
+                padding: EdgeInsets.symmetric(
+                    horizontal: w * 0.025,
+                    vertical: w * 0.01),
                 decoration: BoxDecoration(
                   color: active
                       ? const Color(0xFF0BDA5B).withOpacity(0.15)
                       : const Color(0xFF2A3138),
                   borderRadius: BorderRadius.circular(6),
                 ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (active)
-                      const Icon(Icons.check_circle,
-                          color: Color(0xFF0BDA5B), size: 12),
-                    if (active) const SizedBox(width: 4),
-                    Text(
-                      active ? "Active" : "Not Started",
-                      style: TextStyle(
-                        color: active
-                            ? const Color(0xFF0BDA5B)
-                            : AppColors.textSecondary,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
+                child: Text(
+                  active ? "Active" : "Not Started",
+                  style: TextStyle(
+                    color: active
+                        ? const Color(0xFF0BDA5B)
+                        : AppColors.textSecondary,
+                    fontSize: 10 * scale,
+                  ),
                 ),
               ),
             ],
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: h * 0.015),
 
-          /// 🔹 PROGRESS + %
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Progress",
-                  style: TextStyle(color: AppColors.textSecondary, fontSize: 12)),
-              Text(
-                active ? "60%" : "0%",
-                style: const TextStyle(
-                    color: Colors.grey, fontSize: 12, fontWeight: FontWeight.w700),
-              ),
+              Text("Progress",
+                  style: TextStyle(
+                      color: AppColors.textSecondary,
+                      fontSize: 12 * scale)),
+              Text(active ? "60%" : "0%",
+                  style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12 * scale,
+                      fontWeight: FontWeight.w700)),
             ],
           ),
 
-          const SizedBox(height: 6),
+          SizedBox(height: h * 0.008),
 
-          /// 🔹 PROGRESS BAR
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: active ? 0.6 : 0,
-              minHeight: 6,
+              minHeight: h * 0.008,
               backgroundColor: Colors.white.withOpacity(0.1),
               color: const Color(0xFF2F80ED),
             ),
           ),
 
-          const SizedBox(height: 14),
+          SizedBox(height: h * 0.015),
 
-          /// 🔹 BUTTON + BOOKMARK
-          /// 🔹 BUTTON + BOOKMARK
           Row(
             children: [
 
-              /// 🔵 BUTTON
               Expanded(
                 child: SizedBox(
-                  height: 45,
+                  height: h * 0.06,
                   child: ElevatedButton(
-    onPressed: () {
-    Navigator.pushNamed(context, AppRoutes.simulation);
-    },
+                    onPressed: () {
+                      Navigator.pushNamed(context, AppRoutes.simulation);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: active
                           ? const Color(0xFF2F80ED)
@@ -336,35 +339,26 @@ class _LessonCard extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-
                         if (active) ...[
-                          const SizedBox(width: 6),
-                          const Icon(
-                            Icons.play_arrow,
-                            size: 14,
-                            color: Colors.white,
-                          ),
+                          SizedBox(width: w * 0.015),
+                          const Icon(Icons.play_arrow, size: 14, color: Colors.white),
                         ],
                       ],
                     ),
                   ),
                 ),
-              ), // 👈 مهم جدًا
+              ),
 
-              /// 🔖 BOOKMARK
               if (active) ...[
-                const SizedBox(width: 10),
+                SizedBox(width: w * 0.025),
                 Container(
-                  height: 45,
-                  width: 45,
+                  height: h * 0.06,
+                  width: h * 0.06,
                   decoration: BoxDecoration(
                     color: const Color(0xFF2A3138),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: const Icon(
-                    Icons.bookmark,
-                    color: Colors.white,
-                  ),
+                  child: const Icon(Icons.bookmark, color: Colors.white),
                 ),
               ],
             ],
@@ -374,13 +368,19 @@ class _LessonCard extends StatelessWidget {
     );
   }
 }
+
 class _LockedCard extends StatelessWidget {
   const _LockedCard({super.key});
 
   @override
   Widget build(BuildContext context) {
+
+    final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
+    final scale = w / 375;
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(w * 0.04),
       decoration: BoxDecoration(
         color: const Color(0xFF1C2127),
         borderRadius: BorderRadius.circular(18),
@@ -388,42 +388,36 @@ class _LockedCard extends StatelessWidget {
       child: Column(
         children: [
 
-          /// 🔹 TITLE
           Row(
             children: [
 
-              /// 🔵 ICON BOX زي باقي الكروت
               Container(
-                height: 48,
-                width: 48,
+                height: w * 0.12,
+                width: w * 0.12,
                 decoration: BoxDecoration(
-                  color: const Color(0xFF2A3138), // نفس لون الباقي
+                  color: const Color(0xFF2A3138),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                child: const Icon(
-                  Icons.lock,
-                  color: Colors.grey,
-                ),
+                child: const Icon(Icons.lock, color: Colors.grey),
               ),
 
-              const SizedBox(width: 10),
+              SizedBox(width: w * 0.03),
 
-              const Column(
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     "Attachment Safety",
                     style: TextStyle(
                       color: AppColors.textPrimary,
-                      fontSize: 16,
+                      fontSize: 16 * scale,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
                     "Macros & Extensions • 20 mins",
                     style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 12,
+                      fontSize: 12 * scale,
                       color: AppColors.textSecondary,
                     ),
                   ),
@@ -431,27 +425,19 @@ class _LockedCard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
 
-          /// 🔒 BOX
+          SizedBox(height: h * 0.02),
+
           Container(
-            height: 50,
+            height: h * 0.06,
             alignment: Alignment.center,
             decoration: BoxDecoration(
               color: const Color(0xFF0F172A66),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: const Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.lock, size: 16, color: Colors.grey),
-                SizedBox(height: 4),
-                Text(
-                  "Unlock at Level 05",
-                  style: TextStyle(color: Colors.grey, fontSize: 11),
-                ),
-
-              ],
+            child: Text(
+              "Unlock at Level 05",
+              style: TextStyle(color: Colors.grey, fontSize: 11 * scale),
             ),
           ),
         ],
