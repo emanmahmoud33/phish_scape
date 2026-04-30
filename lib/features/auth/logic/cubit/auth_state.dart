@@ -23,3 +23,4 @@ class AuthError extends AuthState {
   final String error;
   AuthError(this.error);
 }
+class ImageUploadSuccess extends AuthState {}

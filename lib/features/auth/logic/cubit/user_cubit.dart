@@ -19,7 +19,6 @@ class UserError extends UserState {
   UserError(this.error);
 }
 
-/// الكيوبت
 class UserCubit extends Cubit<UserState> {
   final AuthService service;
 

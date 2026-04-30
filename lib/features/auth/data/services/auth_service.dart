@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/login_model.dart';
 import '../../../../core/network/dio_helper.dart';
 import '../models/user_model.dart';
@@ -43,6 +44,32 @@ class AuthService {
         "firstName": firstName,
         "lastName": lastName,
       },
+    );
+  }
+  Future<void> setUserLevel(String level) async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+
+    await Dio().post(
+      "https://phish-escape.runasp.net/me/set-user-level", // ✅ الصح
+      data: {
+        "level": level,
+      },
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+        },
+      ),
+    );
+  }
+  Future<void> uploadProfileImage(String path) async {
+    final formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(path),
+    });
+
+    await DioHelper.dio.put(
+      "/me/upload-profile-image",
+      data: formData,
     );
   }
 }

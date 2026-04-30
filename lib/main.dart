@@ -8,10 +8,13 @@ import 'package:phish_scape/features/onboarding/presentation/screens/level_selec
 import 'package:phish_scape/features/onboarding/presentation/screens/simulate_screen.dart';
 import 'package:phish_scape/features/setting/presentation/Setting_Screen.dart';
 import 'package:phish_scape/layout/main_layout.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'core/network/dio_helper.dart';
 import 'core/routing/app_routes.dart';
 import 'core/theme/app_theme.dart';
+import 'features/auth/data/services/auth_service.dart';
+import 'features/auth/logic/cubit/auth_cubit.dart';
+import 'features/auth/logic/cubit/user_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/onboarding/presentation/screens/protected_screen.dart';
 import 'features/onboarding/presentation/screens/splash_screen..dart';
@@ -20,7 +23,20 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DioHelper.init();
 
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(
+    providers: [
+
+      BlocProvider(
+        create: (_) => AuthCubit(AuthService()),
+      ),
+
+      BlocProvider(
+        create: (_) => UserCubit(AuthService())..getUser(),
+      ),
+
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {

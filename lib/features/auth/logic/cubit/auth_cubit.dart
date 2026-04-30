@@ -59,9 +59,36 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError("Registration failed"));
     }
   }
+
+  void setLevel(String level) async {
+    emit(AuthLoading());
+
+    try {
+      await service.setUserLevel(level);
+      print("SUCCESS 🔥");
+      emit(LevelSuccess());
+    } catch (e) {
+      print("ERROR ❌: $e");
+      emit(AuthError("Failed to set level"));
+    }
+  }
+
+  void uploadImage(String path) async {
+    emit(AuthLoading());
+
+    try {
+      await service.uploadProfileImage(path);
+      emit(ImageUploadSuccess());
+    } catch (e) {
+      emit(AuthError("Upload failed"));
+    }
+  }
 }
 
 /// ================= STATES =================
+class LevelSuccess extends AuthState {}
+
+class ImageUploadSuccess extends AuthState {}
 
 abstract class AuthState {}
 
@@ -72,6 +99,7 @@ class AuthLoading extends AuthState {}
 /// 🔐 Login
 class LoginSuccess extends AuthState {
   final String token;
+
   LoginSuccess(this.token);
 }
 
@@ -84,5 +112,6 @@ class ForgetPasswordSuccess extends AuthState {}
 /// ❌ Error
 class AuthError extends AuthState {
   final String error;
+
   AuthError(this.error);
 }
