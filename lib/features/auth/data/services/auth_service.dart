@@ -29,4 +29,20 @@ class AuthService {
       },
     );
   }
+  Future<void> register({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+  }) async {
+    await DioHelper.dio.post(
+      "/Auth/register",
+      data: {
+        "email": email,
+        "password": password,
+        "firstName": firstName,
+        "lastName": lastName,
+      },
+    );
+  }
 }

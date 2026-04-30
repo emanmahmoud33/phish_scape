@@ -7,43 +7,81 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit(this.service) : super(AuthInitial());
 
+  /// 🔐 LOGIN
   void login(String email, String password) async {
     emit(AuthLoading());
 
     try {
       final result = await service.login(email, password);
-      emit(AuthSuccess(result.token));
+      emit(LoginSuccess(result.token)); // ✅
     } catch (e) {
       if (e is DioException) {
-        final message = e.response?.data['message'] ?? "Email or password is incorrect";
+        final message =
+            e.response?.data['message'] ?? "Email or password is incorrect";
         emit(AuthError(message));
       } else {
         emit(AuthError("Something went wrong"));
       }
     }
   }
+
+  /// 📧 FORGET PASSWORD
   void forgetPassword(String email) async {
     emit(AuthLoading());
 
     try {
       await service.forgetPassword(email);
-      emit(AuthSuccess("Check your email")); // رسالة نجاح
+      emit(ForgetPasswordSuccess()); // ✅
     } catch (e) {
       emit(AuthError("Something went wrong"));
     }
   }
+
+  /// 📝 REGISTER
+  void register({
+    required String email,
+    required String password,
+    required String firstName,
+    required String lastName,
+  }) async {
+    emit(AuthLoading());
+
+    try {
+      await service.register(
+        email: email,
+        password: password,
+        firstName: firstName,
+        lastName: lastName,
+      );
+
+      emit(RegisterSuccess()); // ✅
+    } catch (e) {
+      emit(AuthError("Registration failed"));
+    }
+  }
 }
+
+/// ================= STATES =================
+
 abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthSuccess extends AuthState {
+/// 🔐 Login
+class LoginSuccess extends AuthState {
   final String token;
-  AuthSuccess(this.token);
+  LoginSuccess(this.token);
 }
 
+/// 📝 Register
+class RegisterSuccess extends AuthState {}
+
+/// 📧 Forget Password
+class ForgetPasswordSuccess extends AuthState {}
+
+/// ❌ Error
 class AuthError extends AuthState {
   final String error;
   AuthError(this.error);

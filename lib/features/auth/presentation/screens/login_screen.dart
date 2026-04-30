@@ -42,28 +42,38 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<AuthCubit, AuthState>(
           listener: (context, state) async {
 
-            // ✅ لو نجح
-            if (state is AuthSuccess) {
+            /// 🔐 LOGIN SUCCESS
+            if (state is LoginSuccess) {
               final prefs = await SharedPreferences.getInstance();
               await prefs.setString("token", state.token);
 
               Navigator.pushReplacementNamed(context, AppRoutes.identify);
             }
 
-            // ❌ لو في error (ده اللي سألتِ عليه)
+            /// 📝 REGISTER SUCCESS
+            if (state is RegisterSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Account created")),
+              );
+            }
+
+            /// 📧 FORGET PASSWORD SUCCESS
+            if (state is ForgetPasswordSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Check your email")),
+              );
+            }
+
+            /// ❌ ERROR
             if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
               );
             }
-            if (state is AuthSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(state.token)),
-              );
-            }
           },
 
-    child: Scaffold(
+
+          child: Scaffold(
     backgroundColor: AppColors.backgroundStart,
     body: Container(
     padding: EdgeInsets.all(w * 0.05),
