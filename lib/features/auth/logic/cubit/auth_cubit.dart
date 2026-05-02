@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../data/services/auth_service.dart';
-
+import 'dart:io';
 class AuthCubit extends Cubit<AuthState> {
   final AuthService service;
 
@@ -73,11 +73,16 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+
+
   void uploadImage(String path) async {
     emit(AuthLoading());
 
     try {
-      await service.uploadProfileImage(path);
+      final file = File(path); // 🔥 أهم سطر
+
+      await service.uploadProfileImage(file);
+
       emit(ImageUploadSuccess());
     } catch (e) {
       emit(AuthError("Upload failed"));

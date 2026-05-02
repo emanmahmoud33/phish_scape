@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/logic/cubit/auth_cubit.dart';
@@ -24,120 +25,136 @@ class _HeaderState extends State<Header> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      automaticallyImplyLeading: false,
-      elevation: 0,
-      backgroundColor: AppColors.backgroundStart,
-      flexibleSpace: Container(
+        automaticallyImplyLeading: false,
+        elevation: 0,
+        backgroundColor: AppColors.backgroundStart,
+        flexibleSpace: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        decoration: BoxDecoration(
-          color: Color(0XFF1C2127),
-        ),
-        child: SafeArea(
-          child: Row(
-            children: [
-              /// 🟢 Avatar (اتعدل بس من جوه)
-              GestureDetector(
-                onTap: () async {
-                  final image = await ImagePickerHelper.pickImage();
+    decoration: const BoxDecoration(
+    color: Color(0XFF1C2127),
+    ),
+    child: SafeArea(
+    child: Row(
+    children: [
 
-                  if (image != null) {
-                    setState(() {
-                      imagePath = image.path;
-                    });
+    /// 🟢 Avatar
+    BlocBuilder<UserCubit, UserState>(
+    builder: (context, state) {
+    String? imageUrl;
 
-                    context.read<AuthCubit>().uploadImage(image.path);
-                  }
-                },
-                child: Container(
-                  padding: const EdgeInsets.all(2),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    border: Border.all(
-                      color: Colors.blue,
-                      width: 2,
-                    ),
-                  ),
-                  child: CircleAvatar(
-                    radius: 22,
-                    backgroundImage: imagePath != null
-                        ? FileImage(File(imagePath!))
-                        : const AssetImage("assets/images/user.jpg")
-                            as ImageProvider,
-                  ),
-                ),
-              ),
+    if (state is UserDataState) {
+    imageUrl = state.image;
+    }
 
-              const SizedBox(width: 12),
+    return GestureDetector(
+    onTap: () async {
+    final image = await ImagePickerHelper.pickImage();
 
-              /// 🟢 Text
-              BlocBuilder<UserCubit, UserState>(
-                builder: (context, state) {
-                  if (state is UserLoading) {
-                    return const SizedBox();
-                  }
+    if (image != null) {
+    setState(() {
+    imagePath = image.path;
+    });
 
-                  if (state is UserSuccess) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          state.user.firstName,
-                          style: const TextStyle(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 18,
-                          ),
-                        ),
-                        const SizedBox(height: 2),
-                        FutureBuilder(
-                          future: SharedPreferences.getInstance(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const SizedBox();
-                            }
+    context.read<AuthCubit>().uploadImage(image.path);
+    }
+    },
+    child: Container(
+    padding: const EdgeInsets.all(2),
+    decoration: BoxDecoration(
+    shape: BoxShape.circle,
+    border: Border.all(
+    color: Colors.blue,
+    width: 2,
+    ),
+    ),
+    child: CircleAvatar(
+    radius: 22,
+    backgroundImage: imagePath != null
+    ? FileImage(File(imagePath!))
+        : (imageUrl != null && imageUrl.isNotEmpty
+    ? NetworkImage(imageUrl)
+        : const AssetImage("assets/images/user.jpg")
+    as ImageProvider),
+    ),
+    ),
+    );
+    },
+    ),
 
-                            final prefs = snapshot.data!;
-                            final level =
-                                prefs.getString("level") ?? "Beginner";
+    const SizedBox(width: 12),
 
-                            return Text(
-                              "Lvl $level",
-                              style: const TextStyle(
-                                color: AppColors.primary,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            );
-                          },
-                        )
-                      ],
-                    );
-                  }
-                  if (state is UserError) {
-                    return const Text(
-                      "Error",
-                      style: TextStyle(color: Colors.white),
-                    );
-                  }
+    /// 🟢 Text (name + level)
+    BlocBuilder<UserCubit, UserState>(
+    builder: (context, state) {
+    if (state is UserDataState) {
+    return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
 
-                  return const SizedBox();
-                },
-              ),
+    /// 👤 Name
+    Text(
+    state.user?.firstName ?? "User",
+    style: const TextStyle(
+    color: AppColors.textPrimary,
+    fontWeight: FontWeight.w700,
+    fontSize: 18,
+    ),
+    ),
 
-              const Spacer(),
+    const SizedBox(height: 2),
 
-              _circleIcon(Icons.notifications, () {
-                Navigator.pushNamed(context, AppRoutes.notification);
-              }),
-              const SizedBox(width: 10),
-              _circleIcon(Icons.settings, () {
-                Navigator.pushNamed(context, AppRoutes.setting);
-              }),
-            ],
-          ),
-        ),
+    /// 🎯 Level (من local)
+    FutureBuilder(
+    future: SharedPreferences.getInstance(),
+    builder: (context, snapshot) {
+    if (!snapshot.hasData) {
+    return const SizedBox();
+    }
+    final prefs = snapshot.data!;
+    final level =
+        prefs.getString("level") ?? "Beginner";
+
+    return Text(
+      "Lvl $level",
+      style: const TextStyle(
+        color: AppColors.primary,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
       ),
+    );
+    },
+    ),
+    ],
+    );
+    }
+
+    if (state is UserError) {
+      return const Text(
+        "Error",
+        style: TextStyle(color: Colors.white),
+      );
+    }
+
+    return const SizedBox();
+    },
+    ),
+
+      const Spacer(),
+
+      _circleIcon(Icons.notifications, () {
+        Navigator.pushNamed(context, AppRoutes.notification);
+      }),
+
+      const SizedBox(width: 10),
+
+      _circleIcon(Icons.settings, () {
+        Navigator.pushNamed(context, AppRoutes.setting);
+      }),
+    ],
+    ),
+    ),
+        ),
     );
   }
 

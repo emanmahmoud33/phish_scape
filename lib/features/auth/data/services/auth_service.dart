@@ -1,10 +1,16 @@
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../simulation/data/models/question_model.dart';
+import '../models/lesson_model.dart';
 import '../models/login_model.dart';
-import '../../../../core/network/dio_helper.dart';
 import '../models/user_model.dart';
+import '../../../../core/network/dio_helper.dart';
 
 class AuthService {
+
+  /// ================= LOGIN =================
   Future<LoginModel> login(String email, String password) async {
     final response = await DioHelper.dio.post(
       "/Auth",
@@ -16,20 +22,17 @@ class AuthService {
 
     return LoginModel.fromJson(response.data);
   }
+
+  /// ================= GET USER =================
   Future<UserModel> getMe() async {
-    final response = await DioHelper.dio.get("/me");
+    final dio = await getDio(); // ✅ لازم token
+
+    final response = await dio.get("/me");
 
     return UserModel.fromJson(response.data);
+  }
 
-  }
-  Future<void> forgetPassword(String email) async {
-    await DioHelper.dio.post(
-      "/Auth/forget-password",
-      data: {
-        "email": email,
-      },
-    );
-  }
+  /// ================= REGISTER =================
   Future<void> register({
     required String email,
     required String password,
@@ -46,30 +49,100 @@ class AuthService {
       },
     );
   }
-  Future<void> setUserLevel(String level) async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString("token");
 
-    await Dio().post(
-      "https://phish-escape.runasp.net/me/set-user-level", // ✅ الصح
+  /// ================= FORGET PASSWORD =================
+  Future<void> forgetPassword(String email) async {
+    await DioHelper.dio.post(
+      "/Auth/forget-password",
+      data: {
+        "email": email,
+      },
+    );
+  }
+
+  /// ================= SET LEVEL =================
+  Future<void> setUserLevel(String level) async {
+    final dio = await getDio();
+
+    await dio.post(
+      "/me/set-user-level",
       data: {
         "level": level,
       },
-      options: Options(
+    );
+  }
+
+  /// ================= UPLOAD IMAGE =================
+  Future<void> uploadProfileImage(File file) async {
+    final dio = await getDio();
+
+    FormData formData = FormData.fromMap({
+      "image": await MultipartFile.fromFile(file.path),
+    });
+
+    await dio.put(
+      "/me/upload-profile-image",
+      data: formData,
+    );
+  }
+
+  /// ================= GET IMAGE =================
+  Future<String> getProfileImage() async {
+    final dio = await getDio();
+
+    final response = await dio.get("/me/get-profile-image");
+
+    print("IMAGE RESPONSE: ${response.data}");
+
+    final imagePath = response.data["profileImage"];
+
+    if (imagePath == null || imagePath.isEmpty) return "";
+
+    // 🔥 نحولها لـ URL كامل
+    return "https://phish-escape.runasp.net/$imagePath";
+  }
+
+  /// ================= DIO WITH TOKEN =================
+  Future<Dio> getDio() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString("token");
+
+    final dio = Dio(
+      BaseOptions(
+        baseUrl: "https://phish-escape.runasp.net",
         headers: {
           "Authorization": "Bearer $token",
         },
       ),
     );
-  }
-  Future<void> uploadProfileImage(String path) async {
-    final formData = FormData.fromMap({
-      "image": await MultipartFile.fromFile(path),
-    });
 
-    await DioHelper.dio.put(
-      "/me/upload-profile-image",
-      data: formData,
-    );
+    return dio;
+  }
+  Future<List<LessonModel>> getLessons() async {
+    final dio = await getDio();
+
+    final response = await dio.get("/api/lessons");
+
+    return (response.data as List)
+        .map((e) => LessonModel.fromJson(e))
+        .toList();
+  }
+  Future<StatsModel> getStats() async {
+    final dio = await getDio();
+
+    final response = await dio.get("/api/Dashboard/stats");
+
+    return StatsModel.fromJson(response.data);
+  }
+  Future<List<QuestionModel>> getQuestions(int lessonId) async {
+    final dio = await getDio();
+
+    final response = await dio.get("/api/lessons/$lessonId/questions");
+
+    print("QUESTIONS: ${response.data}");
+
+    return (response.data as List)
+        .map((e) => QuestionModel.fromJson(e))
+        .toList();
   }
 }

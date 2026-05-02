@@ -1,4 +1,5 @@
-part of 'auth_cubit.dart';
+
+import 'package:phish_scape/features/auth/logic/cubit/user_cubit.dart';
 
 abstract class AuthState {}
 
@@ -24,3 +25,7 @@ class AuthError extends AuthState {
   AuthError(this.error);
 }
 class ImageUploadSuccess extends AuthState {}
+class UserImageLoaded extends UserState {
+  final String imageUrl;
+  UserImageLoaded(this.imageUrl);
+}

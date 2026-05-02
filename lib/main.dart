@@ -14,6 +14,7 @@ import 'core/routing/app_routes.dart';
 import 'core/theme/app_theme.dart';
 import 'features/auth/data/services/auth_service.dart';
 import 'features/auth/logic/cubit/auth_cubit.dart';
+import 'features/auth/logic/cubit/home_cubit.dart';
 import 'features/auth/logic/cubit/user_cubit.dart';
 import 'features/auth/presentation/screens/login_screen.dart';
 import 'features/onboarding/presentation/screens/protected_screen.dart';
@@ -25,15 +26,17 @@ void main() async {
 
   runApp(MultiBlocProvider(
     providers: [
-
       BlocProvider(
         create: (_) => AuthCubit(AuthService()),
       ),
-
       BlocProvider(
-        create: (_) => UserCubit(AuthService())..getUser(),
+        create: (_) => UserCubit(AuthService())
+          ..getUser()
+          ..getUserImage(),
       ),
-
+      BlocProvider(
+        create: (_) => HomeCubit(AuthService())..loadHome(), // 🔥
+      ),
     ],
     child: MyApp(),
   ));

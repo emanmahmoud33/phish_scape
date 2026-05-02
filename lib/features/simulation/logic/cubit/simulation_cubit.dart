@@ -1,0 +1,39 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../auth/data/services/auth_service.dart';
+import '../../data/models/question_model.dart';
+
+
+abstract class SimulationState {}
+
+class SimulationInitial extends SimulationState {}
+
+class SimulationLoading extends SimulationState {}
+
+class SimulationSuccess extends SimulationState {
+  final List<QuestionModel> questions;
+  SimulationSuccess(this.questions);
+}
+
+class SimulationError extends SimulationState {
+  final String error;
+  SimulationError(this.error);
+}
+
+class SimulationCubit extends Cubit<SimulationState> {
+  final AuthService service;
+
+  SimulationCubit(this.service) : super(SimulationInitial());
+
+  Future<void> loadQuestions(int lessonId) async {
+    emit(SimulationLoading());
+
+    try {
+      final questions = await service.getQuestions(lessonId);
+      print("QUESTIONS: $questions"); // 👈 مهم
+
+      emit(SimulationSuccess(questions));
+    } catch (e) {
+      emit(SimulationError(e.toString()));
+    }
+  }
+}
