@@ -8,7 +8,7 @@ class DioHelper {
   static Future<void> init() async {
     dio = Dio(
       BaseOptions(
-        baseUrl: "https://phish-escape.runasp.net",
+        baseUrl: "https://phish-escape.runasp.net/api",
         receiveDataWhenStatusError: true,
       ),
     );

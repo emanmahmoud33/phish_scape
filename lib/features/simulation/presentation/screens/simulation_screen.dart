@@ -5,6 +5,7 @@ import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dar
 import 'package:phish_scape/features/simulation/data/models/question_model.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../auth/data/services/auth_service.dart';
+import '../../data/models/question_model.dart';
 import '../../logic/cubit/simulation_cubit.dart';
 
 class SimulationScreen extends StatefulWidget {
@@ -23,7 +24,11 @@ class _SimulationScreenState extends State<SimulationScreen> {
     final height = size.height;
     final width = size.width;
 
-    final lessonId = ModalRoute.of(context)?.settings.arguments as int?;
+    final lessonId =
+    ModalRoute.of(context)?.settings.arguments as int?;
+    if (lessonId == null) {
+      return const Center(child: Text("No lessonId"));
+    }
 
     return BlocProvider(
       create: (_) {
@@ -95,6 +100,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
             ? _buildDefaultSimulation(width, height)
             : BlocBuilder<SimulationCubit, SimulationState>(
           builder: (context, state) {
+
             if (state is SimulationLoading) {
               return const Center(child: CircularProgressIndicator());
             }
@@ -103,36 +109,34 @@ class _SimulationScreenState extends State<SimulationScreen> {
               return Center(child: Text(state.error));
             }
 
+            /// ✅ الأسئلة من API
             if (state is SimulationSuccess) {
               final question = state.questions[0];
-              int correctAnswers = 0;
-              int totalQuestions = state.questions.length;
 
               return _buildSimulationUI(
-                  question.question,
-                  question.options,
-                  width,
-                  height,
+                question.question,
+                question.options,
+                width,
+                height,
                   onSubmit: () {
-                    if (selectedIndex == question.correctIndex) {
-                      correctAnswers++;
-                    }
+                    if (selectedIndex == -1) return;
 
-                    Navigator.pushNamed(
-                      context,
-                      AppRoutes.analysis,
-                      arguments: {
-                        "correct": correctAnswers,
-                        "total": totalQuestions,
-                      },
+                    final question = state.questions[0];
+                    final selectedAnswer = question.answers[selectedIndex];
+
+                    context.read<SimulationCubit>().submitAnswer(
+                      lessonId: lessonId!,
+                      questionId: question.id,
+                      answerId: selectedAnswer.id,
                     );
                   }
               );
             }
+
+            /// ✅ نتيجة الـ API
             if (state is SimulationAnalysisSuccess) {
               final result = state.analysis;
 
-              /// نروح شاشة analysis زي ما هي
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 Navigator.pushNamed(
                   context,
@@ -143,12 +147,12 @@ class _SimulationScreenState extends State<SimulationScreen> {
 
               return const SizedBox();
             }
+
             return const SizedBox();
           },
         ),
       ),
-    );
-  }
+    );}
 
   /// 🔥 UI واحدة (بنستخدمها في الحالتين)
   Widget _buildSimulationUI(
@@ -286,11 +290,16 @@ class _SimulationScreenState extends State<SimulationScreen> {
       onSubmit: () {
         if (selectedIndex == -1) return;
 
-        context.read<SimulationCubit>().submitAnswer(
-            question.id,
-             selectedIndex,
-            );
-            },
+        /// 👇 مفيش API هنا
+        Navigator.pushNamed(
+          context,
+          AppRoutes.analysis,
+          arguments: {
+            "correct": selectedIndex == 1 ? 1 : 0,
+            "total": 1,
+          },
+        );
+      },
     );
   }
 

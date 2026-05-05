@@ -87,6 +87,7 @@ class LessonsScreen extends StatelessWidget {
                   child: _LessonCard(
                     icon: Icons.link,
                     title: lesson.title ?? "",
+                    lessonId: lesson.id,
                     subtitle: lesson.description ?? "",
                     active: true,
                   ),
@@ -236,13 +237,13 @@ class _LessonCard extends StatelessWidget {
   final IconData icon;
   final String title;
   final String subtitle;
-
+  final int lessonId;
   const _LessonCard({
     super.key,
     this.active = false,
     required this.icon,
     required this.title,
-    required this.subtitle,
+    required this.subtitle, required this.lessonId,
   });
 
   @override
@@ -376,7 +377,9 @@ class _LessonCard extends StatelessWidget {
                   height: h * 0.06,
                   child: ElevatedButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.simulation);
+                      Navigator.pushNamed(context, AppRoutes.simulation,
+                        arguments: lessonId,
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: active

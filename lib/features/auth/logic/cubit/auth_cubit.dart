@@ -64,8 +64,10 @@ class AuthCubit extends Cubit<AuthState> {
   }
 
   void setLevel(String level) async {
-    emit(AuthLoading());
 
+    if (!isClosed) {
+      emit(AuthLoading());
+    }
     try {
       await service.setUserLevel(level);
       print("SUCCESS 🔥");

@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../../../lessons/data/models/lesson_model.dart';
+import '../../../profile/data/madels/profile_stats_model.dart';
 import '../../../simulation/data/models/question_model.dart';
 import '../models/login_model.dart';
 import '../models/user_model.dart';
@@ -11,7 +12,7 @@ import '../../../../core/network/dio_helper.dart';
 
 class AuthService {
 
-  /// ================= LOGIN =================
+  /// ================ LOGIN ================
   Future<LoginModel> login(String email, String password) async {
     final response = await DioHelper.dio.post(
       "/Auth",
@@ -101,12 +102,17 @@ class AuthService {
 
   Future<Dio> getDio() async {
     final prefs = await SharedPreferences.getInstance();
+
     final token = prefs.getString("token");
+
+    print("TOKEN: $token");
 
     final dio = Dio(
       BaseOptions(
         baseUrl: "https://phish-escape.runasp.net",
         headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json",
           "Authorization": "Bearer $token",
         },
       ),
@@ -145,21 +151,47 @@ class AuthService {
         .toList();
   }
   Future<Map<String, dynamic>> submitAnswer({
+    required int lessonId,
     required int questionId,
     required int answerId,
   }) async {
     final dio = await getDio();
 
     final response = await dio.post(
-      "/api/analysis", // 👈 تأكدي من swagger
+      "/api/lessons/$lessonId/answer",
       data: {
         "questionId": questionId,
         "answerId": answerId,
       },
     );
 
-    print("ANALYSIS: ${response.data}");
+    print("SEND DATA:");
+    print("lessonId: $lessonId");
+    print("questionId: $questionId");
+    print("answerId: $answerId");
+
 
     return response.data;
   }
+  Future<ProfileStatsModel> getProfileStats() async {
+    final dio = await getDio();
+
+    print("BASE URL: ${dio.options.baseUrl}");
+
+    final endpoint = "/api/UserDashboard/user-dashboard";
+
+    print("ENDPOINT: $endpoint");
+
+    final fullUrl = "${dio.options.baseUrl}$endpoint";
+
+    print("FULL URL: $fullUrl");
+
+    final response = await dio.get(endpoint);
+
+    print("RESPONSE: ${response.data}");
+
+    return ProfileStatsModel.fromJson(response.data);
+  }
+
+
 }

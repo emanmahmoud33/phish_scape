@@ -36,18 +36,31 @@ class SimulationCubit extends Cubit<SimulationState> {
       emit(SimulationError(e.toString()));
     }
   }
-  Future<void> submitAnswer(int questionId, int answerId) async {
-    emit(SimulationLoading());
-
+  Future<void> submitAnswer({
+    required int lessonId,
+    required int questionId,
+    required int answerId,
+  }) async {
     try {
       final result = await service.submitAnswer(
+        lessonId: lessonId,
         questionId: questionId,
         answerId: answerId,
       );
 
+      if (isClosed) return; // 👈🔥 أهم سطر
+
       emit(SimulationAnalysisSuccess(result));
     } catch (e) {
+      if (isClosed) return;
+
       emit(SimulationError(e.toString()));
     }
   }
+}
+
+class SimulationAnalysisSuccess extends SimulationState {
+  final Map<String, dynamic> analysis;
+
+  SimulationAnalysisSuccess(this.analysis);
 }

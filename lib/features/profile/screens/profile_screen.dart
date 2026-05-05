@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../auth/presentation/widgets/custom_app_bar.dart';
 import '../../../../core/routing/app_routes.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../auth/data/services/auth_service.dart';
+import '../logic/profile_cubit.dart';
+import '../logic/profile_state.dart';
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -10,10 +13,34 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return Scaffold(
+    return BlocProvider(
+      create: (_) => ProfileCubit(AuthService())..getProfileStats(),
+
+      child: Scaffold(
 
         backgroundColor: const Color(0xFF081826),
-    body: SafeArea(
+          body: BlocBuilder<ProfileCubit, ProfileState>(
+              builder: (context, state) {
+
+                if (state is ProfileLoading) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                if (state is ProfileError) {
+                  return Center(
+                    child: Text(state.error, style: const TextStyle(
+                      color: Colors.white,
+                    ),),
+                  );
+                }
+
+                if (state is ProfileSuccess) {
+
+                  final stats = state.stats;
+
+                  return  SafeArea(
     child: SingleChildScrollView(
     padding: const EdgeInsets.all(20),
     child: Column(
@@ -85,7 +112,7 @@ class ProfileScreen extends StatelessWidget {
     Expanded(
     child: _topCard(
     title: "Security Score",
-    value: "85",
+        value: stats.securityScore.toString(),
     sub: "/100",
     extra: "+12% vs last week",
       icon: Icons.trending_up,
@@ -96,7 +123,7 @@ class ProfileScreen extends StatelessWidget {
     Expanded(
     child: _topCard(
     title: "Global Rank",
-    value: "Top 5%",
+        value: stats.globalRank,
     sub: "",
     extra: "Expert Level",
       icon: Icons.workspace_premium,
@@ -283,7 +310,7 @@ class ProfileScreen extends StatelessWidget {
         icon: Icons.local_fire_department,
         title: "Current Streak",
         subtitle: "12 days running",
-        value: "12",
+          value: stats.streak.toString(),
         iconColor: Color(0xFFEF6E15),
         bgColor:  Color(0xFF2E2929)
       ),
@@ -295,7 +322,7 @@ class ProfileScreen extends StatelessWidget {
         icon: Icons.task_alt,
         title: "Tests Completed",
         subtitle: "All time total",
-        value: "34",
+          value: stats.testsCompleted.toString(),
         iconColor: Colors.purple,
           bgColor:  Colors.purple.withOpacity(0.1)
 
@@ -303,9 +330,13 @@ class ProfileScreen extends StatelessWidget {
     ],
     ),
     ),
-    ),
-    );
-  }
+                  );
+                }
+
+                return const SizedBox();
+                },
+          ),
+      ));}
 
   /// 🔹 TOP CARD
   Widget _topCard({
