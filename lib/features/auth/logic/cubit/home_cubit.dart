@@ -9,9 +9,8 @@ class HomeLoading extends HomeState {}
 
 class HomeSuccess extends HomeState {
   final List<LessonModel> lessons;
-  final StatsModel stats;
 
-  HomeSuccess(this.lessons, this.stats);
+  HomeSuccess(this.lessons);
 }
 
 class HomeError extends HomeState {
@@ -28,38 +27,13 @@ class HomeCubit extends Cubit<HomeState> {
 
     try {
       final lessons = await service.getLessons();
-      final stats = await service.getStats();
 
-      emit(HomeSuccess(lessons, stats));
+
+      emit(HomeSuccess(lessons));
     } catch (e) {
-      print("HOME ERROR: $e"); // 🔥 مهم
+      print("HOME ERROR: $e");
       emit(HomeError("Failed to load home"));
     }
   }
-  void getHome() async {
-    emit(HomeLoading());
 
-    try {
-      final data = await service.getHome();
-
-      print("DATA: $data");
-
-      if (data == null) {
-        throw Exception("Empty data");
-      }
-
-      final lessons = (data["lessons"] ?? [])
-          .map<LessonModel>((e) => LessonModel.fromJson(e))
-          .toList();
-
-      final stats = StatsModel.fromJson(data["stats"] ?? {});
-
-      emit(HomeSuccess(lessons, stats));
-
-    } catch (e) {
-      print("HOME ERROR: $e");
-
-      emit(HomeError(e.toString()));
-    }
-  }
 }

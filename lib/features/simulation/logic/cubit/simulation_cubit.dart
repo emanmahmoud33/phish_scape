@@ -36,4 +36,18 @@ class SimulationCubit extends Cubit<SimulationState> {
       emit(SimulationError(e.toString()));
     }
   }
+  Future<void> submitAnswer(int questionId, int answerId) async {
+    emit(SimulationLoading());
+
+    try {
+      final result = await service.submitAnswer(
+        questionId: questionId,
+        answerId: answerId,
+      );
+
+      emit(SimulationAnalysisSuccess(result));
+    } catch (e) {
+      emit(SimulationError(e.toString()));
+    }
+  }
 }

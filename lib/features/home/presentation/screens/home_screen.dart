@@ -24,7 +24,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final h = size.height;
     final scale = w / 375;
     return BlocProvider(
-        create: (_) => HomeCubit(AuthService())..getHome(),
+        create: (_) => HomeCubit(AuthService())..loadHome(),
         child: BlocListener<AuthCubit, AuthState>(
           listener: (context, state) {
             if (state is ImageUploadSuccess) {
@@ -56,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 if (state is HomeSuccess) {
                   final lessons = state.lessons;
-                  final stats = state.stats;
+
 
                   return SingleChildScrollView(
                       child: Column(
@@ -162,7 +162,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             SizedBox(height: h * 0.035),
 
-                            /// 📊 STATS
+
                             Row(
                               children: [
                                 Expanded(
@@ -215,13 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 children: [
                                   ClipRRect(
                                       borderRadius: BorderRadius.circular(12),
-                                      child: Container(
-                                        height: 120,
-                                        width: double.infinity,
-                                        color: Colors.grey,
-                                        child: const Icon(Icons.image,
-                                            color: Colors.white),
-                                      )),
+                                      child: Image.asset('assets/images/home.png')),
                                   SizedBox(height: h * 0.015),
                                   Row(
                                     children: [
@@ -304,7 +298,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ));
   }
 
-  /// 📊 STAT CARD
+
   Widget _statCard(
     String title,
     String value,

@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../lessons/data/models/dashboard_model.dart';
+
 import '../../../lessons/data/models/lesson_model.dart';
 import '../../../simulation/data/models/question_model.dart';
 import '../models/login_model.dart';
@@ -119,17 +119,20 @@ class AuthService {
 
     final response = await dio.get("/api/lessons");
 
-    return (response.data as List)
+    print("RAW RESPONSE: ${response.data}"); // 👈 مهم
+
+    final data = response.data;
+
+    /// ✅ لو API بيرجع Map
+    final List lessonsList = data is List
+        ? data
+        : data["data"] ?? data["lessons"] ?? [];
+
+    return lessonsList
         .map((e) => LessonModel.fromJson(e))
         .toList();
   }
-  Future<StatsModel> getStats() async {
-    final dio = await getDio();
 
-    final response = await dio.get("/api/Dashboard/stats");
-
-    return StatsModel.fromJson(response.data);
-  }
   Future<List<QuestionModel>> getQuestions(int lessonId) async {
     final dio = await getDio();
 
@@ -141,14 +144,22 @@ class AuthService {
         .map((e) => QuestionModel.fromJson(e))
         .toList();
   }
-  Future<DashboardModel> getDashboard() async {
-    final response = await DioHelper.dio.get("/api/Dashboard/stats");
+  Future<Map<String, dynamic>> submitAnswer({
+    required int questionId,
+    required int answerId,
+  }) async {
+    final dio = await getDio();
 
-    return DashboardModel.fromJson(response.data);
-  }
-  Future<Map<String, dynamic>> getHome() async {
-    final response = await DioHelper.dio.get("/api/Home");
+    final response = await dio.post(
+      "/api/analysis", // 👈 تأكدي من swagger
+      data: {
+        "questionId": questionId,
+        "answerId": answerId,
+      },
+    );
+
+    print("ANALYSIS: ${response.data}");
 
     return response.data;
   }
- }
+}

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/data/services/auth_service.dart';
-import '../../logic/dashboard_cubit.dart';
-import '../../logic/dashboard_state.dart';
 import '../../logic/lesson_cubit.dart';
+import '../../logic/lesson_state.dart';
 import '../widgets/header.dart';
 import '../../../../core/routing/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,65 +17,45 @@ class LessonsScreen extends StatelessWidget {
     final h = size.height;
     final scale = w / 375;
 
-    return MultiBlocProvider(
-      providers: [
+     return BlocProvider(
+      create: (_) => LessonCubit(AuthService())..getLessons(),
 
-        /// 🟢 Lessons
-        BlocProvider(
-          create: (_) => LessonCubit(AuthService())..getLessons(),
-        ),
-
-        /// 🟢 Dashboard (Weekly Goal)
-        BlocProvider(
-          create: (_) => DashboardCubit(AuthService())..getStats(),
-        ),
-      ],
-
-      child: Scaffold(
+      child:  Scaffold(
         backgroundColor: AppColors.backgroundStart,
         appBar: Header(),
 
-        body: SingleChildScrollView(
-          padding: EdgeInsets.all(w * 0.04),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+        body: BlocBuilder<LessonCubit, LessonState>(
+      builder: (context, state) {
+        print("STATE: $state");
+
+        if (state is LessonLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (state is LessonError) {
+          return Center(child: Text(state.error));
+        }
+
+        if (state is LessonSuccess) {
+
+          if (state.lessons.isEmpty) {
+            return const Center(child: Text("No lessons"));
+          }
+
+          return ListView(
+            padding: EdgeInsets.all(w * 0.04),
             children: [
 
               SizedBox(height: h * 0.025),
 
-              const _SearchBar(),
+               _SearchBar(),
 
               SizedBox(height: h * 0.03),
 
-              /// 🔥 Weekly Goal (API)
-              BlocBuilder<DashboardCubit, DashboardState>(
-                builder: (context, state) {
-
-                  if (state is DashboardLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (state is DashboardError) {
-                    return Center(child: Text(state.error));
-                  }
-
-                  if (state is DashboardSuccess) {
-                    final stats = state.data;
-
-                    return _WeeklyGoal(
-                      xp: stats.totalXp ?? 0,           // ✅ حماية
-                      percent: stats.percentage ?? 0,   // ✅ حماية
-                      completed: stats.currentXp ?? 0,  // ✅ حماية
-                    );
-                  }
-
-                  return const SizedBox();
-                },
-              ),
+               _WeeklyGoal(),
 
               SizedBox(height: h * 0.025),
 
-              /// 🔥 العنوان
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -101,54 +80,31 @@ class LessonsScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.03),
 
-              /// 🔥 Lessons (API)
-              BlocBuilder<LessonCubit, LessonState>(
-                builder: (context, state) {
-
-                  if (state is LessonLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-
-                  if (state is LessonError) {
-                    return Center(child: Text(state.error));
-                  }
-
-                  if (state is LessonSuccess) {
-
-                    if (state.lessons.isEmpty) {
-                      return const Center(
-                        child: Text("No lessons found"),
-                      );
-                    }
-
-                    return Column(
-                      children: state.lessons.map((lesson) {
-                        return Padding(
-                          padding: EdgeInsets.only(bottom: h * 0.02),
-                          child: _LessonCard(
-                            title: lesson.title,
-                            subtitle: lesson.description,
-                            icon: Icons.link,
-                            active: true,
-                            id: lesson.id,
-                          ),
-                        );
-                      }).toList(),
-                    );
-                  }
-
-                  return const SizedBox();
-                },
-              ),
+              /// ✅ الحل هنا (null safe)
+              ...state.lessons.map((lesson) {
+                return Padding(
+                  padding: EdgeInsets.only(bottom: h * 0.02),
+                  child: _LessonCard(
+                    icon: Icons.link,
+                    title: lesson.title ?? "",
+                    subtitle: lesson.description ?? "",
+                    active: true,
+                  ),
+                );
+              }).toList(),
 
               SizedBox(height: h * 0.02),
 
               const _LockedCard(),
             ],
-          ),
-        ),
+          );
+        }
+
+        return const SizedBox();
+      },
       ),
-    );
+      ));
+
   }
 }
 
@@ -157,21 +113,34 @@ class _SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final w = MediaQuery.of(context).size.width;
 
-    return   Row(
+    return Container(
+      height: 50,
+      padding: EdgeInsets.symmetric(horizontal: w * 0.03),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1C2127), // نفس لون الكارد في الصورة
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
         children: [
-          Icon(Icons.search, color: Colors.grey),
-          SizedBox(width: 10),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1F2937),
-              borderRadius: BorderRadius.circular(12),
-            ),
+
+          /// 🔍 أيقونة جوه الكارد
+          const Icon(
+            Icons.search,
+            color: AppColors.textSecondary,
+            size: 20,
+          ),
+
+          SizedBox(width: w * 0.025),
+
+          /// 🔥 input ياخد باقي المساحة
+          Expanded(
             child: TextField(
-              style: const TextStyle(color: Colors.white),
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 14,
+              ),
 
               onChanged: (value) {
                 context.read<LessonCubit>().search(value);
@@ -181,105 +150,103 @@ class _SearchBar extends StatelessWidget {
                 hintText: "Find phishing tactics...",
                 hintStyle: TextStyle(
                   color: AppColors.textSecondary,
-                  fontSize: 16,
+                  fontSize: 14,
                 ),
                 border: InputBorder.none,
-                icon: Icon(Icons.search, color: AppColors.textSecondary),
+                isDense: true, // 👈 مهم عشان يقلل الارتفاع
               ),
             ),
-          )
+          ),
         ],
-      );
-
+      ),
+    );
   }
 }
 
-// class _WeeklyGoal extends StatelessWidget {
-//   const _WeeklyGoal();
-//
-//   @override
-//   Widget build(BuildContext context) {
-//
-//     final w = MediaQuery.of(context).size.width;
-//     final scale = w / 375;
-//
-//     return Padding(
-//       padding: EdgeInsets.all(w * 0.03),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//
-//           Text("Weekly Goal",
-//               style: TextStyle(
-//                   color: AppColors.textSecondary,
-//                   fontSize: 14 * scale,
-//                   fontWeight: FontWeight.w500)),
-//
-//           SizedBox(height: w * 0.02),
-//
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Text("1,200 XP to Gold",
-//                   style: TextStyle(
-//                       color: Colors.white,
-//                       fontWeight: FontWeight.w700,
-//                       fontSize: 20 * scale)),
-//               Text("72%",
-//                   style: TextStyle(
-//                       color: Colors.white,
-//                       fontSize: 24 * scale,
-//                       fontWeight: FontWeight.w700)),
-//             ],
-//           ),
-//
-//           SizedBox(height: w * 0.025),
-//
-//           ClipRRect(
-//             borderRadius: BorderRadius.circular(10),
-//             child: LinearProgressIndicator(
-//               value: 0.72,
-//               minHeight: w * 0.02,
-//               backgroundColor: Colors.grey.withOpacity(0.2),
-//               color: Colors.white,
-//             ),
-//           ),
-//
-//           SizedBox(height: w * 0.02),
-//
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//             children: [
-//               Text("4 of 6 Lessons Today",
-//                   style: TextStyle(color: Colors.grey, fontSize: 12 * scale)),
-//               Text("+150 XP",
-//                   style: TextStyle(color: Colors.grey, fontSize: 12 * scale)),
-//             ],
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
+class _WeeklyGoal extends StatelessWidget {
+  const _WeeklyGoal();
+
+  @override
+  Widget build(BuildContext context) {
+
+    final w = MediaQuery.of(context).size.width;
+    final scale = w / 375;
+
+    return Padding(
+      padding: EdgeInsets.all(w * 0.03),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+
+          Text("Weekly Goal",
+              style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 14 * scale,
+                  fontWeight: FontWeight.w500)),
+
+          SizedBox(height: w * 0.02),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("1,200 XP to Gold",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20 * scale)),
+              Text("72%",
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24 * scale,
+                      fontWeight: FontWeight.w700)),
+            ],
+          ),
+
+          SizedBox(height: w * 0.025),
+
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: LinearProgressIndicator(
+              value: 0.72,
+              minHeight: w * 0.02,
+              backgroundColor: Colors.grey.withOpacity(0.2),
+              color: Colors.white,
+            ),
+          ),
+
+          SizedBox(height: w * 0.02),
+
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("4 of 6 Lessons Today",
+                  style: TextStyle(color: Colors.grey, fontSize: 12 * scale)),
+              Text("+150 XP",
+                  style: TextStyle(color: Colors.grey, fontSize: 12 * scale)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class _LessonCard extends StatelessWidget {
   final bool active;
   final IconData icon;
   final String title;
   final String subtitle;
-  final int id;
+
   const _LessonCard({
     super.key,
     this.active = false,
     required this.icon,
     required this.title,
     required this.subtitle,
-    required this.id,
   });
 
   @override
   Widget build(BuildContext context) {
-
     final w = MediaQuery.of(context).size.width;
     final h = MediaQuery.of(context).size.height;
     final scale = w / 375;
@@ -320,24 +287,31 @@ class _LessonCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(title,
-                        style: TextStyle(
-                            color: AppColors.textPrimary,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16 * scale)),
+                    Text(
+                      title, // ✅ بدون !
+                      style: TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 16 * scale,
+                      ),
+                    ),
                     SizedBox(height: h * 0.005),
-                    Text(subtitle,
-                        style: TextStyle(
-                            color: AppColors.textSecondary,
-                            fontSize: 12 * scale)),
+                    Text(
+                      subtitle, // ✅ بدون !
+                      style: TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12 * scale,
+                      ),
+                    ),
                   ],
                 ),
               ),
 
               Container(
                 padding: EdgeInsets.symmetric(
-                    horizontal: w * 0.025,
-                    vertical: w * 0.01),
+                  horizontal: w * 0.025,
+                  vertical: w * 0.01,
+                ),
                 decoration: BoxDecoration(
                   color: active
                       ? const Color(0xFF0BDA5B).withOpacity(0.15)
@@ -362,15 +336,21 @@ class _LessonCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Progress",
-                  style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 12 * scale)),
-              Text(active ? "60%" : "0%",
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 12 * scale,
-                      fontWeight: FontWeight.w700)),
+              Text(
+                "Progress",
+                style: TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 12 * scale,
+                ),
+              ),
+              Text(
+                active ? "60%" : "0%",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12 * scale,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ],
           ),
 
@@ -396,8 +376,7 @@ class _LessonCard extends StatelessWidget {
                   height: h * 0.06,
                   child: ElevatedButton(
                     onPressed: () {
-
-                      Navigator.pushNamed(context, AppRoutes.simulation, arguments: id);
+                      Navigator.pushNamed(context, AppRoutes.simulation);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: active
@@ -427,21 +406,8 @@ class _LessonCard extends StatelessWidget {
                   ),
                 ),
               ),
-
-              if (active) ...[
-                SizedBox(width: w * 0.025),
-                Container(
-                  height: h * 0.06,
-                  width: h * 0.06,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF2A3138),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: const Icon(Icons.bookmark, color: Colors.white),
-                ),
-              ],
             ],
-          )
+          ),
         ],
       ),
     );
@@ -526,69 +492,3 @@ class _LockedCard extends StatelessWidget {
 }
 
 
-class _WeeklyGoal extends StatelessWidget {
-  final int xp;
-  final double percent;
-  final int completed;
-
-  const _WeeklyGoal({
-    required this.xp,
-    required this.percent,
-    required this.completed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final scale = w / 375;
-
-    return Padding(
-      padding: EdgeInsets.all(w * 0.03),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-
-          Text("Weekly Goal",
-              style: TextStyle(color: Colors.grey, fontSize: 14 * scale)),
-
-          SizedBox(height: w * 0.02),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("$xp XP to Gold",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 20 * scale)),
-
-              Text("${(percent * 100).toInt()}%",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24 * scale,
-                      fontWeight: FontWeight.w700)),
-            ],
-          ),
-
-          SizedBox(height: w * 0.025),
-
-          LinearProgressIndicator(
-            value: percent,
-          ),
-
-          SizedBox(height: w * 0.02),
-
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("$completed XP",
-                  style: TextStyle(color: Colors.grey, fontSize: 12 * scale)),
-              const Text("+150 XP",
-                  style: TextStyle(color: Colors.grey)),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}

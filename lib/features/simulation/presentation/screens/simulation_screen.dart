@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
-
+import 'package:phish_scape/features/simulation/data/models/question_model.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../auth/data/services/auth_service.dart';
 import '../../logic/cubit/simulation_cubit.dart';
@@ -94,44 +94,58 @@ class _SimulationScreenState extends State<SimulationScreen> {
         body: lessonId == null
             ? _buildDefaultSimulation(width, height)
             : BlocBuilder<SimulationCubit, SimulationState>(
-                builder: (context, state) {
-                  if (state is SimulationLoading) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
+          builder: (context, state) {
+            if (state is SimulationLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-                  if (state is SimulationError) {
-                    return Center(child: Text(state.error));
-                  }
+            if (state is SimulationError) {
+              return Center(child: Text(state.error));
+            }
 
-                  if (state is SimulationSuccess) {
-                    final question = state.questions[0];
-                    int correctAnswers = 0;
-                    int totalQuestions = state.questions.length;
+            if (state is SimulationSuccess) {
+              final question = state.questions[0];
+              int correctAnswers = 0;
+              int totalQuestions = state.questions.length;
 
-                    return _buildSimulationUI(
-                        question.question,
-                        question.options,
-                        width,
-                        height,
-                        onSubmit: () {
-                          if (selectedIndex == question.correctIndex) {
-                            correctAnswers++;
-                          }
+              return _buildSimulationUI(
+                  question.question,
+                  question.options,
+                  width,
+                  height,
+                  onSubmit: () {
+                    if (selectedIndex == question.correctIndex) {
+                      correctAnswers++;
+                    }
 
-                          Navigator.pushNamed(
-                            context,
-                            AppRoutes.analysis,
-                            arguments: {
-                              "correct": correctAnswers,
-                              "total": totalQuestions,
-                            },
-                          );
-                        }
+                    Navigator.pushNamed(
+                      context,
+                      AppRoutes.analysis,
+                      arguments: {
+                        "correct": correctAnswers,
+                        "total": totalQuestions,
+                      },
                     );
                   }
-                  return const SizedBox();
-                },
-              ),
+              );
+            }
+            if (state is SimulationAnalysisSuccess) {
+              final result = state.analysis;
+
+              /// نروح شاشة analysis زي ما هي
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                Navigator.pushNamed(
+                  context,
+                  AppRoutes.analysis,
+                  arguments: result,
+                );
+              });
+
+              return const SizedBox();
+            }
+            return const SizedBox();
+          },
+        ),
       ),
     );
   }
@@ -233,7 +247,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
                     /// 🔥 OPTIONS
                     ...List.generate(
                       options.length,
-                      (index) => Padding(
+                          (index) => Padding(
                         padding: const EdgeInsets.only(bottom: 10),
                         child: _optionTile(
                           options[index],
@@ -270,23 +284,13 @@ class _SimulationScreenState extends State<SimulationScreen> {
       width,
       height,
       onSubmit: () {
-        int correctAnswers = 0;
-        int totalQuestions = 1;
+        if (selectedIndex == -1) return;
 
-        // 👇 الصح هنا هو الاختيار رقم 1
-        if (selectedIndex == 1) {
-          correctAnswers++;
-        }
-
-        Navigator.pushNamed(
-          context,
-          AppRoutes.analysis,
-          arguments: {
-            "correct": correctAnswers,
-            "total": totalQuestions,
-          },
-        );
-      },
+        context.read<SimulationCubit>().submitAnswer(
+            question.id,
+             selectedIndex,
+            );
+            },
     );
   }
 
@@ -328,11 +332,11 @@ class _SimulationScreenState extends State<SimulationScreen> {
               ),
               child: selected
                   ? const Center(
-                      child: CircleAvatar(
-                        radius: 5,
-                        backgroundColor: AppColors.primary,
-                      ),
-                    )
+                child: CircleAvatar(
+                  radius: 5,
+                  backgroundColor: AppColors.primary,
+                ),
+              )
                   : null,
             ),
             const SizedBox(width: 10),

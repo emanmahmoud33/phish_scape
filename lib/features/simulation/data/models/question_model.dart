@@ -1,16 +1,17 @@
 class AnswerModel {
   final String text;
   final bool isCorrect;
+  final int id;
 
   AnswerModel({
     required this.text,
-    required this.isCorrect,
+    required this.isCorrect, required this.id,
   });
 
   factory AnswerModel.fromJson(Map<String, dynamic> json) {
     return AnswerModel(
       text: json['answerText'] ?? "",
-      isCorrect: json['isCorrect'] ?? false,
+      isCorrect: json['isCorrect'] ?? false, id: json['id'] ?? json['questionId'] ?? 0,
     );
   }
 }
