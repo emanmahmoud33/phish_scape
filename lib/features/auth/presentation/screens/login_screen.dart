@@ -42,6 +42,13 @@ class _LoginScreenState extends State<LoginScreen> {
         child: BlocListener<AuthCubit, AuthState>(
           listener: (context, state) async {
 
+            if (state is AuthSuccess) {
+              final prefs = await SharedPreferences.getInstance();
+              await prefs.setString("token", state.token);
+
+              Navigator.pushReplacementNamed(context, AppRoutes.identify);
+            }
+
             /// 🔐 LOGIN SUCCESS
             if (state is LoginSuccess) {
               final prefs = await SharedPreferences.getInstance();

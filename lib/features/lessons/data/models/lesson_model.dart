@@ -38,4 +38,5 @@ class StatsModel {
       rank: json['rank'] ?? "N/A",
     );
   }
+  
 }

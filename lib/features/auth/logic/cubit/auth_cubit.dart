@@ -1,10 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../core/network/dio_helper.dart';
 import '../../data/services/auth_service.dart';
 import 'dart:io';
+
 class AuthCubit extends Cubit<AuthState> {
   final AuthService service;
-
+  String? token;
   AuthCubit(this.service) : super(AuthInitial());
 
   /// 🔐 LOGIN
@@ -12,16 +14,17 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     try {
-      final result = await service.login(email, password);
-      emit(LoginSuccess(result.token)); // ✅
+      final response = await service.login(email, password);
+
+      token = response.token;
+
+      DioHelper.setToken(token!);
+
+      print("TOKEN: $token");
+
+      emit(AuthSuccess(token!));
     } catch (e) {
-      if (e is DioException) {
-        final message =
-            e.response?.data['message'] ?? "Email or password is incorrect";
-        emit(AuthError(message));
-      } else {
-        emit(AuthError("Something went wrong"));
-      }
+      emit(AuthError(e.toString()));
     }
   }
 
@@ -98,7 +101,10 @@ class ImageUploadSuccess extends AuthState {}
 abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
-
+class AuthSuccess extends AuthState {
+  final String token;
+  AuthSuccess(this.token);
+}
 class AuthLoading extends AuthState {}
 
 /// 🔐 Login

@@ -35,206 +35,262 @@ class _SimulationScreenState extends State<SimulationScreen> {
 
         return cubit;
       },
-    child: Scaffold(
-    backgroundColor: AppColors.backgroundStart,
-    appBar: AppBar(
-    backgroundColor: AppColors.backgroundStart,
-    automaticallyImplyLeading: false,
-    elevation: 0,
-    toolbarHeight: height * 0.08,
-    flexibleSpace: SafeArea(
-    child: Padding(
-    padding: EdgeInsets.symmetric(horizontal: width * 0.04),
-    child: Row(
-    children: [
-    Material(
-    color: Colors.transparent,
-    child: InkWell(
-    onTap: () {
-    if (Navigator.canPop(context)) {
-    Navigator.pop(context);
-    } else {
-    Navigator.pushReplacementNamed(
-    context,
-    AppRoutes.main,
-    );
-    }
-    },
-    child: Icon(
-    Icons.arrow_back_ios,
-    color: AppColors.primary,
-    size: width * 0.05,
-    ),
-    ),
-    ),
-    const SizedBox(width: 10),
-    const Expanded(
-    child: Center(
-    child: Text(
-    "Simulation: Email 3 of 10",
-    style: TextStyle(
-    color: AppColors.textPrimary,
-    fontWeight: FontWeight.w700,
-    fontSize: 18,
-    ),
-    ),
-    ),
-    ),
-    const Icon(
-    Icons.info_rounded,
-    color: AppColors.primary,
-    size: 22,
-    ),
-    ],
-    ),
-    ),
-    ),
-    ),
+      child: Scaffold(
+        backgroundColor: AppColors.backgroundStart,
 
-    /// 🔥 هنا التعديل الحقيقي
-    body: BlocBuilder<SimulationCubit, SimulationState>(
-    builder: (context, state) {
-
-    if (state is SimulationLoading) {
-    return const Center(child: CircularProgressIndicator());
-    }
-
-    if (state is SimulationError) {
-    return Center(child: Text(state.error));
-    }
-
-    if (state is SimulationSuccess) {
-    final question = state.questions[0];
-
-    return SafeArea(
-    child: SingleChildScrollView(
-    child: Padding(
-    padding: EdgeInsets.all(width * 0.04),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-
-    SizedBox(height: height * 0.02),
-
-    const Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-    Text("Training Progress",
-    style: TextStyle(
-    color: Colors.grey,
-    fontSize: 12,
-    fontWeight: FontWeight.w700,
-    letterSpacing: 1.2)),
-    Text("30% Completed",
-    style: TextStyle(
-    color: AppColors.primary,
-    fontSize: 12,
-    fontWeight: FontWeight.w700)),
-    ],
-    ),
-
-    const SizedBox(height: 8),
-
-    ClipRRect(
-    borderRadius: BorderRadius.circular(10),
-    child: const LinearProgressIndicator(
-    value: 0.3,
-    minHeight: 8,
-    backgroundColor: Color(0xFF1F2937),
-    color: AppColors.primary,
-    ),
-    ),
-
-    SizedBox(height: height * 0.06),
-
-    /// 🔹 CARD
-    Container(
-    padding: EdgeInsets.all(width * 0.04),
-    decoration: BoxDecoration(
-    borderRadius: BorderRadius.circular(8),
-    color: AppColors.backgroundStart,
-    border: Border.all(
-    color: AppColors.textSecondary.withOpacity(0.03),
-    width: 2,
-    ),
-    ),
-    child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-
-    const Row(
-    children: [
-    CircleAvatar(
-    radius: 4,
-    backgroundColor: AppColors.primary,
-    ),
-    SizedBox(width: 6),
-    Text(
-    "EMAIL ANALYSIS",
-    style: TextStyle(
-    color: Colors.grey,
-    fontWeight: FontWeight.w700,
-    fontSize: 10,
-    letterSpacing: 1),
-    ),
-    ],
-    ),
-
-    const SizedBox(height: 12),
-
-    /// 🔥 السؤال من API
-    Text(
-    question.question,
-    style: const TextStyle(
-    color: AppColors.textPrimary,
-    fontSize: 18,
-    fontWeight: FontWeight.w700,
-    ),
-    ),
-
-    const SizedBox(height: 20),
-
-      /// 🔥 الخيارات من API
-      ...List.generate(
-        question.options.length,
-            (index) => Padding(
-          padding: const EdgeInsets.only(bottom: 10),
-          child: _optionTile(
-            question.options[index],
-            String.fromCharCode(65 + index),
-            index,
+        /// 🔝 APP BAR (زي ما هو)
+        appBar: AppBar(
+          backgroundColor: AppColors.backgroundStart,
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          toolbarHeight: height * 0.08,
+          flexibleSpace: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * 0.04),
+              child: Row(
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (Navigator.canPop(context)) {
+                        Navigator.pop(context);
+                      } else {
+                        Navigator.pushReplacementNamed(
+                          context,
+                          AppRoutes.main,
+                        );
+                      }
+                    },
+                    child: Icon(
+                      Icons.arrow_back_ios,
+                      color: AppColors.primary,
+                      size: width * 0.05,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Center(
+                      child: Text(
+                        "Simulation: Email 3 of 10",
+                        style: TextStyle(
+                          color: AppColors.textPrimary,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.info_rounded,
+                    color: AppColors.primary,
+                    size: 22,
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
+
+        /// 🔥 BODY
+        body: lessonId == null
+            ? _buildDefaultSimulation(width, height)
+            : BlocBuilder<SimulationCubit, SimulationState>(
+                builder: (context, state) {
+                  if (state is SimulationLoading) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  if (state is SimulationError) {
+                    return Center(child: Text(state.error));
+                  }
+
+                  if (state is SimulationSuccess) {
+                    final question = state.questions[0];
+                    int correctAnswers = 0;
+                    int totalQuestions = state.questions.length;
+
+                    return _buildSimulationUI(
+                        question.question,
+                        question.options,
+                        width,
+                        height,
+                        onSubmit: () {
+                          if (selectedIndex == question.correctIndex) {
+                            correctAnswers++;
+                          }
+
+                          Navigator.pushNamed(
+                            context,
+                            AppRoutes.analysis,
+                            arguments: {
+                              "correct": correctAnswers,
+                              "total": totalQuestions,
+                            },
+                          );
+                        }
+                    );
+                  }
+                  return const SizedBox();
+                },
+              ),
       ),
-    ],
-    ),
-    ),
-
-      SizedBox(height: height * 0.04),
-
-      SizedBox(
-        width: double.infinity,
-        child: CustomButton(
-          text: 'SUBMIT ANSWER',
-          onPressed: () {
-            Navigator.pushNamed(context, AppRoutes.analysis);
-          },
-        ),
-      ),
-    ],
-    ),
-    ),
-    ),
-    );
-    }
-
-    return const SizedBox();
-    },
-    ),
-    ),
     );
   }
 
+  /// 🔥 UI واحدة (بنستخدمها في الحالتين)
+  Widget _buildSimulationUI(
+      String questionText,
+      List<String> options,
+      double width,
+      double height, {
+        required VoidCallback onSubmit,
+      }) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: EdgeInsets.all(width * 0.04),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: height * 0.02),
+
+              const Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Training Progress",
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 1.2)),
+                  Text("30% Completed",
+                      style: TextStyle(
+                          color: AppColors.primary,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700)),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: const LinearProgressIndicator(
+                  value: 0.3,
+                  minHeight: 8,
+                  backgroundColor: Color(0xFF1F2937),
+                  color: AppColors.primary,
+                ),
+              ),
+
+              SizedBox(height: height * 0.06),
+
+              /// 🔹 CARD
+              Container(
+                padding: EdgeInsets.all(width * 0.04),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: AppColors.backgroundStart,
+                  border: Border.all(
+                    color: AppColors.textSecondary.withOpacity(0.03),
+                    width: 2,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 4,
+                          backgroundColor: AppColors.primary,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          "EMAIL ANALYSIS",
+                          style: TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 10,
+                              letterSpacing: 1),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    /// 🔥 QUESTION
+                    Text(
+                      questionText,
+                      style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    /// 🔥 OPTIONS
+                    ...List.generate(
+                      options.length,
+                      (index) => Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: _optionTile(
+                          options[index],
+                          String.fromCharCode(65 + index),
+                          index,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              SizedBox(height: height * 0.04),
+              SizedBox(
+                width: double.infinity,
+                child: CustomButton(
+                  text: 'SUBMIT ANSWER',
+                  onPressed: onSubmit,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// 🟢 DEFAULT (من navbar)
+  /// 🟢 DEFAULT (من navbar)
+  Widget _buildDefaultSimulation(double width, double height) {
+    return _buildSimulationUI(
+      "Which of the following URLs is suspicious?",
+      ["google.com", "g00gle-login.com", "gmail.com"],
+      width,
+      height,
+      onSubmit: () {
+        int correctAnswers = 0;
+        int totalQuestions = 1;
+
+        // 👇 الصح هنا هو الاختيار رقم 1
+        if (selectedIndex == 1) {
+          correctAnswers++;
+        }
+
+        Navigator.pushNamed(
+          context,
+          AppRoutes.analysis,
+          arguments: {
+            "correct": correctAnswers,
+            "total": totalQuestions,
+          },
+        );
+      },
+    );
+  }
+
+  /// 🔘 OPTION TILE (زي ما هو)
   Widget _optionTile(String text, String label, int index) {
     final selected = selectedIndex == index;
 
@@ -272,11 +328,11 @@ class _SimulationScreenState extends State<SimulationScreen> {
               ),
               child: selected
                   ? const Center(
-                child: CircleAvatar(
-                  radius: 5,
-                  backgroundColor: AppColors.primary,
-                ),
-              )
+                      child: CircleAvatar(
+                        radius: 5,
+                        backgroundColor: AppColors.primary,
+                      ),
+                    )
                   : null,
             ),
             const SizedBox(width: 10),

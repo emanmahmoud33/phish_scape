@@ -13,7 +13,6 @@ class DioHelper {
       ),
     );
 
-    // ✅ إضافة التوكن أوتوماتيك
     dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {
@@ -28,5 +27,8 @@ class DioHelper {
         },
       ),
     );
+  }
+  static void setToken(String token) {
+    dio.options.headers["Authorization"] = "Bearer $token";
   }
 }

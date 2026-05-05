@@ -2,8 +2,9 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../lessons/data/models/dashboard_model.dart';
+import '../../../lessons/data/models/lesson_model.dart';
 import '../../../simulation/data/models/question_model.dart';
-import '../models/lesson_model.dart';
 import '../models/login_model.dart';
 import '../models/user_model.dart';
 import '../../../../core/network/dio_helper.dart';
@@ -50,7 +51,6 @@ class AuthService {
     );
   }
 
-  /// ================= FORGET PASSWORD =================
   Future<void> forgetPassword(String email) async {
     await DioHelper.dio.post(
       "/Auth/forget-password",
@@ -60,7 +60,6 @@ class AuthService {
     );
   }
 
-  /// ================= SET LEVEL =================
   Future<void> setUserLevel(String level) async {
     final dio = await getDio();
 
@@ -72,7 +71,6 @@ class AuthService {
     );
   }
 
-  /// ================= UPLOAD IMAGE =================
   Future<void> uploadProfileImage(File file) async {
     final dio = await getDio();
 
@@ -86,7 +84,6 @@ class AuthService {
     );
   }
 
-  /// ================= GET IMAGE =================
   Future<String> getProfileImage() async {
     final dio = await getDio();
 
@@ -98,11 +95,10 @@ class AuthService {
 
     if (imagePath == null || imagePath.isEmpty) return "";
 
-    // 🔥 نحولها لـ URL كامل
+
     return "https://phish-escape.runasp.net/$imagePath";
   }
 
-  /// ================= DIO WITH TOKEN =================
   Future<Dio> getDio() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString("token");
@@ -145,4 +141,14 @@ class AuthService {
         .map((e) => QuestionModel.fromJson(e))
         .toList();
   }
-}
+  Future<DashboardModel> getDashboard() async {
+    final response = await DioHelper.dio.get("/api/Dashboard/stats");
+
+    return DashboardModel.fromJson(response.data);
+  }
+  Future<Map<String, dynamic>> getHome() async {
+    final response = await DioHelper.dio.get("/api/Home");
+
+    return response.data;
+  }
+ }

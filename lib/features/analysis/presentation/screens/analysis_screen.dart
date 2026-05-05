@@ -29,7 +29,6 @@ class AnalysisScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
 
-                /// 🔹 PROGRESS
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: const [
@@ -56,7 +55,7 @@ class AnalysisScreen extends StatelessWidget {
 
                 SizedBox(height: h * 0.04),
 
-                /// 🔹 TITLE
+
                 const Text("ASSESSMENT COMPLETE",
                     style: TextStyle(
                         color: Color(0xFFB4C5FF),
@@ -73,7 +72,6 @@ class AnalysisScreen extends StatelessWidget {
 
                 SizedBox(height: h * 0.04),
 
-                /// 🔵 CIRCLE
                 Stack(
                   clipBehavior: Clip.none,
                   alignment: Alignment.center,
@@ -127,7 +125,6 @@ class AnalysisScreen extends StatelessWidget {
                 ),
                 SizedBox(height: h * 0.04),
 
-                /// 🔹 STATS GRID
                 GridView.count(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -145,7 +142,6 @@ class AnalysisScreen extends StatelessWidget {
 
                 SizedBox(height: h * 0.03),
 
-                /// 🔹 INSIGHT
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
@@ -185,7 +181,6 @@ class AnalysisScreen extends StatelessWidget {
 
                 SizedBox(height: h * 0.04),
 
-                /// 🔵 BUTTON
                 SizedBox(
                   width: double.infinity,
                   height: h * 0.06,
@@ -196,7 +191,6 @@ class AnalysisScreen extends StatelessWidget {
 
                 const SizedBox(height: 12),
 
-                /// 🔘 SECOND BUTTON
                 SizedBox(
 
                   width: double.infinity,
@@ -257,7 +251,6 @@ class _StatCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
 
-          /// 🔹 TOP ROW
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -275,9 +268,8 @@ class _StatCard extends StatelessWidget {
             ],
           ),
 
-          const Spacer(), // 👈 جوه Column
+          const Spacer(),
 
-          /// 🔹 VALUE
           Text(
             value,
             style: TextStyle(

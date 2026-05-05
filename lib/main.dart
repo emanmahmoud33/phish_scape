@@ -5,7 +5,7 @@ import 'package:phish_scape/features/chatbot/presentation/screens/chat_bot_scree
 import 'package:phish_scape/features/notifications/presentation/screens/notifications_screen.dart';
 import 'package:phish_scape/features/onboarding/presentation/screens/identify_screen.dart';
 import 'package:phish_scape/features/onboarding/presentation/screens/level_selection_screen.dart';
-import 'package:phish_scape/features/onboarding/presentation/screens/simulate_screen.dart';
+import 'package:phish_scape/features/onboarding/presentation/screens/simulate_screen.dart' hide SimulationScreen;
 import 'package:phish_scape/features/setting/presentation/Setting_Screen.dart';
 import 'package:phish_scape/layout/main_layout.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
