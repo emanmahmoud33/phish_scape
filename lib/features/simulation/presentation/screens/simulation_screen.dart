@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
-import 'package:phish_scape/features/simulation/data/models/question_model.dart';
 import '../../../../core/routing/app_routes.dart';
 import '../../../auth/data/services/auth_service.dart';
-import '../../data/models/question_model.dart';
 import '../../logic/cubit/simulation_cubit.dart';
 
 class SimulationScreen extends StatefulWidget {
@@ -26,24 +24,26 @@ class _SimulationScreenState extends State<SimulationScreen> {
 
     final lessonId =
     ModalRoute.of(context)?.settings.arguments as int?;
+
     if (lessonId == null) {
-      return const Center(child: Text("No lessonId"));
+      return const Scaffold(
+        body: Center(
+          child: Text("No lessonId"),
+        ),
+      );
     }
 
     return BlocProvider(
       create: (_) {
         final cubit = SimulationCubit(AuthService());
 
-        if (lessonId != null) {
-          cubit.loadQuestions(lessonId);
-        }
+        cubit.loadQuestions(lessonId);
 
         return cubit;
       },
       child: Scaffold(
         backgroundColor: AppColors.backgroundStart,
 
-        /// 🔝 APP BAR (زي ما هو)
         appBar: AppBar(
           backgroundColor: AppColors.backgroundStart,
           automaticallyImplyLeading: false,
@@ -95,22 +95,36 @@ class _SimulationScreenState extends State<SimulationScreen> {
           ),
         ),
 
-        /// 🔥 BODY
-        body: lessonId == null
-            ? _buildDefaultSimulation(width, height)
-            : BlocBuilder<SimulationCubit, SimulationState>(
+        body: BlocConsumer<SimulationCubit, SimulationState>(
+
+          listener: (context, state) {
+
+            if (state is SimulationAnalysisSuccess) {
+
+              Navigator.pushNamed(
+                context,
+                AppRoutes.analysis,
+                arguments: state.analysis,
+              );
+            }
+          },
+
           builder: (context, state) {
 
             if (state is SimulationLoading) {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
             }
 
             if (state is SimulationError) {
-              return Center(child: Text(state.error));
+              return Center(
+                child: Text(state.error),
+              );
             }
 
-            /// ✅ الأسئلة من API
             if (state is SimulationSuccess) {
+
               final question = state.questions[0];
 
               return _buildSimulationUI(
@@ -118,43 +132,32 @@ class _SimulationScreenState extends State<SimulationScreen> {
                 question.options,
                 width,
                 height,
-                  onSubmit: () {
-                    if (selectedIndex == -1) return;
+                onSubmit: () {
 
-                    final question = state.questions[0];
-                    final selectedAnswer = question.answers[selectedIndex];
+                  if (selectedIndex == -1) return;
 
-                    context.read<SimulationCubit>().submitAnswer(
-                      lessonId: lessonId!,
-                      questionId: question.id,
-                      answerId: selectedAnswer.id,
-                    );
-                  }
+                  final selectedAnswer =
+                  question.answers[selectedIndex];
+
+                  print("QUESTION ID: ${question.id}");
+                  print("ANSWER ID: ${selectedAnswer.id}");
+
+                  context.read<SimulationCubit>().submitAnswer(
+                    lessonId: lessonId,
+                    questionId: question.id,
+                    answerId: selectedAnswer.id,
+                  );
+                },
               );
-            }
-
-            /// ✅ نتيجة الـ API
-            if (state is SimulationAnalysisSuccess) {
-              final result = state.analysis;
-
-              WidgetsBinding.instance.addPostFrameCallback((_) {
-                Navigator.pushNamed(
-                  context,
-                  AppRoutes.analysis,
-                  arguments: result,
-                );
-              });
-
-              return const SizedBox();
             }
 
             return const SizedBox();
           },
         ),
       ),
-    );}
+    );
+  }
 
-  /// 🔥 UI واحدة (بنستخدمها في الحالتين)
   Widget _buildSimulationUI(
       String questionText,
       List<String> options,
@@ -174,17 +177,23 @@ class _SimulationScreenState extends State<SimulationScreen> {
               const Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Training Progress",
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.2)),
-                  Text("30% Completed",
-                      style: TextStyle(
-                          color: AppColors.primary,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w700)),
+                  Text(
+                    "Training Progress",
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  Text(
+                    "30% Completed",
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ],
               ),
 
@@ -202,7 +211,6 @@ class _SimulationScreenState extends State<SimulationScreen> {
 
               SizedBox(height: height * 0.06),
 
-              /// 🔹 CARD
               Container(
                 padding: EdgeInsets.all(width * 0.04),
                 decoration: BoxDecoration(
@@ -226,17 +234,17 @@ class _SimulationScreenState extends State<SimulationScreen> {
                         Text(
                           "EMAIL ANALYSIS",
                           style: TextStyle(
-                              color: Colors.grey,
-                              fontWeight: FontWeight.w700,
-                              fontSize: 10,
-                              letterSpacing: 1),
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 10,
+                            letterSpacing: 1,
+                          ),
                         ),
                       ],
                     ),
 
                     const SizedBox(height: 12),
 
-                    /// 🔥 QUESTION
                     Text(
                       questionText,
                       style: const TextStyle(
@@ -248,7 +256,6 @@ class _SimulationScreenState extends State<SimulationScreen> {
 
                     const SizedBox(height: 20),
 
-                    /// 🔥 OPTIONS
                     ...List.generate(
                       options.length,
                           (index) => Padding(
@@ -265,6 +272,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
               ),
 
               SizedBox(height: height * 0.04),
+
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(
@@ -279,32 +287,8 @@ class _SimulationScreenState extends State<SimulationScreen> {
     );
   }
 
-  /// 🟢 DEFAULT (من navbar)
-  /// 🟢 DEFAULT (من navbar)
-  Widget _buildDefaultSimulation(double width, double height) {
-    return _buildSimulationUI(
-      "Which of the following URLs is suspicious?",
-      ["google.com", "g00gle-login.com", "gmail.com"],
-      width,
-      height,
-      onSubmit: () {
-        if (selectedIndex == -1) return;
-
-        /// 👇 مفيش API هنا
-        Navigator.pushNamed(
-          context,
-          AppRoutes.analysis,
-          arguments: {
-            "correct": selectedIndex == 1 ? 1 : 0,
-            "total": 1,
-          },
-        );
-      },
-    );
-  }
-
-  /// 🔘 OPTION TILE (زي ما هو)
   Widget _optionTile(String text, String label, int index) {
+
     final selected = selectedIndex == index;
 
     return GestureDetector(
@@ -336,7 +320,9 @@ class _SimulationScreenState extends State<SimulationScreen> {
                 shape: BoxShape.circle,
                 border: Border.all(
                   width: 3,
-                  color: selected ? AppColors.primary : Colors.grey,
+                  color: selected
+                      ? AppColors.primary
+                      : Colors.grey,
                 ),
               ),
               child: selected
@@ -348,7 +334,9 @@ class _SimulationScreenState extends State<SimulationScreen> {
               )
                   : null,
             ),
+
             const SizedBox(width: 10),
+
             Expanded(
               child: Text(
                 text,
@@ -358,6 +346,7 @@ class _SimulationScreenState extends State<SimulationScreen> {
                 ),
               ),
             ),
+
             Text(
               label,
               style: const TextStyle(

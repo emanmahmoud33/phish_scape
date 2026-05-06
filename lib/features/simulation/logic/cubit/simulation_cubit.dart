@@ -33,6 +33,18 @@ class SimulationCubit extends Cubit<SimulationState> {
 
       emit(SimulationSuccess(questions));
     } catch (e) {
+
+      if (e.toString().contains("AlreadyAnswered")) {
+
+        emit(
+          SimulationError(
+            "You already answered this question",
+          ),
+        );
+
+        return;
+      }
+
       emit(SimulationError(e.toString()));
     }
   }

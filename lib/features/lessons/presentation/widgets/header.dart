@@ -73,7 +73,7 @@ class _HeaderState extends State<Header> {
     ? FileImage(File(imagePath!))
         : (imageUrl != null && imageUrl.isNotEmpty
     ? NetworkImage(imageUrl)
-        : const AssetImage("assets/images/user.jpg")
+        : const AssetImage("assets/images/logo.png")
     as ImageProvider),
     ),
     ),

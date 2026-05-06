@@ -1,5 +1,6 @@
 class AnswerModel {
-  final int id; // 👈 ضيفي ده
+
+  final int id;
   final String text;
   final bool isCorrect;
 
@@ -10,8 +11,9 @@ class AnswerModel {
   });
 
   factory AnswerModel.fromJson(Map<String, dynamic> json) {
+
     return AnswerModel(
-      id: json['id'] ?? json['answerId'] ?? 0, // 👈 مهم
+      id: json['answerId'] ?? 0,
       text: json['answerText'] ?? "",
       isCorrect: json['isCorrect'] ?? false,
     );
@@ -19,7 +21,9 @@ class AnswerModel {
 }
 
 class QuestionModel {
-  final int id; // 👈 ضيفي ده
+
+  final int id;
+
   final String question;
   final List<AnswerModel> answers;
 
@@ -30,17 +34,19 @@ class QuestionModel {
   });
 
   factory QuestionModel.fromJson(Map<String, dynamic> json) {
+
     return QuestionModel(
-      id: json['id'] ?? json['questionId'] ?? 0, // 👈 مهم
+      id: json['questionId'] ?? 0,
+
+
+
       question: json['questionText'] ?? "",
+
       answers: (json['answers'] as List)
           .map((e) => AnswerModel.fromJson(e))
           .toList(),
     );
   }
-
-
-  /// 🔥 helper عشان نستخدمه في UI
 
   List<String> get options {
     return answers.map((e) => e.text).toList();

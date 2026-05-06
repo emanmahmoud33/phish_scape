@@ -1,4 +1,4 @@
-import '../data/madels/profile_stats_model.dart';
+import '../data/models/profile_stats_model.dart';
 
 abstract class ProfileState {}
 

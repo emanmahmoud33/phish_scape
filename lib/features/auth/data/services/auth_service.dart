@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../../../lessons/data/models/lesson_model.dart';
-import '../../../profile/data/madels/profile_stats_model.dart';
+import '../../../profile/data/models/profile_stats_model.dart';
 import '../../../simulation/data/models/question_model.dart';
 import '../models/login_model.dart';
 import '../models/user_model.dart';
@@ -29,7 +29,7 @@ class AuthService {
   Future<UserModel> getMe() async {
     final dio = await getDio(); // ✅ لازم token
 
-    final response = await dio.get("/me");
+    final response = await dio.get("https://phish-escape.runasp.net/me");
 
     return UserModel.fromJson(response.data);
   }
@@ -65,7 +65,9 @@ class AuthService {
     final dio = await getDio();
 
     await dio.post(
-      "/me/set-user-level",
+
+
+          "https://phish-escape.runasp.net/me/set-user-level",
       data: {
         "level": level,
       },
@@ -80,7 +82,7 @@ class AuthService {
     });
 
     await dio.put(
-      "/me/upload-profile-image",
+      "https://phish-escape.runasp.net/me/upload-profile-image",
       data: formData,
     );
   }
@@ -88,7 +90,7 @@ class AuthService {
   Future<String> getProfileImage() async {
     final dio = await getDio();
 
-    final response = await dio.get("/me/get-profile-image");
+    final response = await dio.get("https://phish-escape.runasp.net/me/get-profile-image");
 
     print("IMAGE RESPONSE: ${response.data}");
 
@@ -109,7 +111,7 @@ class AuthService {
 
     final dio = Dio(
       BaseOptions(
-        baseUrl: "https://phish-escape.runasp.net",
+        baseUrl: "https://phish-escape.runasp.net/api",
         headers: {
           "Content-Type": "application/json",
           "Accept": "application/json",
@@ -123,7 +125,7 @@ class AuthService {
   Future<List<LessonModel>> getLessons() async {
     final dio = await getDio();
 
-    final response = await dio.get("/api/lessons");
+    final response = await dio.get("/lessons");
 
     print("RAW RESPONSE: ${response.data}"); // 👈 مهم
 
@@ -142,7 +144,7 @@ class AuthService {
   Future<List<QuestionModel>> getQuestions(int lessonId) async {
     final dio = await getDio();
 
-    final response = await dio.get("/api/lessons/$lessonId/questions");
+    final response = await dio.get("/lessons/$lessonId/questions");
 
     print("QUESTIONS: ${response.data}");
 
@@ -155,30 +157,48 @@ class AuthService {
     required int questionId,
     required int answerId,
   }) async {
-    final dio = await getDio();
 
-    final response = await dio.post(
-      "/api/lessons/$lessonId/answer",
-      data: {
-        "questionId": questionId,
-        "answerId": answerId,
-      },
-    );
+    final dio = DioHelper.dio;
 
-    print("SEND DATA:");
-    print("lessonId: $lessonId");
-    print("questionId: $questionId");
-    print("answerId: $answerId");
+    try {
 
+      print("SEND DATA:");
+      print("lessonId: $lessonId");
+      print("questionId: $questionId");
+      print("answerId: $answerId");
 
-    return response.data;
+      final response = await dio.post(
+        "/api/lessons/$lessonId/answer",
+        data: {
+          "questionId": questionId,
+          "answerId": answerId,
+        },
+      );
+
+      print("SUCCESS RESPONSE:");
+      print(response.data);
+
+      return response.data;
+
+    } on DioException catch (e) {
+
+      print("STATUS CODE: ${e.response?.statusCode}");
+
+      print("ERROR DATA:");
+      print(e.response?.data);
+
+      print("REQUEST BODY:");
+      print(e.requestOptions.data);
+
+      rethrow;
+    }
   }
   Future<ProfileStatsModel> getProfileStats() async {
     final dio = await getDio();
 
     print("BASE URL: ${dio.options.baseUrl}");
 
-    final endpoint = "/api/UserDashboard/user-dashboard";
+    final endpoint = "/UserDashboard/user-dashboard";
 
     print("ENDPOINT: $endpoint");
 

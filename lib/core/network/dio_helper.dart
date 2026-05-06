@@ -8,20 +8,29 @@ class DioHelper {
   static Future<void> init() async {
     dio = Dio(
       BaseOptions(
-        baseUrl: "https://phish-escape.runasp.net/api",
+        baseUrl: "https://phish-escape.runasp.net",
         receiveDataWhenStatusError: true,
       ),
     );
 
     dio.interceptors.add(
       InterceptorsWrapper(
+
         onRequest: (options, handler) async {
+
           final prefs = await SharedPreferences.getInstance();
+
           String? token = prefs.getString("token");
 
-          if (token != null) {
-            options.headers["Authorization"] = "Bearer $token";
-          }
+          print("TOKEN FROM PREFS: $token");
+
+          options.headers["Authorization"] = "Bearer $token";
+
+          print("HEADERS:");
+          print(options.headers);
+
+          print("FULL REQUEST URL:");
+          print("${options.baseUrl}${options.path}");
 
           return handler.next(options);
         },
