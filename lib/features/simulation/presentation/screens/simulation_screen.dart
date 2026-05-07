@@ -107,6 +107,17 @@ class _SimulationScreenState extends State<SimulationScreen> {
                 arguments: state.analysis,
               );
             }
+
+            if (state is SimulationError) {
+
+              ScaffoldMessenger.of(context).showSnackBar(
+
+                SnackBar(
+                  backgroundColor: Colors.red,
+                  content: Text(state.error),
+                ),
+              );
+            }
           },
 
           builder: (context, state) {
@@ -117,11 +128,6 @@ class _SimulationScreenState extends State<SimulationScreen> {
               );
             }
 
-            if (state is SimulationError) {
-              return Center(
-                child: Text(state.error),
-              );
-            }
 
             if (state is SimulationSuccess) {
 
