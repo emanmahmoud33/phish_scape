@@ -34,7 +34,7 @@ class AuthService {
     return UserModel.fromJson(response.data);
   }
 
-  /// ================= REGISTER =================
+
   Future<void> register({
     required String email,
     required String password,
@@ -167,6 +167,7 @@ class AuthService {
       print("questionId: $questionId");
       print("answerId: $answerId");
 
+
       final response = await dio.post(
         "/api/lessons/$lessonId/answer",
         data: {
@@ -193,24 +194,64 @@ class AuthService {
       rethrow;
     }
   }
-  Future<ProfileStatsModel> getProfileStats() async {
+  // Future<ProfileStatsModel> getProfileStats() async {
+  //   final dio = await getDio();
+  //
+  //   print("BASE URL: ${dio.options.baseUrl}");
+  //
+  //   final endpoint = "/UserDashboard/user-dashboard";
+  //
+  //   print("ENDPOINT: $endpoint");
+  //
+  //   final fullUrl = "${dio.options.baseUrl}$endpoint";
+  //
+  //   print("FULL URL: $fullUrl");
+  //
+  //   final response = await dio.get(endpoint);
+  //
+  //   print("RESPONSE: ${response.data}");
+  //
+  //   return ProfileStatsModel.fromJson(response.data);
+  // }
+  Future<Map<String, dynamic>>
+  getLessonResult(int lessonId) async {
+
+    try {
+
+      final dio = await getDio();
+
+      final response = await dio.get(
+        "/lessons/$lessonId/result",
+      );
+
+      print("RESULT DATA:");
+      print(response.data);
+
+      return response.data;
+
+    } catch (e) {
+
+      print("RESULT ERROR:");
+      print(e);
+
+      rethrow;
+    }
+  }
+  Future<QuestionModel>
+  getNextQuestion(int lessonId) async {
+
     final dio = await getDio();
 
-    print("BASE URL: ${dio.options.baseUrl}");
+    final response = await dio.get(
+      "/lessons/$lessonId/next-question",
+    );
 
-    final endpoint = "/UserDashboard/user-dashboard";
+    print("NEXT QUESTION:");
+    print(response.data);
 
-    print("ENDPOINT: $endpoint");
-
-    final fullUrl = "${dio.options.baseUrl}$endpoint";
-
-    print("FULL URL: $fullUrl");
-
-    final response = await dio.get(endpoint);
-
-    print("RESPONSE: ${response.data}");
-
-    return ProfileStatsModel.fromJson(response.data);
+    return QuestionModel.fromJson(
+      response.data,
+    );
   }
 
 

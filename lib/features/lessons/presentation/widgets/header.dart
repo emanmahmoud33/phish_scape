@@ -94,7 +94,10 @@ class _HeaderState extends State<Header> {
 
     /// 👤 Name
     Text(
-    state.user?.firstName ?? "User",
+    "${state.user?.firstName ?? ""} ${state.user?.lastName ?? ""}".trim().isEmpty
+        ? "User"
+        : "${state.user?.firstName ?? ""} ${state.user?.lastName ?? ""}",
+
     style: const TextStyle(
     color: AppColors.textPrimary,
     fontWeight: FontWeight.w700,

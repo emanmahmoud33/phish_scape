@@ -9,7 +9,7 @@ class AuthCubit extends Cubit<AuthState> {
   String? token;
   AuthCubit(this.service) : super(AuthInitial());
 
-  /// 🔐 LOGIN
+
   void login(String email, String password) async {
     emit(AuthLoading());
 
@@ -28,25 +28,24 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
-  /// 📧 FORGET PASSWORD
+
   void forgetPassword(String email) async {
     emit(AuthLoading());
 
     try {
       await service.forgetPassword(email);
-      emit(ForgetPasswordSuccess()); // ✅
+      emit(ForgetPasswordSuccess());
     } catch (e) {
       emit(AuthError("Something went wrong"));
     }
   }
 
-  /// 📝 REGISTER
   void register({
     required String email,
     required String password,
     required String firstName,
     required String lastName,
-  }) async {
+  })async {
     emit(AuthLoading());
 
     try {
@@ -56,11 +55,36 @@ class AuthCubit extends Cubit<AuthState> {
         firstName: firstName,
         lastName: lastName,
       );
+      emit(RegisterSuccess());
+    }  catch (e) {
 
-      emit(RegisterSuccess()); // ✅
-    } catch (e) {
-      emit(AuthError("Registration failed"));
-    }
+  if (e is DioException) {
+
+  print("STATUS CODE:");
+  print(e.response?.statusCode);
+
+  print("RESPONSE:");
+  print(e.response?.data);
+
+  print("MESSAGE:");
+  print(e.message);
+
+  emit(
+  AuthError(
+  e.response?.data.toString() ??
+  "Registration failed",
+  ),
+  );
+
+  return;
+  }
+
+  emit(
+  AuthError(
+  e.toString(),
+  ),
+  );
+  }
   }
 
   void setLevel(String level) async {
@@ -70,10 +94,10 @@ class AuthCubit extends Cubit<AuthState> {
 
     try {
       await service.setUserLevel(level);
-      print("SUCCESS 🔥");
+      print("SUCCESS ");
       emit(LevelSuccess());
     } catch (e) {
-      print("ERROR ❌: $e");
+      print("ERROR : $e");
       emit(AuthError("Failed to set level"));
     }
   }
@@ -84,8 +108,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
 
     try {
-      final file = File(path); // 🔥 أهم سطر
-
+      final file = File(path);
       await service.uploadProfileImage(file);
 
       emit(ImageUploadSuccess());
@@ -95,7 +118,7 @@ class AuthCubit extends Cubit<AuthState> {
   }
 }
 
-/// ================= STATES =================
+
 class LevelSuccess extends AuthState {}
 
 class ImageUploadSuccess extends AuthState {}
@@ -109,20 +132,19 @@ class AuthSuccess extends AuthState {
 }
 class AuthLoading extends AuthState {}
 
-/// 🔐 Login
+
 class LoginSuccess extends AuthState {
   final String token;
 
   LoginSuccess(this.token);
 }
 
-/// 📝 Register
+
 class RegisterSuccess extends AuthState {}
 
-/// 📧 Forget Password
 class ForgetPasswordSuccess extends AuthState {}
 
-/// ❌ Error
+
 class AuthError extends AuthState {
   final String error;
 
