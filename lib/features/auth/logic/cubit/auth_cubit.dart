@@ -128,3 +128,4 @@ class AuthError extends AuthState {
 
   AuthError(this.error);
 }
+

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/routing/app_routes.dart';
-
+import '../../data/models/chat_message_model.dart';
+import '../../data/services/chat_service.dart';
+import 'package:intl/intl.dart';
 class Message {
   final String text;
   final bool isUser;
@@ -16,44 +18,99 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
-  final TextEditingController controller = TextEditingController();
+  final ScrollController scrollController =
+  ScrollController();
+  final TextEditingController messageController =
+  TextEditingController();
 
-  List<Message> messages = [
-    Message(
+  final List<ChatMessageModel> messages = [
+
+    ChatMessageModel(
       text:
       "Hello! I'm your AI Cyber Assistant.\nPhishing often starts with a deceptive link. Would you like to dive into a specific concept?",
       isUser: false,
     ),
-    Message(
+
+    ChatMessageModel(
       text:
       "URL Spoofing is a common technique where attackers create a web address that looks legitimate but leads to a malicious site.",
       isUser: false,
     ),
   ];
 
-  void sendMessage() {
-    if (controller.text.trim().isEmpty) return;
+  final ChatService chatService = ChatService();
 
-    final text = controller.text;
+  String conversationId = "";
+
+  bool isLoading = false;
+
+  Future<void> sendMessage() async {
+    if (messageController.text.trim().isEmpty) return;
+
+    final userMessage = messageController.text;
 
     setState(() {
-      messages.add(Message(text: text, isUser: true));
+      messages.add(
+        ChatMessageModel(
+          text: userMessage,
+          isUser: true,
+        ),
+      );
+
+      isLoading = true;
     });
 
-    controller.clear();
+    messageController.clear();
 
-    /// 🔹 Fake AI (هتشيلها لما تربطي API)
-    Future.delayed(const Duration(seconds: 1), () {
+    try {
+      final response = await chatService.sendMessage(
+        message: userMessage,
+        conversationId: conversationId,
+      );
+
+      conversationId = response["conversationId"];
+
+      final botReply = response["reply"];
+
       setState(() {
         messages.add(
-          Message(
-            text: "This is a demo AI response.",
+          ChatMessageModel(
+            text: botReply,
+            isUser: false,
+          ),
+        );
+        Future.delayed(
+          const Duration(milliseconds: 100),
+              () {
+            scrollController.animateTo(
+              scrollController.position.maxScrollExtent,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+            );
+          },
+        );
+      });
+    } catch (e) {
+      setState(() {
+        messages.add(
+          ChatMessageModel(
+            text: "Something went wrong",
             isUser: false,
           ),
         );
       });
+    }
+
+    setState(() {
+      isLoading = false;
     });
   }
+
+  void sendQuickMessage(String text) {
+    messageController.text = text;
+    sendMessage();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -160,115 +217,125 @@ class _ChatScreenState extends State<ChatScreen> {
           children: [
 
       /// 📨 MESSAGES
-      Expanded(
-      child: ListView.builder(
-      padding: EdgeInsets.all(w * 0.05),
-      itemCount: messages.length + 1,
-      itemBuilder: (context, index) {
+            Expanded(
+              child: ListView.builder(
+                controller: scrollController,
+                itemCount: messages.length,
+                itemBuilder: (context, index) {
+                  final message = messages[index];
 
-        /// TODAY LABEL
-        if (index == 0) {
-          return Center(
-            child: Text(
-              "Today",
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 12 * scale,
+                  return Align(
+                    alignment:
+                    message.isUser
+                        ? Alignment.centerRight
+                        : Alignment.centerLeft,
+
+                    child: Column(
+                      crossAxisAlignment:
+                      message.isUser
+                          ? CrossAxisAlignment.end
+                          : CrossAxisAlignment.start,
+
+                      children: [
+
+                        /// الرسالة
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          padding: const EdgeInsets.all(14),
+
+                          decoration: BoxDecoration(
+                            color: message.isUser
+                                ? const Color(0xFF2F80ED)
+                                : const Color(0xFF1F2937),
+
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+
+                          child: Text(
+                            message.text,
+                            style: const TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+
+                        /// الوقت + seen
+
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            right: 6,
+                            top: 2,
+                          ),
+
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+
+                              Text(
+                                DateFormat('hh:mm a').format(DateTime.now()),
+                                style: TextStyle(
+                                  color: Colors.white.withOpacity(0.5),
+                                  fontSize: 10,
+                                ),
+                              ),
+
+                              const SizedBox(width: 4),
+
+                              if (message.isUser)
+                                const Icon(
+                                  Icons.done_all,
+                                  color: Color(0xFF5EA2F6),
+                                  size: 14,
+                                ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
             ),
-          );
-        }
-
-        final msg = messages[index - 1];
-
-        return Column(
-          crossAxisAlignment: msg.isUser
-              ? CrossAxisAlignment.end
-              : CrossAxisAlignment.start,
-          children: [
-
-            /// MESSAGE
-         Padding(
-        padding: const EdgeInsets.only(top: 16),
-        child: Column(
-        crossAxisAlignment:
-        msg.isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
-        children: [
-
-        /// 📨 MESSAGE
-        msg.isUser
-        ? Container(
-        padding: const EdgeInsets.all(14),
-        constraints: BoxConstraints(maxWidth: w * 0.7),
-        decoration: BoxDecoration(
-        color: const Color(0xFF2F80ED),
-        borderRadius: BorderRadius.circular(16),
-        ),
-        child: Text(
-        msg.text,
-        style: TextStyle(
-        color: Colors.white,
-        fontSize: 13 * scale),
-        ),
-        )
-            : Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-        const CircleAvatar(
-        backgroundColor: Color(0xFF2F80ED),
-        child: Icon(Icons.shield, color: Colors.white),
-        ),
-        const SizedBox(width: 10),
-
-        Expanded(
-        child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
-        borderRadius: BorderRadius.circular(16),
-        ),
-        child: Text(
-        msg.text,
-        style: TextStyle(
-        color: Colors.white,
-        fontSize: 13 * scale),
-        ),
-        ),
-        ),
-        ],
-        ),
-
-        const SizedBox(height: 4),
-
-        /// ⏱️ TIME (تحت الرسالة)
-        Padding(
-        padding: EdgeInsets.only(
-        left: msg.isUser ? 0 : 52, // 👈 علشان يعدي تحت البابل مش تحت الايقون
-        ),
-        child: Text(
-        msg.isUser ? "10:44 AM  ✓✓" : "10:42 AM",
-        style: TextStyle(
-        color: Colors.grey,
-        fontSize: 10 * scale,
-        ),
-        ),
-        ),
-        ],
-        ),
-        ),
-          ],
-        );
-      },
-    ),
-    ),
+            if (isLoading)
+              const Padding(
+                padding: EdgeInsets.all(10),
+                child: CircularProgressIndicator(
+                  color: Color(0xFF2F80ED),
+                ),
+              ),
             /// QUICK ACTIONS
             Padding(
               padding: EdgeInsets.symmetric(horizontal: w * 0.04),
               child: Row(
                 children: [
-                  _quickBtn(Icons.search, "Explain URL Spoofing",Color(0xFF0F1C35),Color(0xFF5EA2F6)),
+
+                  /// Explain URL Spoofing
+                  GestureDetector(
+                    onTap: () {
+                      sendQuickMessage("Explain URL Spoofing");
+                    },
+                    child: _quickBtn(
+                      Icons.search,
+                      "Explain URL Spoofing",
+                      const Color(0xFF0F1C35),
+                      const Color(0xFF5EA2F6),
+                    ),
+                  ),
+
                   const SizedBox(width: 10),
-                  _quickBtn(Icons.link, "Check link",Color(0xFF1D2839),Color(0xffEAEEF2)),
+
+                  /// Check Link
+                  GestureDetector(
+                    onTap: () {
+                      sendQuickMessage("Check this suspicious link");
+                    },
+                    child: _quickBtn(
+                      Icons.link,
+                      "Check link",
+                      const Color(0xFF1D2839),
+                      const Color(0xffEAEEF2),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -291,7 +358,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   Expanded(
                     child: TextField(
-                      controller: controller,
+                      controller: messageController,
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         hintText: "Type your question...",
@@ -305,9 +372,10 @@ class _ChatScreenState extends State<ChatScreen> {
                       color: Colors.grey),
 
                   const SizedBox(width: 8),
-
                   GestureDetector(
-                    onTap: sendMessage,
+                    onTap: () async {
+                      await sendMessage();
+                    },
                     child: Container(
                       height: 40,
                       width: 40,
@@ -315,8 +383,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         color: Color(0xFF2F80ED),
                         shape: BoxShape.circle,
                       ),
-                      child:
-                      const Icon(Icons.send, color: Colors.white),
+                      child: const Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -327,23 +397,48 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
-  Widget _quickBtn(IconData icon, String text,Color bgColor,Color textIconColor) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        decoration: BoxDecoration(
-          color: bgColor,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, color: textIconColor, size: 18),
-             SizedBox(width: 6),
-            Text(text, style:  TextStyle(color:textIconColor ,fontWeight: FontWeight.w700,fontSize: 13)),
-          ],
-        ),
+  Widget _quickBtn(
+      IconData icon,
+      String text,
+      Color bgColor,
+      Color textIconColor,
+      ) {
+    final w = MediaQuery.of(context).size.width;
+
+    return Container(
+      width: w * 0.42,
+      padding: const EdgeInsets.symmetric(
+        vertical: 10,
+        horizontal: 8,
+      ),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            icon,
+            color: textIconColor,
+            size: 18,
+          ),
+
+          const SizedBox(width: 6),
+
+          Flexible(
+            child: Text(
+              text,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                color: textIconColor,
+                fontWeight: FontWeight.w700,
+                fontSize: 13,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
-}
+  }
