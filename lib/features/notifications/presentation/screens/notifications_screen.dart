@@ -36,7 +36,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
             child: Row(
               children: [
 
-                /// 🔙 BACK BUTTON
+
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -60,7 +60,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
                 SizedBox(width: w * 0.02),
 
-                /// 🔤 TITLE
+
                 Expanded(
                   child: Center(
                     child: Text(
@@ -74,7 +74,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                   ),
                 ),
 
-                /// ✅ DONE ICON
                 Icon(
                   Icons.done_all,
                   color: AppColors.primary,
@@ -98,7 +97,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
               // SizedBox(height: h * 0.03),
 
-              /// 🔹 TABS
               SizedBox(
                 height: h * 0.05,
                 child: ListView.builder(
@@ -139,7 +137,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
               SizedBox(height: h * 0.03),
 
-              /// 🔹 LIST
               Expanded(
                 child: ListView(
                   children: [
@@ -199,7 +196,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  /// 🔹 SECTION TITLE
   Widget _sectionTitle(String text, double scale) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 10),
@@ -213,7 +209,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     );
   }
 
-  /// 🔹 NOTIFICATION ITEM
   Widget _notificationItem({
     required IconData icon,
     required Color color,
@@ -232,7 +227,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            /// ICON
             Container(
               height: 48,
               width: 48,
@@ -245,13 +239,11 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
             const SizedBox(width: 12),
 
-            /// TEXT
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
 
-                  /// 🔹 TITLE + TIME
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -277,7 +269,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
                   const SizedBox(height: 4),
 
-                  /// 🔹 SUBTITLE + DOT
                   Row(
                     children: [
 
@@ -294,7 +285,6 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
 
                       const SizedBox(width: 6),
 
-                      /// 🔵 DOT هنا بقى
                       Container(
                         height: 8,
                         width: 8,

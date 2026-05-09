@@ -63,7 +63,6 @@ class _MainLayoutState extends State<MainLayout> {
                   ],
                 ),
 
-                /// 🔵 الزرار اللي في النص
                 Positioned(
                   top: -11.33,
                   child: GestureDetector(
@@ -103,7 +102,6 @@ class _MainLayoutState extends State<MainLayout> {
     );
   }
 
-  /// 🔹 NAV ITEM (Animation + Ripple + Indicator)
   Widget _navItem(IconData icon, String label, int index) {
     final isSelected = currentIndex == index;
 

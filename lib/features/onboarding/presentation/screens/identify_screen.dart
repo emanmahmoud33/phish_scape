@@ -18,12 +18,12 @@ class IdentifyScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(w * 0.05), // بدل 20
+        padding: EdgeInsets.all(w * 0.05),
         decoration: const BoxDecoration(
           color: AppColors.backgroundStart,
         ),
         child: SafeArea(
-          child: SingleChildScrollView( // 👈 الحل هنا
+          child: SingleChildScrollView(
             child: ConstrainedBox(
               constraints: BoxConstraints(
                 minHeight: MediaQuery.of(context).size.height,
@@ -31,7 +31,6 @@ class IdentifyScreen extends StatelessWidget {
               child: Column(
                 children: [
 
-                  /// 🔹 Skip
                   Align(
                     alignment: Alignment.topRight,
                     child: TextButton(
@@ -54,7 +53,6 @@ class IdentifyScreen extends StatelessWidget {
 
                   const SizedBox(height: 20),
 
-                  /// 🔵 Circle
                   CircleAvatar(
                     radius: w * 0.5,
                     backgroundColor: const Color(0xFF0F2C35),
@@ -81,7 +79,6 @@ class IdentifyScreen extends StatelessWidget {
 
                   SizedBox(height: h * 0.04),
 
-                  /// 🔤 Title
                   Text(
                     "Identify the Bait",
                     style: TextStyle(
@@ -93,7 +90,6 @@ class IdentifyScreen extends StatelessWidget {
 
                   SizedBox(height: h * 0.015),
 
-                  /// 📝 Description
                   Text(
                     "Cyber-attacks often hide in plain sight...",
                     textAlign: TextAlign.center,

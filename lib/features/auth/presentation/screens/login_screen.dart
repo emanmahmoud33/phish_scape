@@ -49,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.pushReplacementNamed(context, AppRoutes.identify);
             }
 
-            /// 🔐 LOGIN SUCCESS
+
             if (state is LoginSuccess) {
               final prefs = await SharedPreferences.getInstance();
               await prefs.setString("token", state.token);
@@ -57,21 +57,21 @@ class _LoginScreenState extends State<LoginScreen> {
               Navigator.pushReplacementNamed(context, AppRoutes.identify);
             }
 
-            /// 📝 REGISTER SUCCESS
+
             if (state is RegisterSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Account created")),
               );
             }
 
-            /// 📧 FORGET PASSWORD SUCCESS
+
             if (state is ForgetPasswordSuccess) {
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text("Check your email")),
               );
             }
 
-            /// ❌ ERROR
+
             if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(state.error)),
@@ -95,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children:  [
 
-    /// 🔷 Header
+
     Row(
     children: [
     const Icon(Icons.shield, color: AppColors.primary),
@@ -112,7 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
     ),
 
     SizedBox(height: h * 0.04),
-    /// 🔐 Secure Login
+
     Row(
     children: [
     const Icon(Icons.lock, color: AppColors.primary),
@@ -146,7 +146,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     SizedBox(height: h * 0.015),
 
-    /// 📝 Description
+
     Center(
     child: Padding(
     padding: EdgeInsets.all(w * 0.03),
@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     SizedBox(height: h * 0.04),
 
-    /// 📧 Email
+
     const Text(
     "Email/Username",
     style: TextStyle(color: Colors.white),
@@ -195,7 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     SizedBox(height: h * 0.025),
 
-    /// 🔑 Password
+
     const Text(
     "Password",
     style: TextStyle(color: Colors.white),
@@ -204,7 +204,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
             TextFormField(
               controller: passwordController,
-              obscureText: isPasswordHidden, // 👈 بدل true
+              obscureText: isPasswordHidden,
 
               validator: (value) {
                 if (value == null || value.isEmpty) {
@@ -226,12 +226,12 @@ class _LoginScreenState extends State<LoginScreen> {
                   borderSide: BorderSide.none,
                 ),
 
-                // 👇 بدل Icon → IconButton
+
                 suffixIcon: IconButton(
                   icon: Icon(
                     isPasswordHidden
-                        ? Icons.visibility_off   // مخفي
-                        : Icons.visibility,      // ظاهر
+                        ? Icons.visibility_off
+                        : Icons.visibility,
                     color: AppColors.textSecondary,
                   ),
                   onPressed: () {
@@ -244,7 +244,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
 
     SizedBox(height: h * 0.015),
-      /// 🔗 Forgot
+
       Align(
         alignment: Alignment.centerRight,
         child: TextButton(
@@ -273,7 +273,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       SizedBox(height: h * 0.015),
 
-      /// 🔘 Button + Loading
+
       BlocBuilder<AuthCubit, AuthState>(
         builder: (context, state) {
           if (state is AuthLoading) {
@@ -300,7 +300,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       SizedBox(height: h * 0.025),
 
-      /// 🔒 Encryption
+
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -319,7 +319,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       SizedBox(height: h * 0.05),
 
-      /// OR
+
       Center(
         child: Text(
           "Or authenticate with",
@@ -336,7 +336,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       SizedBox(height: h * 0.04),
 
-      /// Register
+
       Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

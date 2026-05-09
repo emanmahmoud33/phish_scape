@@ -1,546 +1,486 @@
-
-
 import 'package:flutter/material.dart';
-
+import 'package:flutter_svg/svg.dart';
 import '../../../core/routing/app_routes.dart';
 import '../../../core/theme/app_colors.dart';
 
-class ProfileScreen extends StatelessWidget {
-const ProfileScreen({super.key});
+class ProfileScreen extends StatefulWidget {
 
-@override
-Widget build(BuildContext context) {
-final width = MediaQuery.of(context).size.width;
+  const ProfileScreen({super.key});
 
-return Scaffold(
-backgroundColor: const Color(0xFF081826),
-body: SafeArea(
-child: SingleChildScrollView(
-padding: const EdgeInsets.all(20),
-child: Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
+  @override
 
-/// 🔙 HEADER
-Row(
-mainAxisAlignment: MainAxisAlignment.spaceBetween,
-children: [
-
-/// 🔙 BACK BUTTON
-Material(
-color: Colors.transparent,
-child: InkWell(
-borderRadius: BorderRadius.circular(20),
-onTap: () {
-if (Navigator.canPop(context)) {
-Navigator.pop(context);
-} else {
-Navigator.pushReplacementNamed(context, AppRoutes.main);
-}
-},
-child: const Padding(
-padding: EdgeInsets.all(8),
-child: Icon(
-Icons.arrow_back_ios,
-color: AppColors.primary,
-),
-),
-),
-),
-
-const Text(
-"Security Score & Stats",
-style: TextStyle(
-color: AppColors.textPrimary,
-fontWeight: FontWeight.w700,
-fontSize: 18,
-),
-),
-
-Material(
-color: Colors.transparent,
-child: InkWell(
-borderRadius: BorderRadius.circular(20),
-onTap: () {
-print("share");
-},
-child: const Padding(
-padding: EdgeInsets.all(8),
-child: Icon(
-Icons.share,
-color: AppColors.primary,
-),
-),
-),
-),
-],
-),
-
-const SizedBox(height: 20),
-
-/// 🔢 TOP CARDS
-Row(
-children: [
-Expanded(
-child: _topCard(
-title: "Security Score",
-value: "85",
-sub: "/100",
-extra: "+12% vs last week",
-icon: Icons.trending_up,
-valueColor: AppColors.primary,
-),
-),
-const SizedBox(width: 12),
-Expanded(
-child: _topCard(
-title: "Global Rank",
-value: "Top 5%",
-sub: "",
-extra: "Expert Level",
-icon: Icons.workspace_premium,
-valueColor: AppColors.textPrimary,
-),
-),
-],
-),
-
-const SizedBox(height: 25),
-
-const Text(
-"Detection Accuracy",
-style: TextStyle(
-color: AppColors.textPrimary,
-fontSize: 22,
-fontWeight: FontWeight.w700,
-),
-),
-
-const SizedBox(height: 5),
-
-const Text(
-"Performance over last 30 days",
-style: TextStyle(
-color: AppColors.textSecondary,
-fontSize: 14,
-fontWeight: FontWeight.w400,
-),
-),
-
-const SizedBox(height: 15),
-
-/// 📊 CHART BOX
-Container(
-height: width * 0.6,
-padding: const EdgeInsets.all(16),
-decoration: BoxDecoration(
-color: const Color(0xFF1A242E),
-borderRadius: BorderRadius.circular(20),
-),
-child: Stack(
-children: [
-const Align(
-alignment: Alignment.topLeft,
-child: Text(
-"92%",
-style: TextStyle(
-color: AppColors.primary,
-fontSize: 32,
-fontWeight: FontWeight.w700,
-),
-),
-),
-
-const Positioned(
-top: 40,
-left: 0,
-child: Row(
-children: [
-Text(
-"Current Average",
-style: TextStyle(
-color: AppColors.textSecondary,
-fontSize: 12,
-),
-),
-SizedBox(width: 3),
-Text(
-'+5.4%',
-style: TextStyle(color: Color(0xFF0BDA5B)),
-),
-],
-),
-),
-
-Positioned(
-top: 0,
-right: 0,
-child: Container(
-width: 40,
-height: 46.67,
-padding: const EdgeInsets.all(10),
-decoration: BoxDecoration(
-color: AppColors.primary.withOpacity(0.15),
-borderRadius: BorderRadius.circular(12),
-),
-child: const Icon(
-Icons.analytics,
-color: AppColors.primary,
-size: 20,
-),
-),
-),
-
-Positioned.fill(
-top: 80,
-child: Column(
-children: [
-Expanded(
-child: CustomPaint(
-painter: ChartPainter(),
-child: Container(),
-),
-),
-
-const SizedBox(height: 10),
-
-const Row(
-mainAxisAlignment: MainAxisAlignment.spaceBetween,
-children: [
-Text("MAY 01", style: TextStyle(color: Colors.grey, fontSize: 10)),
-Text("MAY 15", style: TextStyle(color: Colors.grey, fontSize: 10)),
-Text("TODAY", style: TextStyle(color: Colors.grey, fontSize: 10)),
-],
-),
-],
-),
-),
-],
-),
-),
-
-const SizedBox(height: 25),
-
-const Text(
-"Earned Badges",
-style: TextStyle(
-color: Colors.white,
-fontSize: 18,
-fontWeight: FontWeight.bold,
-),
-),
-
-const SizedBox(height: 1),
-
-const Text(
-"Demonstrated cybersecurity proficiency",
-style: TextStyle(color: Colors.grey),
-),
-
-const SizedBox(height: 15),
-
-Column(
-children: [
-Row(
-mainAxisAlignment: MainAxisAlignment.spaceAround,
-children: [
-_badgeItem(Icons.link, "Link Inspector"),
-_badgeItem(Icons.shield, "Scam Hunter"),
-_badgeItem(Icons.bolt, "Zero-Day Hero"),
-],
-),
-
-const SizedBox(height: 20),
-
-Row(
-mainAxisAlignment: MainAxisAlignment.spaceAround,
-children: [
-_lockedBadge(Icons.lock, "Firewall Master"),
-_lockedBadge(Icons.key, "Vault Guard"),
-_lockedBadge(Icons.security, "Admin Access"),
-],
-),
-],
-),
-
-const SizedBox(height: 25),
-
-_infoCard(
-icon: Icons.local_fire_department,
-title: "Current Streak",
-subtitle: "12 days running",
-value: "12",
-iconColor: const Color(0xFFEF6E15),
-bgColor: const Color(0xFF2E2929),
-),
-
-const SizedBox(height: 12),
-
-_infoCard(
-icon: Icons.task_alt,
-title: "Tests Completed",
-subtitle: "All time total",
-value: "34",
-iconColor: Colors.purple,
-bgColor: Colors.purple.withOpacity(0.1),
-),
-],
-),
-),
-),
-);
+  State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
-Widget _topCard({
-required String title,
-required String value,
-required String sub,
-required Color valueColor,
-required String extra,
-required IconData icon,
-}) {
-return Container(
-padding: const EdgeInsets.all(16),
-decoration: BoxDecoration(
-color: const Color(0xFF1A242E),
-borderRadius: BorderRadius.circular(12),
-),
-child: Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-Text(title,
-style: const TextStyle(
-color: AppColors.textSecondary,
-fontSize: 14,
-fontWeight: FontWeight.w500)),
-const SizedBox(height: 10),
-Row(
-children: [
-Text(
-value,
-style: TextStyle(
-color: valueColor,
-fontSize: 30,
-fontWeight: FontWeight.w700,
-),
-),
-const SizedBox(width: 4),
-Text(sub,
-style: const TextStyle(
-color: AppColors.textSecondary,
-fontSize: 14,
-fontWeight: FontWeight.w400,
-)),
-],
-),
-const SizedBox(height: 8),
-Row(
-children: [
-Icon(icon, color: const Color(0xFF0BDA5B), size: 14),
-const SizedBox(width: 4),
-Text(
-extra,
-style: const TextStyle(
-color: Color(0xFF0BDA5B),
-fontSize: 12,
-fontWeight: FontWeight.w500,
-),
-),
-],
-),
-],
-),
-);
+class _ProfileScreenState extends State<ProfileScreen> {
+
+
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+        backgroundColor: const Color(0xFF081826),
+    body: SafeArea(
+    child: SingleChildScrollView(
+    padding: const EdgeInsets.all(20),
+    child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+    Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+    Material(
+    color: Colors.transparent,
+    child: InkWell(
+    borderRadius: BorderRadius.circular(20),
+    onTap: () {
+    if (Navigator.canPop(context)) {
+    Navigator.pop(context);
+    } else {
+    Navigator.pushReplacementNamed(
+    context, AppRoutes.main);
+    }
+    },
+    child: const Padding(
+    padding: EdgeInsets.all(8),
+    child: Icon(
+    Icons.arrow_back_ios,
+    color: AppColors.primary,
+    ),
+    ),
+    ),
+    ),
+
+    const Text(
+    "Security Score & Stats",
+    style: TextStyle(
+    color: AppColors.textPrimary,
+    fontWeight: FontWeight.w700,
+    fontSize: 18,
+    ),
+    ),
+
+    Material(
+    color: Colors.transparent,
+    child: InkWell(
+    borderRadius: BorderRadius.circular(20),
+    onTap: () {
+    print("share");
+    },
+    child: const Padding(
+    padding: EdgeInsets.all(8),
+    child: Icon(
+    Icons.share,
+    color: AppColors.primary,
+    ),
+    ),
+    ),
+    ),
+    ],
+    ),
+
+    const SizedBox(height: 20),
+
+    Row(
+    children: [
+    Expanded(
+    child: _topCard(
+    title: "Security Score",
+    value: "85",
+    sub: "/100",
+    extra: "+12% vs last week",
+    icon: Icons.trending_up,
+    valueColor: AppColors.primary,
+    ),
+    ),
+    const SizedBox(width: 12),
+    Expanded(
+    child: _topCard(
+    title: "Global Rank",
+    value: "Top 5%",
+    sub: "",
+    extra: "Expert Level",
+    icon: Icons.workspace_premium,
+    valueColor: AppColors.textPrimary,
+    ),
+    ),
+    ],
+    ),
+
+    const SizedBox(height: 25),
+
+    const Text(
+    "Detection Accuracy",
+    style: TextStyle(
+    color: AppColors.textPrimary,
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+    ),
+    ),
+
+    const SizedBox(height: 5),
+
+
+    const Text(
+    "Performance over last 30 days",
+    style: TextStyle(
+    color: AppColors.textSecondary,
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    ),
+    ),
+
+    const SizedBox(height: 15),
+
+    Container(
+    height: width * 0.6,
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+    color: const Color(0xFF1A242E),
+    borderRadius: BorderRadius.circular(20),
+    ),
+    child: Stack(
+    children: [
+    const Align(
+    alignment: Alignment.topLeft,
+    child: Text(
+    "92%",
+    style: TextStyle(
+    color: AppColors.primary,
+    fontSize: 32,
+    fontWeight: FontWeight.w700,
+    ),
+    ),
+    ),
+    const Positioned(
+    top: 40,
+    left: 0,
+    child: Row(
+    children: [
+    Text(
+    "Current Average",
+    style: TextStyle(
+    color: AppColors.textSecondary,
+    fontSize: 12,
+    ),
+    ),
+    SizedBox(width: 3),
+    Text(
+    '+5.4%',
+    style: TextStyle(color: Color(0xFF0BDA5B)),
+    ),
+    ],
+    ),
+    ),
+    Positioned(
+    top: 0,
+    right: 0,
+    child: Container(
+    width: 40,
+    height: 46.67,
+    padding: const EdgeInsets.all(10),
+    decoration: BoxDecoration(
+    color: AppColors.primary.withOpacity(0.15),
+    borderRadius: BorderRadius.circular(12),
+    ),
+    child: const Icon(
+    Icons.analytics,
+    color: AppColors.primary,
+    size: 20,
+    ),
+    ),
+    ),
+    Positioned.fill(
+    top: 60,
+    bottom: 25,
+    child: Column(
+    children: [
+    Expanded(
+    child: SvgPicture.asset(
+    "assets/images/SVG_Graphic.svg",
+    fit: BoxFit.fill,
+    width: double.infinity,
+    ),
+    ),
+    const SizedBox(height: 10),
+    const Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+    Text("MAY 01",
+    style: TextStyle(
+    color: Colors.grey, fontSize: 10)),
+    Text("MAY 15",
+    style: TextStyle(
+    color: Colors.grey, fontSize: 10)),
+    Text("TODAY",
+    style: TextStyle(
+    color: Colors.grey, fontSize: 10)),
+    ],
+    ),
+    ],
+    ),
+    ),
+    ],
+    ),
+    ),
+
+    const SizedBox(height: 25),
+
+
+      const Text(
+        "Earned Badges",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+
+      const SizedBox(height: 1),
+
+      const Text(
+        "Demonstrated cybersecurity proficiency",
+        style: TextStyle(color: Colors.grey),
+      ),
+
+      const SizedBox(height: 15),
+
+      Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _badgeItem(Icons.link, "Link Inspector"),
+              _badgeItem(Icons.shield, "Scam Hunter"),
+              _badgeItem(Icons.bolt, "Zero-Day Hero"),
+            ],
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _lockedBadge(Icons.lock, "Firewall Master"),
+              _lockedBadge(Icons.key, "Vault Guard"),
+              _lockedBadge(Icons.security, "Admin Access"),
+            ],
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 25),
+
+      _infoCard(
+        icon: Icons.local_fire_department,
+        title: "Current Streak",
+        subtitle: "12 days running",
+        value: "12",
+        iconColor: const Color(0xFFEF6E15),
+        bgColor: const Color(0xFF2E2929),
+      ),
+
+      const SizedBox(height: 12),
+
+      _infoCard(
+        icon: Icons.task_alt,
+        title: "Tests Completed",
+        subtitle: "All time total",
+        value: "34",
+        iconColor: Colors.purple,
+        bgColor: Colors.purple.withOpacity(0.1),
+      ),
+    ],
+    ),
+    ),
+    ),
+    );
+  }
+
+  Widget _topCard({
+    required String title,
+    required String value,
+    required String sub,
+    required Color valueColor,
+    required String extra,
+    required IconData icon,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A242E),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title,
+              style: const TextStyle(
+                  color: AppColors.textSecondary,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500)),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Text(
+                value,
+                style: TextStyle(
+                  color: valueColor,
+                  fontSize: 30,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(width: 4),
+              Text(sub,
+                  style: const TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                  )),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Icon(icon, color: const Color(0xFF0BDA5B), size: 14),
+              const SizedBox(width: 4),
+              Text(
+                extra,
+                style: const TextStyle(
+                  color: Color(0xFF0BDA5B),
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+
+  Widget _infoCard({
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required String value,
+    required Color iconColor,
+    required Color bgColor,
+  }) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1A242E),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: bgColor,
+            ),
+            child: Icon(icon, size: 24, color: iconColor),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title,
+                    style: const TextStyle(
+                        color: AppColors.textPrimary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 14)),
+                Text(subtitle,
+                    style: const TextStyle(
+                        color: AppColors.textSecondary,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400)),
+              ],
+            ),
+          ),
+          Text(
+            value,
+            style: const TextStyle(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w700,
+              fontSize: 18,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
-Widget _infoCard({
-required IconData icon,
-required String title,
-required String subtitle,
-required String value,
-required Color iconColor,
-required Color bgColor,
-}) {
-return Container(
-padding: const EdgeInsets.all(16),
-decoration: BoxDecoration(
-color: const Color(0xFF1A242E),
-borderRadius: BorderRadius.circular(12),
-),
-child: Row(
-children: [
-Container(
-width: 40,
-height: 40,
-decoration: BoxDecoration(
-borderRadius: BorderRadius.circular(8),
-color: bgColor,
-),
-child: Icon(icon, size: 24, color: iconColor),
-),
-const SizedBox(width: 12),
-Expanded(
-child: Column(
-crossAxisAlignment: CrossAxisAlignment.start,
-children: [
-Text(title,
-style: const TextStyle(
-color: AppColors.textPrimary,
-fontWeight: FontWeight.w700,
-fontSize: 14)),
-Text(subtitle,
-style: const TextStyle(
-color: AppColors.textSecondary,
-fontSize: 12,
-fontWeight: FontWeight.w400)),
-],
-),
-),
-Text(
-value,
-style: const TextStyle(
-color: AppColors.textPrimary,
-fontWeight: FontWeight.w700,
-fontSize: 18,
-),
-),
-],
-),
-);
-}
-}
-
-class ChartPainter extends CustomPainter {
-@override
-void paint(Canvas canvas, Size size) {
-final paintLine = Paint()
-..color = Colors.blue
-..strokeWidth = 3
-..style = PaintingStyle.stroke;
-
-final path = Path();
-
-path.moveTo(0, size.height * 0.7);
-
-path.quadraticBezierTo(
-size.width * 0.1,
-size.height * 0.2,
-size.width * 0.2,
-size.height * 0.5);
-
-path.quadraticBezierTo(
-size.width * 0.3,
-size.height * 0.8,
-size.width * 0.4,
-size.height * 0.4);
-
-path.quadraticBezierTo(
-size.width * 0.5,
-size.height * 0.3,
-size.width * 0.6,
-size.height * 0.9);
-
-path.quadraticBezierTo(
-size.width * 0.7,
-size.height * 0.1,
-size.width * 0.8,
-size.height * 0.6);
-
-path.quadraticBezierTo(
-size.width * 0.9,
-size.height * 0.8,
-size.width,
-size.height * 0.3);
-
-canvas.drawPath(path, paintLine);
-
-final paintFill = Paint()
-..shader = LinearGradient(
-colors: [
-Colors.blue.withOpacity(0.3),
-Colors.transparent,
-],
-begin: Alignment.topCenter,
-end: Alignment.bottomCenter,
-).createShader(Rect.fromLTWH(0, 0, size.width, size.height));
-
-final fillPath = Path.from(path)
-..lineTo(size.width, size.height)
-..lineTo(0, size.height)
-..close();
-
-canvas.drawPath(fillPath, paintFill);
-}
-
-@override
-bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
 
 Widget _badgeItem(IconData icon, String text) {
-return Column(
-children: [
-Container(
-padding: const EdgeInsets.all(2),
-width: 80,
-height: 80,
-decoration: BoxDecoration(
-shape: BoxShape.circle,
-border: Border.all(
-color: const Color(0xFF103152),
-width: 3,
-),
-),
-child: CircleAvatar(
-radius: 28,
-backgroundColor: const Color(0xFF1A242E),
-child: Icon(
-icon,
-color: AppColors.primary,
-size: 36,
-),
-),
-),
-const SizedBox(height: 8),
-Text(
-text,
-style: const TextStyle(
-color: Colors.white,
-fontSize: 13,
-fontWeight: FontWeight.w700,
-),
-textAlign: TextAlign.center,
-),
-],
-);
+  return Column(
+    children: [
+      Container(
+        padding: const EdgeInsets.all(2),
+        width: 80,
+        height: 80,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: const Color(0xFF103152),
+            width: 3,
+          ),
+        ),
+        child: CircleAvatar(
+          radius: 28,
+          backgroundColor: const Color(0xFF1A242E),
+          child: Icon(
+            icon,
+            color: AppColors.primary,
+            size: 36,
+          ),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        text,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 13,
+          fontWeight: FontWeight.w700,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    ],
+  );
 }
 
 Widget _lockedBadge(IconData icon, String text) {
-return Column(
-children: [
-SizedBox(
-width: 80,
-height: 80,
-child: CircleAvatar(
-radius: 30,
-backgroundColor: const Color(0xFF151E29),
-child: Icon(
-icon,
-color: const Color(0xFF404B57),
-size: 36,
-),
-),
-),
-const SizedBox(height: 8),
-Text(
-text,
-style: const TextStyle(
-color: AppColors.textSecondary,
-fontSize: 11,
-fontWeight: FontWeight.w500,
-),
-textAlign: TextAlign.center,
-),
-],
-);
+  return Column(
+    children: [
+      SizedBox(
+        width: 80,
+        height: 80,
+        child: CircleAvatar(
+          radius: 30,
+          backgroundColor: const Color(0xFF151E29),
+          child: Icon(
+            icon,
+            color: const Color(0xFF404B57),
+            size: 36,
+          ),
+        ),
+      ),
+      const SizedBox(height: 8),
+      Text(
+        text,
+        style: const TextStyle(
+          color: AppColors.textSecondary,
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+        ),
+        textAlign: TextAlign.center,
+      ),
+    ],
+  );
 }
-

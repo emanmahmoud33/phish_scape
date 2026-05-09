@@ -178,7 +178,6 @@ class _SignupScreenState extends State<SignupScreen> {
 
                     SizedBox(height: h * 0.04),
 
-                    /// FIRST NAME
                     _label("First Name", scale),
 
                     _input(

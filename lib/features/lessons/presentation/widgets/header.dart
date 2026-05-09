@@ -37,7 +37,7 @@ class _HeaderState extends State<Header> {
     child: Row(
     children: [
 
-    /// 🟢 Avatar
+
     BlocBuilder<UserCubit, UserState>(
     builder: (context, state) {
     String? imageUrl;
@@ -83,7 +83,7 @@ class _HeaderState extends State<Header> {
 
     const SizedBox(width: 12),
 
-    /// 🟢 Text (name + level)
+
     BlocBuilder<UserCubit, UserState>(
     builder: (context, state) {
     if (state is UserDataState) {
@@ -92,7 +92,7 @@ class _HeaderState extends State<Header> {
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
 
-    /// 👤 Name
+
     Text(
     "${state.user?.firstName ?? ""} ${state.user?.lastName ?? ""}".trim().isEmpty
         ? "User"
@@ -107,7 +107,7 @@ class _HeaderState extends State<Header> {
 
     const SizedBox(height: 2),
 
-    /// 🎯 Level (من local)
+
     FutureBuilder(
     future: SharedPreferences.getInstance(),
     builder: (context, snapshot) {

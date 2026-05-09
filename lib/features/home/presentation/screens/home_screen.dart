@@ -303,7 +303,18 @@ class _HomeScreenState extends State<HomeScreen> {
                                     text: 'Analyze Now',
                                     onPressed: () {
                                       Navigator.pushNamed(
-                                          context, AppRoutes.simulation);
+
+                                        context,
+
+                                        AppRoutes.simulation,
+
+                                        arguments: {
+
+                                          "lessonId": 1,
+
+                                          "progress": 0,
+                                        },
+                                      );
                                     },
                                   )
                                 ],

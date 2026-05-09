@@ -134,7 +134,6 @@ class _ChatScreenState extends State<ChatScreen> {
             child: Row(
               children: [
 
-                /// 🔙 BACK BUTTON (نفس الشكل بالظبط)
                 Material(
                   color: Colors.transparent,
                   child: InkWell(
@@ -212,11 +211,11 @@ class _ChatScreenState extends State<ChatScreen> {
         ),
       ),
 
-      /// 🔹 BODY
+
       body: Column(
           children: [
 
-      /// 📨 MESSAGES
+
             Expanded(
               child: ListView.builder(
                 controller: scrollController,
@@ -238,7 +237,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                       children: [
 
-                        /// الرسالة
+
                         Container(
                           margin: const EdgeInsets.symmetric(vertical: 8),
                           padding: const EdgeInsets.all(14),
@@ -259,7 +258,7 @@ class _ChatScreenState extends State<ChatScreen> {
                           ),
                         ),
 
-                        /// الوقت + seen
+
 
                         Padding(
                           padding: const EdgeInsets.only(
@@ -303,13 +302,13 @@ class _ChatScreenState extends State<ChatScreen> {
                   color: Color(0xFF2F80ED),
                 ),
               ),
-            /// QUICK ACTIONS
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: w * 0.04),
               child: Row(
                 children: [
 
-                  /// Explain URL Spoofing
+
                   GestureDetector(
                     onTap: () {
                       sendQuickMessage("Explain URL Spoofing");
@@ -324,7 +323,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
                   const SizedBox(width: 10),
 
-                  /// Check Link
+
                   GestureDetector(
                     onTap: () {
                       sendQuickMessage("Check this suspicious link");
@@ -342,7 +341,7 @@ class _ChatScreenState extends State<ChatScreen> {
 
             const SizedBox(height: 10),
 
-            /// INPUT
+
             Container(
               margin: EdgeInsets.all(w * 0.04),
               padding: const EdgeInsets.symmetric(horizontal: 12),

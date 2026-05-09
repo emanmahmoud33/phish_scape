@@ -17,7 +17,7 @@ class LessonCubit extends Cubit<LessonState> {
     try {
       final lessons = await service.getLessons();
 
-      print("LESSONS: $lessons"); // 🔥 مهم
+      print("LESSONS: $lessons");
 
       allLessons = lessons;
 

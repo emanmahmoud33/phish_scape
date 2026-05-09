@@ -25,12 +25,10 @@ class ProtectedScreen extends StatelessWidget {
         ),
         child: SafeArea(
 
-          /// 👇 الحل هنا
           child: SingleChildScrollView(
             child: Column(
               children: [
 
-                /// 🔹 Skip
                 Align(
                   alignment: Alignment.topRight,
                   child: TextButton(
@@ -53,7 +51,6 @@ class ProtectedScreen extends StatelessWidget {
 
                 SizedBox(height: h * 0.05),
 
-                /// 🔵 Circle
                 SizedBox(
                   height: w * 0.7,
                   width: w * 0.7,
@@ -90,7 +87,6 @@ class ProtectedScreen extends StatelessWidget {
 
                 SizedBox(height: h * 0.04),
 
-                /// 📝 Title
                 Text(
                   "Stay Protected",
                   style: TextStyle(
@@ -102,7 +98,6 @@ class ProtectedScreen extends StatelessWidget {
 
                 SizedBox(height: h * 0.015),
 
-                /// 📄 Description
                 Text(
                   "Build long-term security habits and watch your Security Score grow...",
                   textAlign: TextAlign.center,
@@ -114,7 +109,6 @@ class ProtectedScreen extends StatelessWidget {
 
                 SizedBox(height: h * 0.08),
 
-                /// 🟦 Card
                 Container(
                   padding: EdgeInsets.all(w * 0.04),
                   decoration: BoxDecoration(

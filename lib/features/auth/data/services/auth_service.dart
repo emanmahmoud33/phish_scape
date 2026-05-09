@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../lessons/data/models/lesson_model.dart';
 import '../../../meta/data/models/difficulty_model.dart';
-import '../../../profile/data/models/profile_stats_model.dart';
+
 import '../../../simulation/data/models/question_model.dart';
 import '../models/login_model.dart';
 import '../models/user_model.dart';
@@ -13,7 +13,7 @@ import '../../../../core/network/dio_helper.dart';
 
 class AuthService {
 
-  /// ================ LOGIN ================
+
   Future<LoginModel> login(String email, String password) async {
     final response = await DioHelper.dio.post(
       "/Auth",
@@ -26,9 +26,9 @@ class AuthService {
     return LoginModel.fromJson(response.data);
   }
 
-  /// ================= GET USER =================
+
   Future<UserModel> getMe() async {
-    final dio = await getDio(); // ✅ لازم token
+    final dio = await getDio();
 
     final response = await dio.get("https://phish-escape.runasp.net/me");
 
@@ -128,11 +128,11 @@ class AuthService {
 
     final response = await dio.get("/lessons/cards");
 
-    print("RAW RESPONSE: ${response.data}"); // 👈 مهم
+    print("RAW RESPONSE: ${response.data}");
 
     final data = response.data;
 
-    /// ✅ لو API بيرجع Map
+
     final List lessonsList = data is List
         ? data
         : data["data"] ?? data["lessons"] ?? [];
@@ -195,25 +195,7 @@ class AuthService {
       rethrow;
     }
   }
-  // Future<ProfileStatsModel> getProfileStats() async {
-  //   final dio = await getDio();
-  //
-  //   print("BASE URL: ${dio.options.baseUrl}");
-  //
-  //   final endpoint = "/UserDashboard/user-dashboard";
-  //
-  //   print("ENDPOINT: $endpoint");
-  //
-  //   final fullUrl = "${dio.options.baseUrl}$endpoint";
-  //
-  //   print("FULL URL: $fullUrl");
-  //
-  //   final response = await dio.get(endpoint);
-  //
-  //   print("RESPONSE: ${response.data}");
-  //
-  //   return ProfileStatsModel.fromJson(response.data);
-  // }
+
   Future<Map<String, dynamic>>
   getLessonResult(int lessonId) async {
 

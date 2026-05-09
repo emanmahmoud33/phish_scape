@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
-import '../../../../core/routing/app_routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/data/services/auth_service.dart';
 import '../../../auth/logic/cubit/auth_cubit.dart';
@@ -32,9 +31,8 @@ class SplashScreen extends StatelessWidget {
 
               const Spacer(),
 
-              /// 🔷 Logo Card
               Container(
-                height: w * 0.48, // 👈 بدل 181
+                height: w * 0.48,
                 width: w * 0.48,
                 decoration: BoxDecoration(
                   color: AppColors.backgroundStart,
@@ -53,14 +51,13 @@ class SplashScreen extends StatelessWidget {
                 child: Center(
                   child: SvgPicture.asset(
                     "assets/images/logo.svg",
-                    height: w * 0.18, // 👈 بدل 70
+                    height: w * 0.18,
                   ),
                 ),
               ),
 
               SizedBox(height: h * 0.04),
 
-              /// 📝 Title
               Text(
                 "PhishScape",
                 style: TextStyle(
@@ -72,7 +69,6 @@ class SplashScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.01),
 
-              /// 🟦 Subtitle
               Text(
                 "Master the defense",
                 style: TextStyle(
@@ -85,7 +81,6 @@ class SplashScreen extends StatelessWidget {
 
               const Spacer(),
 
-              /// 🔹 Bottom Text
               Text(
                 "Protecting your digital assets",
                 style: TextStyle(
@@ -97,10 +92,9 @@ class SplashScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.01),
 
-              /// 🔹 Indicator line
               Container(
                 height: 4,
-                width: w * 0.13, // 👈 بدل 50
+                width: w * 0.13,
                 decoration: BoxDecoration(
                   color: AppColors.primary,
                   borderRadius: BorderRadius.circular(10),
@@ -109,7 +103,6 @@ class SplashScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.07),
 
-              /// 🔘 Button
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(

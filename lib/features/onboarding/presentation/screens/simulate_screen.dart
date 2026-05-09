@@ -18,7 +18,7 @@ class SimulateScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.all(w * 0.05), // بدل 20
+        padding: EdgeInsets.all(w * 0.05),
         decoration: const BoxDecoration(
           color: AppColors.backgroundStart,
         ),
@@ -26,7 +26,6 @@ class SimulateScreen extends StatelessWidget {
           child: Column(
             children: [
 
-              /// 🔹 Skip
               Align(
                 alignment: Alignment.topRight,
                 child: TextButton(
@@ -49,7 +48,6 @@ class SimulateScreen extends StatelessWidget {
 
               const Spacer(),
 
-              /// 🎯 IMAGE
               SvgPicture.asset(
                 "assets/images/div.relative.svg",
                 width: w * 0.7,
@@ -57,7 +55,6 @@ class SimulateScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.04),
 
-              /// 📝 Title
               Text(
                 "Simulate & Practice",
                 style: TextStyle(
@@ -69,7 +66,6 @@ class SimulateScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.015),
 
-              /// 📄 Description
               Text(
                 "Experience real-world threats in a safe sandbox environment. Sharpen your instincts by interacting with simulated phishing attacks without risking your actual data.",
                 textAlign: TextAlign.center,
@@ -81,12 +77,10 @@ class SimulateScreen extends StatelessWidget {
 
               const Spacer(),
 
-              /// 🔵 Dots
               Dots(index: 1),
 
               SizedBox(height: h * 0.025),
 
-              /// 🔘 Button
               SizedBox(
                 width: double.infinity,
                 child: CustomButton(

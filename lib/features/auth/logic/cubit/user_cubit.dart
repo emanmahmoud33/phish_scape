@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 
 import '../../data/services/auth_service.dart';
 import '../../data/models/user_model.dart';
 
-/// ================= STATES =================
+
 UserModel? currentUser;
 String? currentImage;
 abstract class UserState {}
@@ -13,25 +13,24 @@ class UserInitial extends UserState {}
 
 class UserLoading extends UserState {}
 
-/// 🟢 بيانات المستخدم
+
 class UserSuccess extends UserState {
   final UserModel user;
   UserSuccess(this.user);
 }
 
-/// 🟢 الصورة
 class UserImageLoaded extends UserState {
   final String imageUrl;
   UserImageLoaded(this.imageUrl);
 }
 
-/// ❌ error
+
 class UserError extends UserState {
   final String error;
   UserError(this.error);
 }
 
-/// ================= CUBIT =================
+
 
 class UserCubit extends Cubit<UserState> {
 
@@ -39,7 +38,7 @@ class UserCubit extends Cubit<UserState> {
 
   UserCubit(this.service) : super(UserInitial());
 
-  /// 📌 get user (name, email)
+
   Future<void> getUser() async {
     try {
       final user = await service.getMe();

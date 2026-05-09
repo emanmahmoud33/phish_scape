@@ -18,7 +18,7 @@ class SocialButtonRow extends StatelessWidget {
       child: Row(
         children: [
 
-          /// 🔵 Google
+
           Expanded(
             flex: 3,
             child: Container(
@@ -41,7 +41,7 @@ class SocialButtonRow extends StatelessWidget {
 
           SizedBox(width: w * 0.03),
 
-          /// 🍎 iOS
+
           Expanded(
             child: Container(
               height: h * 0.065,
@@ -60,7 +60,7 @@ class SocialButtonRow extends StatelessWidget {
 
           SizedBox(width: w * 0.03),
 
-          /// 💻 Code
+
           Expanded(
             child: Container(
               height: h * 0.065,

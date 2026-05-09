@@ -31,7 +31,6 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
         builder: (context) {
           return BlocListener<AuthCubit, AuthState>(
             listener: (context, state) {
-              /// ✅ SUCCESS
               if (state is LevelSuccess) {
                 Navigator.pushNamedAndRemoveUntil(
                   context,
@@ -40,7 +39,6 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                 );
               }
 
-              /// ❌ ERROR
               if (state is AuthError) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(content: Text(state.error)),
@@ -50,7 +48,6 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
             child: Scaffold(
               backgroundColor: AppColors.backgroundStart,
 
-              /// 🔹 APP BAR
               appBar: AppBar(
                 backgroundColor: AppColors.backgroundStart,
                 automaticallyImplyLeading: false,
@@ -82,7 +79,6 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
 
                         SizedBox(width: w * 0.02),
 
-                        /// 🔤 TITLE
                         Expanded(
                           child: Center(
                             child: Text(
@@ -103,7 +99,6 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                 ),
               ),
 
-              /// 🔹 BODY
               body: SafeArea(
                 child: SingleChildScrollView(
                   child: Padding(
@@ -113,7 +108,6 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
                       children: [
                         SizedBox(height: h * 0.025),
 
-                        /// 📊 Progress
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -160,7 +154,6 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
 
                         SizedBox(height: h * 0.015),
 
-                        /// 📝 Description
                         Text(
                           "We'll tailor your learning path based on your current expertise.",
                           style: TextStyle(
@@ -212,7 +205,6 @@ class _LevelSelectionScreenState extends State<LevelSelectionScreen> {
 
                         SizedBox(height: h * 0.02),
 
-                        /// 🔘 BUTTON
                         SizedBox(
                           width: double.infinity,
                           child: CustomButton(

@@ -4,8 +4,8 @@ import '../../../../core/theme/app_colors.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBack;
-  final Widget? leadingWidget; // 👈 لو عايزة تحطي حاجة غير back
-  final Widget? action; // 👈 icon يمين
+  final Widget? leadingWidget;
+  final Widget? action;
 
   const CustomAppBar({
     super.key,
@@ -33,7 +33,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           child: Row(
             children: [
 
-              /// 🔹 LEADING
+
               if (leadingWidget != null)
                 leadingWidget!
               else if (showBack)
@@ -57,7 +57,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
               SizedBox(width: w * 0.02),
 
-              /// 🔤 TITLE
+
               Expanded(
                 child: Center(
                   child: Text(
@@ -71,7 +71,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
 
-              /// 🔹 ACTION
+
               action ??
                   SizedBox(width: w * 0.05),
             ],
