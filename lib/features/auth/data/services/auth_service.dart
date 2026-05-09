@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 import '../../../lessons/data/models/lesson_model.dart';
+import '../../../meta/data/models/difficulty_model.dart';
 import '../../../profile/data/models/profile_stats_model.dart';
 import '../../../simulation/data/models/question_model.dart';
 import '../models/login_model.dart';
@@ -262,6 +263,24 @@ class AuthService {
     await dio.delete(
       "/api/lessons/$lessonId/reset",
     );
+  }
+
+  Future<List<DifficultyModel>>
+  getDifficultyLevels() async {
+    final dio = DioHelper.dio;
+    final response =
+    await dio.get(
+      "/api/meta/difficulty-levels",
+    );
+
+    return (response.data as List)
+
+        .map(
+          (e) =>
+          DifficultyModel.fromJson(e),
+    )
+
+        .toList();
   }
 
 

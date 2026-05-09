@@ -7,9 +7,38 @@ import '../../logic/lesson_state.dart';
 import '../widgets/header.dart';
 import '../../../../core/routing/app_routes.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-class LessonsScreen extends StatelessWidget {
+import 'package:shared_preferences/shared_preferences.dart';
+class LessonsScreen extends StatefulWidget {
   const LessonsScreen({super.key});
 
+  @override
+  State<LessonsScreen> createState() => _LessonsScreenState();
+}
+
+class _LessonsScreenState extends State<LessonsScreen> {
+  String level = "Beginner";
+
+  @override
+  void initState() {
+
+    super.initState();
+
+    loadLevel();
+  }
+
+  Future<void> loadLevel() async {
+
+    final prefs =
+    await SharedPreferences.getInstance();
+
+    setState(() {
+
+      level =
+          prefs.getString(
+            "level",
+          ) ?? "Beginner";
+    });
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -38,10 +67,31 @@ class LessonsScreen extends StatelessWidget {
         }
 
         if (state is LessonSuccess) {
+          for (var lesson in state.lessons) {
 
-          if (state.lessons.isEmpty) {
-            return const Center(child: Text("No lessons"));
+            print(
+              "LESSON LEVEL: ${lesson.level}",
+            );
           }
+
+          print("SAVED LEVEL: $level");
+
+          final filteredLessons =
+
+          state.lessons.where((lesson) {
+
+            return lesson.level
+                == level;
+
+          }).toList();
+
+          final lessonsToShow =
+
+          filteredLessons.isEmpty
+
+              ? state.lessons
+
+              : filteredLessons;
 
           return ListView(
             padding: EdgeInsets.all(w * 0.04),
@@ -49,9 +99,6 @@ class LessonsScreen extends StatelessWidget {
 
               SizedBox(height: h * 0.025),
 
-               _SearchBar(),
-
-              SizedBox(height: h * 0.03),
 
                _WeeklyGoal(),
 
@@ -68,32 +115,40 @@ class LessonsScreen extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
-                  Text(
-                    "View All",
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontSize: 14 * scale,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
+
                 ],
               ),
 
               SizedBox(height: h * 0.03),
 
-              /// ✅ الحل هنا (null safe)
-              ...state.lessons.map((lesson) {
+
+              ...lessonsToShow.map((lesson) {
+
                 return Padding(
-                  padding: EdgeInsets.only(bottom: h * 0.02),
+
+                  padding:
+                  EdgeInsets.only(
+                    bottom: h * 0.02,
+                  ),
+
                   child: _LessonCard(
+
                     icon: Icons.link,
+
                     title: lesson.title,
+
                     lessonId: lesson.id,
-                    subtitle: lesson.description,
+
+                    subtitle:
+                    lesson.description,
+
                     active: lesson.isActive,
-                    progress: lesson.progress,
+
+                    progress:
+                    lesson.progress,
                   ),
                 );
+
               }).toList(),
 
               SizedBox(height: h * 0.02),
@@ -111,60 +166,7 @@ class LessonsScreen extends StatelessWidget {
   }
 }
 
-class _SearchBar extends StatelessWidget {
-  const _SearchBar();
 
-  @override
-  Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-
-    return Container(
-      height: 50,
-      padding: EdgeInsets.symmetric(horizontal: w * 0.03),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1C2127), // نفس لون الكارد في الصورة
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        children: [
-
-          /// 🔍 أيقونة جوه الكارد
-          const Icon(
-            Icons.search,
-            color: AppColors.textSecondary,
-            size: 20,
-          ),
-
-          SizedBox(width: w * 0.025),
-
-          /// 🔥 input ياخد باقي المساحة
-          Expanded(
-            child: TextField(
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 14,
-              ),
-
-              onChanged: (value) {
-                context.read<LessonCubit>().search(value);
-              },
-
-              decoration: const InputDecoration(
-                hintText: "Find phishing tactics...",
-                hintStyle: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 14,
-                ),
-                border: InputBorder.none,
-                isDense: true, // 👈 مهم عشان يقلل الارتفاع
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class _WeeklyGoal extends StatelessWidget {
   const _WeeklyGoal();
