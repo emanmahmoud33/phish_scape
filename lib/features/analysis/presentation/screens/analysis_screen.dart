@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
 import 'package:phish_scape/features/auth/presentation/widgets/custom_button.dart';
 
+import '../../../../core/routing/app_routes.dart';
 import '../../../auth/presentation/widgets/custom_app_bar.dart';
+import '../../../simulation/logic/cubit/simulation_cubit.dart';
 
 class AnalysisScreen extends StatelessWidget {
   const AnalysisScreen({super.key});
@@ -18,9 +21,14 @@ class AnalysisScreen extends StatelessWidget {
     final args =
     ModalRoute.of(context)!
         .settings
-        .arguments as Map<String, dynamic>;
+        .arguments
+    as Map<String, dynamic>;
 
-    final analysis = args["analysis"];
+    final analysis =
+    args["analysis"];
+
+    final lessonId =
+    args["lessonId"];
 
     final totalQuestions =
     args["totalQuestions"];
@@ -34,7 +42,7 @@ class AnalysisScreen extends StatelessWidget {
     return Scaffold(
 
       appBar: const CustomAppBar(
-        title: "Analysis",
+        title: "Analysis & Breakdown",
       ),
 
       backgroundColor:
@@ -458,6 +466,8 @@ class AnalysisScreen extends StatelessWidget {
                   child: OutlinedButton(
 
                     onPressed: () {
+
+                      Navigator.pop(context, true);
                     },
 
                     style:
@@ -478,14 +488,14 @@ class AnalysisScreen extends StatelessWidget {
                       ),
                     ),
 
-                    child: Row(
+                    child:  const Row(
 
                       mainAxisAlignment:
                       MainAxisAlignment.center,
 
                       children: [
 
-                        const Icon(
+                        Icon(
 
                           Icons.refresh,
 
@@ -495,9 +505,9 @@ class AnalysisScreen extends StatelessWidget {
                           AppColors.textPrimary,
                         ),
 
-                        const SizedBox(width: 8),
+                        SizedBox(width: 8),
 
-                        const Text(
+                        Text(
 
                           "RE-EVALUATE MODULE",
 

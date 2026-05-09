@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../auth/data/services/auth_service.dart';
+import '../../../simulation/logic/cubit/simulation_cubit.dart';
 import '../../logic/lesson_cubit.dart';
 import '../../logic/lesson_state.dart';
 import '../widgets/header.dart';
@@ -86,10 +87,11 @@ class LessonsScreen extends StatelessWidget {
                   padding: EdgeInsets.only(bottom: h * 0.02),
                   child: _LessonCard(
                     icon: Icons.link,
-                    title: lesson.title ?? "",
+                    title: lesson.title,
                     lessonId: lesson.id,
-                    subtitle: lesson.description ?? "",
-                    active: true,
+                    subtitle: lesson.description,
+                    active: lesson.isActive,
+                    progress: lesson.progress,
                   ),
                 );
               }).toList(),
@@ -233,51 +235,84 @@ class _WeeklyGoal extends StatelessWidget {
 }
 
 class _LessonCard extends StatelessWidget {
+
   final bool active;
+
   final IconData icon;
+
   final String title;
+
   final String subtitle;
+
   final int lessonId;
+
+  final int progress;
+
   const _LessonCard({
     super.key,
     this.active = false,
     required this.icon,
     required this.title,
-    required this.subtitle, required this.lessonId,
+    required this.subtitle,
+    required this.lessonId,
+    required this.progress,
   });
 
   @override
   Widget build(BuildContext context) {
+
     final w = MediaQuery.of(context).size.width;
+
     final h = MediaQuery.of(context).size.height;
+
     final scale = w / 375;
 
     return Container(
+
       padding: EdgeInsets.all(w * 0.04),
+
       decoration: BoxDecoration(
         color: const Color(0xFF1C2127),
         borderRadius: BorderRadius.circular(18),
       ),
+
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+
+        crossAxisAlignment:
+        CrossAxisAlignment.start,
+
         children: [
 
           Row(
+
             children: [
 
               Container(
+
                 height: w * 0.12,
+
                 width: w * 0.12,
+
                 decoration: BoxDecoration(
+
                   color: active
+
                       ? const Color(0xFF2F80ED)
+
                       : const Color(0xFF2A3138),
-                  borderRadius: BorderRadius.circular(12),
+
+                  borderRadius:
+                  BorderRadius.circular(12),
                 ),
+
                 child: Icon(
+
                   icon,
+
                   color: active
+
                       ? AppColors.textPrimary
+
                       : AppColors.textSecondary,
                 ),
               ),
@@ -285,22 +320,41 @@ class _LessonCard extends StatelessWidget {
               SizedBox(width: w * 0.03),
 
               Expanded(
+
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                  crossAxisAlignment:
+                  CrossAxisAlignment.start,
+
                   children: [
+
                     Text(
-                      title, // ✅ بدون !
+
+                      title,
+
                       style: TextStyle(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w700,
+
+                        color:
+                        AppColors.textPrimary,
+
+                        fontWeight:
+                        FontWeight.w700,
+
                         fontSize: 16 * scale,
                       ),
                     ),
+
                     SizedBox(height: h * 0.005),
+
                     Text(
-                      subtitle, // ✅ بدون !
+
+                      subtitle,
+
                       style: TextStyle(
-                        color: AppColors.textSecondary,
+
+                        color:
+                        AppColors.textSecondary,
+
                         fontSize: 12 * scale,
                       ),
                     ),
@@ -309,22 +363,39 @@ class _LessonCard extends StatelessWidget {
               ),
 
               Container(
+
                 padding: EdgeInsets.symmetric(
                   horizontal: w * 0.025,
                   vertical: w * 0.01,
                 ),
+
                 decoration: BoxDecoration(
+
                   color: active
-                      ? const Color(0xFF0BDA5B).withOpacity(0.15)
+
+                      ? const Color(0xFF0BDA5B)
+                      .withOpacity(0.15)
+
                       : const Color(0xFF2A3138),
-                  borderRadius: BorderRadius.circular(6),
+
+                  borderRadius:
+                  BorderRadius.circular(6),
                 ),
+
                 child: Text(
-                  active ? "Active" : "Not Started",
+
+                  progress > 0
+                      ? "Active"
+                      : "Not Started",
+
                   style: TextStyle(
-                    color: active
+
+                    color: progress > 0
+
                         ? const Color(0xFF0BDA5B)
+
                         : AppColors.textSecondary,
+
                     fontSize: 10 * scale,
                   ),
                 ),
@@ -335,21 +406,37 @@ class _LessonCard extends StatelessWidget {
           SizedBox(height: h * 0.015),
 
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+            mainAxisAlignment:
+            MainAxisAlignment.spaceBetween,
+
             children: [
+
               Text(
+
                 "Progress",
+
                 style: TextStyle(
-                  color: AppColors.textSecondary,
+
+                  color:
+                  AppColors.textSecondary,
+
                   fontSize: 12 * scale,
                 ),
               ),
+
               Text(
-                active ? "60%" : "0%",
+
+                "$progress%",
+
                 style: TextStyle(
+
                   color: Colors.grey,
+
                   fontSize: 12 * scale,
-                  fontWeight: FontWeight.w700,
+
+                  fontWeight:
+                  FontWeight.w700,
                 ),
               ),
             ],
@@ -358,51 +445,138 @@ class _LessonCard extends StatelessWidget {
           SizedBox(height: h * 0.008),
 
           ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+
+            borderRadius:
+            BorderRadius.circular(10),
+
             child: LinearProgressIndicator(
-              value: active ? 0.6 : 0,
+
+              value: progress / 100,
+
               minHeight: h * 0.008,
-              backgroundColor: Colors.white.withOpacity(0.1),
-              color: const Color(0xFF2F80ED),
+
+              backgroundColor:
+              Colors.white.withOpacity(0.1),
+
+              color:
+              const Color(0xFF2F80ED),
             ),
           ),
 
           SizedBox(height: h * 0.015),
-
           Row(
+
             children: [
 
               Expanded(
+
                 child: SizedBox(
+
                   height: h * 0.06,
+
                   child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.pushNamed(context, AppRoutes.simulation,
-                        arguments: lessonId,
-                      );
+
+                    onPressed: () async {
+
+                      if (progress == 100) {
+
+                        await context
+                            .read<SimulationCubit>()
+                            .resetLesson(
+                          lessonId,
+                        );
+                      }
+
+                      Navigator.pushNamed(
+
+                        context,
+
+                        AppRoutes.simulation,
+
+                        arguments: {
+
+                          "lessonId": lessonId,
+
+                          "progress": progress,
+                        },
+                      ).then((_) {
+
+                        context
+                            .read<LessonCubit>()
+                            .getLessons();
+                      });
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: active
+
+                    style:
+                    ElevatedButton.styleFrom(
+
+                      backgroundColor: progress > 0
+
                           ? const Color(0xFF2F80ED)
+
                           : const Color(0xFF2A3138),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+
+                      shape:
+                      RoundedRectangleBorder(
+
+                        borderRadius:
+                        BorderRadius.circular(12),
                       ),
+
                       elevation: 0,
                     ),
+
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+
+                      mainAxisAlignment:
+                      MainAxisAlignment.center,
+
                       children: [
+
                         Text(
-                          active ? "Resume Lesson" : "Start Module",
+
+                          progress == 100
+
+                              ? "Start Again"
+
+                              : progress > 0
+
+                              ? "Resume Lesson"
+
+                              : "Start Module",
+
                           style: TextStyle(
-                            color: active ? Colors.white : Colors.grey,
-                            fontWeight: FontWeight.w600,
+
+                            color: progress > 0
+
+                                ? Colors.white
+
+                                : Colors.grey,
+
+                            fontWeight:
+                            FontWeight.w600,
                           ),
                         ),
-                        if (active) ...[
+
+                        if (progress == 100) ...[
+
                           SizedBox(width: w * 0.015),
-                          const Icon(Icons.play_arrow, size: 14, color: Colors.white),
+
+                          const Icon(
+                            Icons.refresh,
+                            size: 14,
+                            color: Colors.white,
+                          ),
+
+                        ] else if (progress > 0) ...[
+
+                          SizedBox(width: w * 0.015),
+
+                          const Icon(
+                            Icons.play_arrow,
+                            size: 14,
+                            color: Colors.white,
+                          ),
                         ],
                       ],
                     ),
@@ -416,7 +590,6 @@ class _LessonCard extends StatelessWidget {
     );
   }
 }
-
 class _LockedCard extends StatelessWidget {
   const _LockedCard({super.key});
 

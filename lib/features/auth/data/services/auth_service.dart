@@ -125,7 +125,7 @@ class AuthService {
   Future<List<LessonModel>> getLessons() async {
     final dio = await getDio();
 
-    final response = await dio.get("/lessons");
+    final response = await dio.get("/lessons/cards");
 
     print("RAW RESPONSE: ${response.data}"); // 👈 مهم
 
@@ -178,7 +178,7 @@ class AuthService {
 
       print("SUCCESS RESPONSE:");
       print(response.data);
-
+      print(response.data.runtimeType);
       return response.data;
 
     } on DioException catch (e) {
@@ -251,6 +251,16 @@ class AuthService {
 
     return QuestionModel.fromJson(
       response.data,
+    );
+  }
+  Future<void> resetLesson(
+      int lessonId,
+      ) async {
+
+    final dio = DioHelper.dio;
+
+    await dio.delete(
+      "/api/lessons/$lessonId/reset",
     );
   }
 

@@ -30,6 +30,7 @@ class SimulationAnalysisSuccess extends SimulationState {
 
   SimulationAnalysisSuccess(this.analysis);
 }
+class SimulationFinished extends SimulationState {}
 
 class SimulationCubit extends Cubit<SimulationState> {
 
@@ -61,24 +62,6 @@ class SimulationCubit extends Cubit<SimulationState> {
       );
 
     } catch (e) {
-
-      if (
-      e.toString()
-          .contains("AlreadyAnswered")
-      ) {
-
-        emit(
-          SimulationError(
-            "Question already answered, loading next...",
-          ),
-        );
-
-        await loadNextQuestion(
-          lessonId,
-        );
-
-        return;
-      }
 
       emit(
         SimulationError(
@@ -131,33 +114,6 @@ class SimulationCubit extends Cubit<SimulationState> {
 
         print("REAL ERROR:");
         print(data);
-
-        if (
-        data.contains(
-          "AlreadyAnswered",
-        )
-        ) {
-
-          emit(
-            SimulationError(
-              "Question already answered, loading next...",
-            ),
-          );
-
-          Future.delayed(
-            const Duration(
-              milliseconds: 800,
-            ),
-                () {
-
-              loadNextQuestion(
-                lessonId,
-              );
-            },
-          );
-
-          return;
-        }
       }
 
       emit(
@@ -178,7 +134,9 @@ class SimulationCubit extends Cubit<SimulationState> {
       await service.getNextQuestion(
         lessonId,
       );
-
+      print(
+        "NEXT QUESTION ID: ${question.id}",
+      );
       emit(
         SimulationSuccess(
           [question],
@@ -188,9 +146,7 @@ class SimulationCubit extends Cubit<SimulationState> {
     } catch (e) {
 
       emit(
-        SimulationError(
-          "No more questions",
-        ),
+        SimulationFinished(),
       );
     }
   }
@@ -200,5 +156,30 @@ class SimulationCubit extends Cubit<SimulationState> {
     emit(
       SimulationInitial(),
     );
+  }
+  Future<void> resetLesson(
+      int lessonId,
+      ) async {
+
+    emit(SimulationLoading());
+
+    try {
+
+      await service.resetLesson(
+        lessonId,
+      );
+
+      await loadQuestions(
+        lessonId,
+      );
+
+    } catch (e) {
+
+      emit(
+        SimulationError(
+          "Failed to reset lesson",
+        ),
+      );
+    }
   }
 }

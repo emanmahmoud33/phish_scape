@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:phish_scape/core/theme/app_colors.dart';
+import '../core/routing/app_routes.dart';
 import '../features/chatbot/presentation/screens/chat_bot_screen.dart';
 import '../features/home/presentation/screens/home_screen.dart';
 import '../features/lessons/presentation/screens/lesson_screen.dart';
@@ -19,8 +20,8 @@ class _MainLayoutState extends State<MainLayout> {
   final screens = [
     const HomeScreen(),
     const LessonsScreen(),
-   SizedBox(),
-    const SimulationScreen(),
+    const SizedBox(),
+    const SizedBox(),
     const ProfileScreen(),
   ];
 
@@ -79,7 +80,7 @@ class _MainLayoutState extends State<MainLayout> {
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(
-                          color: AppColors.backgroundStart,// لون الـ stroke
+                          color: AppColors.backgroundStart,
                            width: 6
                         ),
                       ),
@@ -108,11 +109,31 @@ class _MainLayoutState extends State<MainLayout> {
 
     return InkWell(
         borderRadius: BorderRadius.circular(20),
-    onTap: () {
-    setState(() {
-    currentIndex = index;
-    });
-    },
+      onTap: () {
+
+        if (index == 3) {
+
+          Navigator.pushNamed(
+
+            context,
+
+            AppRoutes.simulation,
+
+            arguments: {
+
+              "lessonId": 1,
+
+              "progress": 0,
+            },
+          );
+
+          return;
+        }
+
+        setState(() {
+          currentIndex = index;
+        });
+      },
     child: Padding(
     padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
     child: Column(

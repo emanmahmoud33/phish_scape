@@ -272,18 +272,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
                             SizedBox(height: h * 0.04),
 
-                            ...lessons.map((lesson) => _lessonCard(
-                                  id: lesson.id,
-                                  title: lesson.title,
-                                  time: "10 min",
-                                  // مؤقت
-                                  level: lesson.level,
-                                  color: AppColors.primary,
-                                  icon: Icons.menu_book,
-                                  w: w,
-                                  h: h,
-                                  scale: scale,
-                                )),
+                            ...lessons.map(
+                                  (lesson) => _lessonCard(
+
+                                id: lesson.id,
+
+                                title: lesson.title,
+
+                                time: "10 min",
+
+                                level: lesson.level,
+
+                                color: AppColors.primary,
+
+                                icon: getLessonIcon(
+                                  lesson.title,
+                                ),
+
+                                w: w,
+
+                                h: h,
+
+                                scale: scale,
+
+                                progress: lesson.progress,
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -346,104 +360,6 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  Widget _lessonCard({  required String title,  required String time,  required String level,  required Color color,  required IconData icon,  required double w,  required double h,  required double scale,  required int id,  required int progress,}) {  return GestureDetector(      onTap: () {        Navigator.pushNamed(          context,          AppRoutes.simulation,          arguments: id,        ).then((_) {          context              .read<HomeCubit>()              .loadHome();        });      },      child: Container(        margin:        EdgeInsets.only(          bottom: h * 0.02,        ),        padding:        EdgeInsets.all(          w * 0.035,        ),        decoration: BoxDecoration(          color:          const Color(            0xFF1C2127,          ),          borderRadius:          BorderRadius.circular(            16,          ),        ),        child: Column(          children: [            Row(              children: [                Container(                  height:                  w * 0.12,                  width:                  w * 0.12,                  decoration:                  BoxDecoration(                    color:                    color.withOpacity(                      0.15,                    ),                    borderRadius:                    BorderRadius.circular(                      12,                    ),                  ),                  child: Icon(                    icon,                    color: color,                  ),                ),                SizedBox(                  width:                  w * 0.03,                ),                Expanded(                  child: Column(                    crossAxisAlignment:                    CrossAxisAlignment.start,                    children: [                      Text(                        title,                        style: TextStyle(                          color:                          Colors.white,                          fontWeight:                          FontWeight.w500,                          fontSize:                          14 * scale,                        ),                      ),                      SizedBox(                        height:                        h * 0.008,                      ),                      Row(                        children: [                          Icon(                            Icons.access_time,                            size:                            w * 0.035,                            color:                            Colors.grey,                          ),                          SizedBox(                            width:                            w * 0.01,                          ),                          Text(                            time,                            style: TextStyle(                              color:                              Colors.grey,                              fontSize:                              12 * scale,                            ),                          ),                          SizedBox(                            width:                            w * 0.02,                          ),                          Icon(                            Icons.star,                            size:                            w * 0.035,                            color:                            Colors.grey,                          ),                          SizedBox(                            width:                            w * 0.01,                          ),                          Text(                            level,                            style: TextStyle(                              color:                              Colors.grey,                              fontSize:                              12 * scale,                            ),                          ),                        ],                      ),                    ],                  ),                ),                Icon(                  progress > 0                      ? Icons.play_circle_fill                      : Icons.play_circle_outline,                  color:                  progress > 0                      ? AppColors.primary                      : Colors.grey,                  size:                  w * 0.06,                ),              ],            ),            SizedBox(              height:              h * 0.012,            ),            ClipRRect(              borderRadius:              BorderRadius.circular(                10,              ),              child:              LinearProgressIndicator(                value:                progress / 100,                backgroundColor:                Colors.grey.withOpacity(                  0.2,                ),                color:                color,                minHeight:                h * 0.006,              ),            ),          ],        ),      ));}IconData getLessonIcon(    String title,    ) {  final lower =  title.toLowerCase();  if (  lower.contains("qr")  ) {    return Icons.qr_code;  }  if (  lower.contains("domain")  ) {    return Icons.language;  }  if (  lower.contains("link")  ) {    return Icons.link;  }  if (  lower.contains("social")  ) {    return Icons.people;  }  if (  lower.contains("url")  ) {    return Icons.public;  }  return Icons.security;}
 
-  Widget _lessonCard({
-    required String title,
-    required String time,
-    required String level,
-    required Color color,
-    required IconData icon,
-    required double w,
-    required double h,
-    required double scale,
-    required int id,
-  }) {
-    return GestureDetector(
-        onTap: () {
-          Navigator.pushNamed(
-            context,
-            AppRoutes.simulation,
-            arguments: id,
-          );
-        },
-        child: Container(
-          margin: EdgeInsets.only(bottom: h * 0.02),
-          padding: EdgeInsets.all(w * 0.035),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1C2127),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Container(
-                    height: w * 0.12,
-                    width: w * 0.12,
-                    decoration: BoxDecoration(
-                      color: color.withOpacity(0.15),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(icon, color: color),
-                  ),
-                  SizedBox(width: w * 0.03),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 14 * scale,
-                          ),
-                        ),
-                        SizedBox(height: h * 0.008),
-                        Row(
-                          children: [
-                            Icon(Icons.access_time,
-                                size: w * 0.035, color: Colors.grey),
-                            SizedBox(width: w * 0.01),
-                            Text(
-                              time,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12 * scale,
-                              ),
-                            ),
-                            SizedBox(width: w * 0.02),
-                            Icon(Icons.star,
-                                size: w * 0.035, color: Colors.grey),
-                            SizedBox(width: w * 0.01),
-                            Text(
-                              level,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12 * scale,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  Icon(Icons.play_circle_fill,
-                      color: Colors.grey, size: w * 0.06),
-                ],
-              ),
-              SizedBox(height: h * 0.012),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: LinearProgressIndicator(
-                  value: 0.6,
-                  backgroundColor: Colors.grey.withOpacity(0.2),
-                  color: color,
-                  minHeight: h * 0.006,
-                ),
-              ),
-            ],
-          ),
-        ));
-  }
 }

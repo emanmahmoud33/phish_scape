@@ -34,18 +34,22 @@ class _SimulationScreenState
     final height = size.height;
     final width = size.width;
 
+    final args =
+    ModalRoute.of(context)!
+        .settings
+        .arguments
+    as Map;
+
     final lessonId =
-    ModalRoute.of(context)
-        ?.settings
-        .arguments as int?;
+    args["lessonId"];
 
-    if (lessonId == null) {
+    final progress =
+    args["progress"];
 
-      return const Scaffold(
-        body: Center(
-          child: Text("No lessonId"),
-        ),
-      );
+    if (currentQuestion == 1) {
+
+      currentQuestion =
+          (progress ~/ 10) + 1;
     }
 
     return BlocProvider(
@@ -57,7 +61,9 @@ class _SimulationScreenState
           AuthService(),
         );
 
-        cubit.loadQuestions(
+        cubit.emitInitial();
+
+        cubit.loadNextQuestion(
           lessonId,
         );
 
@@ -194,9 +200,10 @@ class _SimulationScreenState
 
                 if (context.mounted) {
 
-                  if (
-                  reevaluate != true
-                  ) {
+                  if (reevaluate == true)
+                  {
+                    return;
+                  }{
 
                     setState(() {
 
@@ -224,7 +231,27 @@ class _SimulationScreenState
                 }
               });
             }
+            if (state is SimulationFinished) {
 
+              Navigator.pushReplacementNamed(
+                context,
+                AppRoutes.analysis,
+                arguments: {
+                  "analysis": {
+                    "isCorrect": true,
+                    "message": "Module Completed",
+                    "explanation":
+                    "You completed all simulation questions successfully.",
+                  },
+
+                  "lessonId": lessonId,
+
+                  "totalQuestions": totalQuestions,
+
+                  "currentQuestion": totalQuestions,
+                },
+              );
+            }
             if (state is SimulationError) {
 
               setState(() {
@@ -280,7 +307,23 @@ class _SimulationScreenState
 
                   if (
                   selectedIndex == -1
-                  ) return;
+                  ) {
+
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+
+                      const SnackBar(
+
+                        backgroundColor: Colors.red,
+
+                        content: Text(
+                          "Please select an answer first",
+                        ),
+                      ),
+                    );
+
+                    return;
+                  }
 
                   final selectedAnswer =
                   question.answers[
